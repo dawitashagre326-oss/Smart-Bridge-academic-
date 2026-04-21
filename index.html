@@ -3,90 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Bridge Academic</title>
+    <title>Smart Bridge</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f9;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
-        .header {
-            text-align: center;
-            background: #0088cc;
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-        .note-card {
-            background: white;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .note-card:hover {
-            background: #e1f5fe;
-        }
-        .note-content {
-            display: none;
-            padding: 10px;
-            border-top: 1px solid #eee;
-            margin-top: 10px;
-            font-size: 0.9em;
-            line-height: 1.6;
-        }
-        h2 { margin: 0; font-size: 1.2em; color: #0088cc; }
+        body { font-family: sans-serif; background-color: #f0f4f8; margin: 0; padding: 15px; }
+        .header { background: #0088cc; color: white; text-align: center; padding: 30px; border-radius: 20px; margin-bottom: 20px; }
+        .note-card { background: white; margin-bottom: 15px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; }
+        .note-card h2 { margin: 0; font-size: 18px; color: #0088cc; }
+        .note-content { display: none; padding-top: 15px; border-top: 1px solid #eee; margin-top: 10px; color: #444; line-height: 1.6; }
     </style>
 </head>
 <body>
-
     <div class="header">
-        <h1>Smart Bridge Academic</h1>
+        <h1>Smart Bridge</h1>
+        <p>የተማሪዎች ማስታወሻ</p>
     </div>
-
-    <div class="note-card" onclick="toggleNote('math')">
+    <div class="note-card" onclick="this.querySelector('.note-content').style.display = this.querySelector('.note-content').style.display === 'block' ? 'none' : 'block'">
         <h2>Mathematics</h2>
-        <div id="math" class="note-content">
-            • በሴሚስተር 2 የሚሰጡ ዋና ዋና ክፍሎች፡ Calculus, Linear Algebra...<br>
-            • ለፈተና ዝግጅት ቀመሮችን (Formulas) መለማመድ ወሳኝ ነው።
-        </div>
+        <div class="note-content">እዚህ ጋር ለማቲማቲክስ የሚሆን አጭር ማስታወሻ ይኖራል።</div>
     </div>
-
-    <div class="note-card" onclick="toggleNote('logic')">
-        <h2>Logic & Critical Thinking</h2>
-        <div id="logic" class="note-content">
-            • ስለ Fallacies እና Validity በደንብ ማጥናት ለፈተና ይጠቅማል።<br>
-            • ክርክሮችን መተንተን መለማመድ።
-        </div>
+    <div class="note-card" onclick="this.querySelector('.note-content').style.display = this.querySelector('.note-content').style.display === 'block' ? 'none' : 'block'">
+        <h2>Logic</h2>
+        <div class="note-content">እዚህ ጋር ለሎጂክ የሚሆን አጭር ማስታወሻ ይኖራል።</div>
     </div>
-
-    <div class="note-card" onclick="toggleNote('geo')">
-        <h2>Geography of Ethiopia</h2>
-        <div id="geo" class="note-content">
-            • ስለ ኢትዮጵያ መልክዓ ምድርና የአየር ንብረት አጭር መረጃዎች...
-        </div>
-    </div>
-
     <script>
-        // ማስታወሻውን ለመክፈትና ለመዝጋት
-        function toggleNote(id) {
-            var note = document.getElementById(id);
-            if (note.style.display === "block") {
-                note.style.display = "none";
-            } else {
-                note.style.display = "block";
-            }
-        }
-
-        // ቴሌግራም ሚኒ አፑን ዝግጁ እንዲያደርግ
         Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
     </script>
 </body>
 </html>
-
