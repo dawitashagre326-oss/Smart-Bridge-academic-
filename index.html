@@ -169,18 +169,20 @@
             </div>
         </div>
     </div>
-<div id="chapters-list">
-    <div class="chapter-card">
-        <div style="text-align: left;">
-            <h3 style="margin:0; font-size:16px;">Chapter 1: Intro to Philosophy</h3>
-            <p style="font-size:12px; color:#666;">የፍልስፍና መግቢያ</p>
-        </div>
-        <div class="btn-group">
-            <button class="btn btn-notes" onclick="openNote('logic_ch1')">📖 Read</button>
-            <button class="btn btn-quiz">❓ Quiz</button>
+
+    <div id="course-view" class="view">
+        <button onclick="navigate('home-view')" style="background:none; border:none; color:var(--primary-color); font-weight:bold; margin-bottom:15px;">← Back</button>
+        <h2 id="selected-course-name">Course Chapters</h2>
+        <div id="chapters-list">
+            <div class="chapter-card">
+                <span>Chapter 1: Introduction</span>
+                <div class="btn-group">
+                    <button class="btn btn-notes">Notes</button>
+                    <button class="btn btn-quiz">Quiz</button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
     <div id="profile-view" class="view">
         <h2>Your Progress</h2>
