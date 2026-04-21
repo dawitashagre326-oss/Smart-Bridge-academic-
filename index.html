@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Bridge Academic</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .header {
+            text-align: center;
+            background: #0088cc;
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        .note-card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .note-card:hover {
+            background: #e1f5fe;
+        }
+        .note-content {
+            display: none;
+            padding: 10px;
+            border-top: 1px solid #eee;
+            margin-top: 10px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        h2 { margin: 0; font-size: 1.2em; color: #0088cc; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Smart Bridge Academic</h1>
+    </div>
+
+    <div class="note-card" onclick="toggleNote('math')">
+        <h2>Mathematics</h2>
+        <div id="math" class="note-content">
+            • በሴሚስተር 2 የሚሰጡ ዋና ዋና ክፍሎች፡ Calculus, Linear Algebra...<br>
+            • ለፈተና ዝግጅት ቀመሮችን (Formulas) መለማመድ ወሳኝ ነው።
+        </div>
+    </div>
+
+    <div class="note-card" onclick="toggleNote('logic')">
+        <h2>Logic & Critical Thinking</h2>
+        <div id="logic" class="note-content">
+            • ስለ Fallacies እና Validity በደንብ ማጥናት ለፈተና ይጠቅማል።<br>
+            • ክርክሮችን መተንተን መለማመድ።
+        </div>
+    </div>
+
+    <div class="note-card" onclick="toggleNote('geo')">
+        <h2>Geography of Ethiopia</h2>
+        <div id="geo" class="note-content">
+            • ስለ ኢትዮጵያ መልክዓ ምድርና የአየር ንብረት አጭር መረጃዎች...
+        </div>
+    </div>
+
+    <script>
+        // ማስታወሻውን ለመክፈትና ለመዝጋት
+        function toggleNote(id) {
+            var note = document.getElementById(id);
+            if (note.style.display === "block") {
+                note.style.display = "none";
+            } else {
+                note.style.display = "block";
+            }
+        }
+
+        // ቴሌግራም ሚኒ አፑን ዝግጁ እንዲያደርግ
+        Telegram.WebApp.ready();
+    </script>
+</body>
+</html>
+
