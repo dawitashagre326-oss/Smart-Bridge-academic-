@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Bridge Academic</title>
+    <title>Smart Bridge Academic | 4.0 CGPA</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #f8f5f0; 
+            --bg-color: #f0f2f5; 
             --primary-green: #1a3a3a;
+            --accent-gold: #ffb800; /* For 4.0 GPA Motivation */
             --white: #ffffff;
             --text-main: #1a1a1a;
             --text-sub: #666;
-            --card-radius: 20px;
+            --card-radius: 16px;
             --accent-blue: #007bff;
         }
 
@@ -20,169 +21,198 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             margin: 0; padding: 0; color: var(--text-main);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- Auth Styles --- */
+        /* --- Auth Styles (Unchanged but refined) --- */
         .auth-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #02132b; z-index: 9999; display: flex; justify-content: center; align-items: center;
         }
         .auth-card {
-            background: linear-gradient(180deg, #044e9b 0%, #033a75 100%);
-            width: 85%; max-width: 350px; padding: 30px 20px; border-radius: 20px; position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: linear-gradient(180deg, #1a3a3a 0%, #0d1f1f 100%);
+            width: 85%; max-width: 350px; padding: 30px 20px; border-radius: 25px; position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;
         }
         .auth-input {
-            width: 100%; box-sizing: border-box; padding: 12px; margin-bottom: 15px;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 10px; color: white; outline: none;
+            width: 100%; box-sizing: border-box; padding: 14px; margin-bottom: 15px;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px; color: white; outline: none; transition: 0.3s;
         }
-        .auth-input::placeholder { color: rgba(255,255,255,0.6); }
+        .auth-input:focus { border-color: var(--accent-gold); }
         
         .auth-btn {
-            width: 100%; padding: 12px; border: none; border-radius: 10px;
-            background: var(--accent-blue); color: white; font-weight: bold; cursor: pointer;
-            margin-top: 5px; transition: background 0.3s;
+            width: 100%; padding: 14px; border: none; border-radius: 12px;
+            background: var(--accent-gold); color: #000; font-weight: 800; cursor: pointer;
+            margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;
         }
-        .auth-btn:active { background: #0056b3; }
-
-        .auth-toggle {
-            color: rgba(255,255,255,0.8); text-align: center; margin-top: 20px;
-            font-size: 14px; cursor: pointer;
-        }
-        .auth-toggle b { color: #fff; text-decoration: underline; }
 
         /* --- Course Library UI --- */
-        .header-section { padding: 25px 20px; background: var(--bg-color); }
-        .library-title { font-size: 28px; font-weight: 800; color: var(--primary-green); margin: 0; }
-        .library-subtitle { font-size: 14px; color: var(--text-sub); margin-top: 5px; }
+        .header-section { 
+            padding: 30px 20px; 
+            background: linear-gradient(135deg, var(--primary-green) 0%, #2c5d5d 100%);
+            color: white;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+        .library-title { font-size: 24px; font-weight: 800; margin: 0; }
+        .library-subtitle { font-size: 13px; opacity: 0.8; margin-top: 5px; }
 
-        .course-list { padding: 0 20px 100px 20px; }
+        /* Progress Bar Style */
+        .progress-container {
+            width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-top: 10px; overflow: hidden;
+        }
+        .progress-fill { height: 100%; background: var(--accent-gold); width: 0%; transition: width 0.5s; }
+
+        .course-list { padding: 20px; padding-bottom: 100px; }
         .course-card {
             background: var(--white); border-radius: var(--card-radius);
-            padding: 20px; margin-bottom: 15px; display: flex; align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04); cursor: pointer;
-            transition: transform 0.2s;
+            padding: 18px; margin-bottom: 15px; display: flex; align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer;
+            position: relative;
         }
-        .course-card:active { transform: scale(0.98); }
         .course-icon-bg {
-            width: 50px; height: 50px; background: #f0f4f4;
-            border-radius: 12px; display: flex; align-items: center;
-            justify-content: center; font-size: 24px; margin-right: 15px;
+            width: 55px; height: 55px; background: #f0f7f7;
+            border-radius: 15px; display: flex; align-items: center;
+            justify-content: center; font-size: 28px; margin-right: 15px;
         }
         .course-info { flex-grow: 1; }
-        .course-name { font-size: 17px; font-weight: 700; color: var(--primary-green); margin: 0; }
-        .course-meta { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
-        .arrow-icon { color: #ccc; font-size: 18px; }
+        .course-name { font-size: 16px; font-weight: 700; color: var(--primary-green); margin: 0; }
+        .course-meta { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+
+        /* --- Language Toggle --- */
+        .lang-switch {
+            display: flex; background: rgba(255,255,255,0.1); border-radius: 20px;
+            padding: 4px; margin-top: 15px; width: fit-content;
+        }
+        .lang-btn {
+            padding: 5px 15px; border-radius: 15px; font-size: 12px; cursor: pointer; border: none;
+            background: transparent; color: white;
+        }
+        .lang-btn.active { background: var(--accent-gold); color: black; font-weight: bold; }
 
         /* --- Chapter Detail UI --- */
-        .detail-header {
-            background: var(--primary-green); color: white;
-            padding: 30px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
-        }
-        .back-btn { background: none; border: none; color: white; font-size: 16px; cursor: pointer; margin-bottom: 10px; }
-        
         .chapter-card {
             background: white; border-radius: var(--card-radius);
-            margin: 15px 20px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin: 15px 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-        .chapter-title { font-size: 16px; font-weight: 700; margin-bottom: 15px; color: var(--primary-green); }
+        .chapter-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-green); }
         .mode-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .mode-box {
-            border: 1px solid #eee; border-radius: 12px; padding: 12px;
-            display: flex; flex-direction: column; cursor: pointer;
-            background: #fafafa; transition: background 0.2s;
+            border: 1px solid #f0f0f0; border-radius: 12px; padding: 12px;
+            text-align: center; cursor: pointer; background: #fdfdfd;
         }
-        .mode-box:hover { background: #f0f7f7; }
-        .mode-label { font-size: 13px; font-weight: 700; color: var(--primary-green); }
-        .mode-count { font-size: 11px; color: #888; margin-top: 2px; }
+        .mode-box:active { background: #f0f7f7; }
+        .mode-label { font-size: 13px; font-weight: 700; display: block; }
+        .mode-count { font-size: 10px; color: #888; margin-top: 4px; }
 
-        /* Navigation */
+        /* --- Bottom Nav --- */
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.05); z-index: 100;
+            display: flex; justify-content: space-around; padding: 10px 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.08); z-index: 100;
         }
-        .nav-item { text-align: center; font-size: 11px; color: #999; cursor: pointer; }
+        .nav-item { text-align: center; font-size: 10px; color: #bbb; cursor: pointer; flex: 1; }
         .nav-item.active { color: var(--primary-green); font-weight: bold; }
+        .nav-icon { font-size: 20px; margin-bottom: 2px; }
 
         .view { display: none; min-height: 100vh; }
-        .view.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .view.active { display: block; animation: slideUp 0.3s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div id="auth-overlay" class="auth-overlay">
         <div class="auth-card">
-            <h2 style="color:white; text-align:center; font-family: 'Serif'; margin-bottom: 25px;">Smart Bridge</h2>
+            <h1 style="color:var(--accent-gold); font-size: 28px; margin-bottom: 5px;">Smart Bridge</h1>
+            <p style="color: #ccc; font-size: 12px; margin-bottom: 25px;">Road to 4.0 CGPA 🚀</p>
             
             <div id="login-panel">
-                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number">
+                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number (09...)">
                 <input type="password" id="login-pass" class="auth-input" placeholder="Password">
                 <button class="auth-btn" onclick="performLogin()">Login</button>
-                <p class="auth-toggle" onclick="toggleAuth(true)">Don't have an account? <b>Create Account</b></p>
+                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(true)">New here? <b style="color:white">Register</b></p>
             </div>
 
             <div id="signup-panel" style="display: none;">
                 <input type="text" id="reg-name" class="auth-input" placeholder="Full Name">
                 <input type="tel" id="reg-phone" class="auth-input" placeholder="Phone Number">
-                <input type="password" id="reg-pass" class="auth-input" placeholder="Create Password">
+                <input type="password" id="reg-pass" class="auth-input" placeholder="Password">
                 <button class="auth-btn" onclick="performSignup()">Create Account</button>
-                <p class="auth-toggle" onclick="toggleAuth(false)">Already have an account? <b>Login</b></p>
+                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">Have account? <b style="color:white">Login</b></p>
             </div>
         </div>
     </div>
 
     <div id="library-view" class="view active">
         <div class="header-section">
-            <h1 class="library-title">Course Library</h1>
-            <p class="library-subtitle">All materials tailored for Ethiopian freshmen.</p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1 class="library-title">Course Library</h1>
+                <span id="gpa-badge" style="background:var(--accent-gold); color:black; padding:4px 10px; border-radius:10px; font-weight:bold; font-size:12px;">Goal: 4.0</span>
+            </div>
+            <p class="library-subtitle">Bilingual materials for Freshman Social Science.</p>
         </div>
         <div class="course-list" id="course-container"></div>
     </div>
 
     <div id="detail-view" class="view">
-        <div class="detail-header">
-            <button class="back-btn" onclick="navigate('library-view')">← Back</button>
-            <h1 id="selected-course-title" style="margin:0;">Course Name</h1>
-            <p id="selected-course-desc" style="font-size:13px; opacity:0.8; margin-top:5px;"></p>
+        <div class="header-section">
+            <button onclick="navigate('library-view')" style="background:none; border:none; color:white; font-size:18px; cursor:pointer; padding:0; margin-bottom:10px;">← Back</button>
+            <h1 id="selected-course-title" style="margin:0; font-size: 22px;">Course</h1>
+            
+            <div class="lang-switch">
+                <button id="btn-en" class="lang-btn active" onclick="setLanguage('en')">English 🇬🇧</button>
+                <button id="btn-am" class="lang-btn" onclick="setLanguage('am')">አማርኛ 🇪🇹</button>
+            </div>
         </div>
         <div id="chapters-container"></div>
     </div>
 
     <div id="profile-view" class="view">
         <div style="padding:40px 20px; text-align:center;">
-            <div style="font-size: 60px; margin-bottom: 10px;">👤</div>
-            <h2 id="user-display">Student Name</h2>
-            <p id="user-phone-display" style="color: #666;"></p>
-            <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
-            <button class="auth-btn" style="background:#ff4d4d; width: 200px;" onclick="performLogout()">Logout</button>
+            <div style="width:80px; height:80px; background:var(--primary-green); border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; color:white; font-size:35px;">👤</div>
+            <h2 id="user-display" style="margin-bottom:5px;">Student Name</h2>
+            <p id="user-phone-display" style="color: #666; margin-top:0;"></p>
+            
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin:25px 0;">
+                <div style="background:white; padding:15px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="font-size:20px; font-weight:bold; color:var(--primary-green);">0</div>
+                    <div style="font-size:11px; color:#888;">Quizzes Taken</div>
+                </div>
+                <div style="background:white; padding:15px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                    <div style="font-size:20px; font-weight:bold; color:var(--accent-gold);">0%</div>
+                    <div style="font-size:11px; color:#888;">Avg. Score</div>
+                </div>
+            </div>
+
+            <button class="auth-btn" style="background:#ff4d4d; color:white;" onclick="performLogout()">Logout Account</button>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="navigate('library-view')">📚<br>Courses</div>
-        <div class="nav-item" onclick="navigate('profile-view')">👤<br>Profile</div>
+        <div class="nav-item active" onclick="navigate('library-view')">
+            <div class="nav-icon">📚</div>
+            Courses
+        </div>
+        <div class="nav-item" onclick="navigate('profile-view')">
+            <div class="nav-icon">👤</div>
+            Profile
+        </div>
     </nav>
 
     <script>
+        // Extended Course Data with Bilingual Support
         const courses = [
-            { id: 1, name: "Logic", chapters: 4, qs: 4, icon: "📖", desc: "Master critical thinking and formal reasoning." },
-            { id: 2, name: "General Psychology", chapters: 4, qs: 1, icon: "🧠", desc: "Understanding human behavior and mind." },
-            { id: 3, name: "Geography of Ethiopia", chapters: 3, qs: 1, icon: "🌍", desc: "Explore the Horn of Africa's landscape." },
-            { id: 4, name: "Anthropology", chapters: 3, qs: 0, icon: "👤", desc: "Study of human societies and cultures." },
-            { id: 5, name: "Moral & Civic Education", chapters: 3, qs: 1, icon: "⚖️", desc: "Ethics and citizenship in Ethiopia." },
-            { id: 6, name: "Math for Social Sciences", chapters: 3, qs: 0, icon: "📐", desc: "Applied mathematics for economics." },
-            { id: 7, name: "Communicative English II", chapters: 5, qs: 2, icon: "💬", desc: "Advanced language and writing skills." },
-            { id: 8, name: "Economics", chapters: 6, qs: 5, icon: "📊", desc: "Principles of micro and macro economics." },
-            { id: 9, name: "Global Trends", chapters: 4, qs: 1, icon: "🌐", desc: "Understanding international relations." },
-            { id: 10, name: "Entrepreneurship", chapters: 4, qs: 2, icon: "💡", desc: "Developing business and innovation skills." },
-            { id: 11, name: "History of Ethiopia", chapters: 5, qs: 3, icon: "🏛️", desc: "Chronicles of the Horn of Africa." },
-            { id: 12, name: "Emerging Technology", chapters: 3, qs: 4, icon: "🚀", desc: "AI, IoT, and future tech trends." },
-            { id: 13, name: "Critical Thinking", chapters: 4, qs: 2, icon: "🔍", desc: "Analyzing arguments and fallacies." },
-            { id: 14, name: "Inclusiveness", chapters: 3, qs: 1, icon: "🤝", desc: "Special needs and inclusive society." }
+            { id: 1, name: "Logic & Critical Thinking", amName: "ሎጂክ እና ሂሳዊ አስተሳሰብ", chapters: 4, progress: 0, icon: "📖", desc: "Master reasoning skills." },
+            { id: 2, name: "General Psychology", amName: "ሳይኮሎጂ", chapters: 4, progress: 0, icon: "🧠", desc: "Understanding the human mind." },
+            { id: 3, name: "Geography of Ethiopia", amName: "የኢትዮጵያ ጂኦግራፊ", chapters: 3, progress: 0, icon: "🌍", desc: "Horn of Africa exploration." },
+            { id: 4, name: "Anthropology", amName: "አንትሮፖሎጂ", chapters: 3, progress: 0, icon: "👤", desc: "Humanity and culture." },
+            { id: 5, name: "Moral & Civic Education", amName: "ሲቪክስ", chapters: 3, progress: 0, icon: "⚖️", desc: "Ethics and citizenship." },
+            { id: 6, name: "Economics", amName: "ኢኮኖሚክስ", chapters: 6, progress: 0, icon: "📊", desc: "Micro & Macro basics." }
         ];
+
+        let currentLang = 'en';
 
         function initApp() {
             const container = document.getElementById('course-container');
@@ -191,19 +221,64 @@
                     <div class="course-icon-bg">${c.icon}</div>
                     <div class="course-info">
                         <div class="course-name">${c.name}</div>
-                        <div class="course-meta">${c.chapters} chapters • ${c.qs} Qs</div>
+                        <div class="course-meta">${c.chapters} Chapters • Short Notes + MCQ</div>
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: ${c.progress}%"></div>
+                        </div>
                     </div>
-                    <div class="arrow-icon">›</div>
+                    <div style="color:#ccc; margin-left:10px;">›</div>
                 </div>
             `).join('');
 
-            // Check Login Session
             if (localStorage.getItem('isLogged') === 'true') {
                 document.getElementById('auth-overlay').style.display = 'none';
                 updateProfileUI();
             }
         }
 
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            document.getElementById('btn-am').classList.toggle('active', lang === 'am');
+            
+            // Re-render chapters to update language
+            const activeCourseId = document.getElementById('selected-course-title').dataset.id;
+            if(activeCourseId) showCourse(parseInt(activeCourseId));
+        }
+
+        function showCourse(id) {
+            const course = courses.find(c => c.id === id);
+            const titleElem = document.getElementById('selected-course-title');
+            titleElem.innerText = currentLang === 'en' ? course.name : course.amName;
+            titleElem.dataset.id = id;
+            
+            const chaptersContainer = document.getElementById('chapters-container');
+            let chaptersHTML = '';
+            for(let i=1; i<=course.chapters; i++) {
+                chaptersHTML += `
+                    <div class="chapter-card">
+                        <div class="chapter-title">
+                            ${currentLang === 'en' ? 'Chapter' : 'ምዕራፍ'} ${i}: 
+                            ${currentLang === 'en' ? 'Core Concepts' : 'ዋና ዋና ነጥቦች'}
+                        </div>
+                        <div class="mode-container">
+                            <div class="mode-box" onclick="alert('PDF loading...')">
+                                <span class="mode-label">⚡ Power Notes</span>
+                                <span class="mode-count">Read in ${currentLang === 'en' ? 'English' : 'አማርኛ'}</span>
+                            </div>
+                            <div class="mode-box" onclick="alert('Quiz session starting...')">
+                                <span class="mode-label">❓ Quiz Mode</span>
+                                <span class="mode-count">Exam Prep</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            chaptersContainer.innerHTML = chaptersHTML;
+            navigate('detail-view');
+        }
+
+        // --- Standard Logic (from your code) ---
         function toggleAuth(isSignup) {
             document.getElementById('login-panel').style.display = isSignup ? 'none' : 'block';
             document.getElementById('signup-panel').style.display = isSignup ? 'block' : 'none';
@@ -213,13 +288,10 @@
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
             const pass = document.getElementById('reg-pass').value;
-
             if(name && phone && pass) {
                 localStorage.setItem('userData', JSON.stringify({name, phone, pass}));
-                alert("Account Created Successfully! Please login.");
+                alert("Success! Now Login.");
                 toggleAuth(false);
-            } else {
-                alert("Please fill all fields!");
             }
         }
 
@@ -227,17 +299,22 @@
             const phone = document.getElementById('login-phone').value;
             const pass = document.getElementById('login-pass').value;
             const savedData = JSON.parse(localStorage.getItem('userData'));
-
-            // Default Admin and Registered User check
-            if((phone === "0911111111" && pass === "1234") || 
-               (savedData && phone === savedData.phone && pass === savedData.pass)) {
+            if((phone === "0911111111" && pass === "1234") || (savedData && phone === savedData.phone && pass === savedData.pass)) {
                 localStorage.setItem('isLogged', 'true');
-                if(!savedData) localStorage.setItem('userData', JSON.stringify({name: "Admin Student", phone: phone}));
+                if(!savedData) localStorage.setItem('userData', JSON.stringify({name: "Smart Learner", phone: phone}));
                 document.getElementById('auth-overlay').style.display = 'none';
                 updateProfileUI();
-            } else {
-                alert("Incorrect phone or password!");
-            }
+            } else { alert("Error: Check phone/password"); }
+        }
+
+        function navigate(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach((n, idx) => {
+                n.classList.remove('active');
+                if((viewId === 'library-view' || viewId === 'detail-view') && idx === 0) n.classList.add('active');
+                if(viewId === 'profile-view' && idx === 1) n.classList.add('active');
+            });
         }
 
         function updateProfileUI() {
@@ -248,47 +325,7 @@
             }
         }
 
-        function showCourse(id) {
-            const course = courses.find(c => c.id === id);
-            document.getElementById('selected-course-title').innerText = course.name;
-            document.getElementById('selected-course-desc').innerText = course.desc;
-            
-            const chaptersContainer = document.getElementById('chapters-container');
-            let chaptersHTML = '';
-            for(let i=1; i<=course.chapters; i++) {
-                chaptersHTML += `
-                    <div class="chapter-card">
-                        <div class="chapter-title">Chapter ${i}: Course Content</div>
-                        <div class="mode-container">
-                            <div class="mode-box" onclick="alert('Note section is being updated...')">
-                                <span class="mode-label">Power Notes</span>
-                                <span class="mode-count">Open PDF/Text</span>
-                            </div>
-                            <div class="mode-box" onclick="alert('Quiz section is being updated...')">
-                                <span class="mode-label">Quiz Mode</span>
-                                <span class="mode-count">Practice Questions</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            chaptersContainer.innerHTML = chaptersHTML;
-            navigate('detail-view');
-        }
-
-        function navigate(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(viewId === 'library-view') document.querySelectorAll('.nav-item')[0].classList.add('active');
-            if(viewId === 'profile-view') document.querySelectorAll('.nav-item')[1].classList.add('active');
-        }
-
-        function performLogout() {
-            localStorage.removeItem('isLogged');
-            location.reload();
-        }
+        function performLogout() { localStorage.removeItem('isLogged'); location.reload(); }
 
         initApp();
     </script>
