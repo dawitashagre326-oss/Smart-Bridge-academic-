@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Bridge Academic</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { font-family: sans-serif; background-color: #f0f8ff; margin: 0; padding: 20px; text-align: center; }
+        .header { background: #0088cc; color: white; padding: 40px 20px; border-radius: 15px; margin-bottom: 20px; }
+        .note-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 10px; border: 1px solid #ddd; cursor: pointer; color: #0088cc; font-weight: bold; }
+        .content { display: none; padding: 10px; color: #333; font-weight: normal; text-align: left; border-top: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Smart Bridge Academic</h1>
+    </div>
+    <div class="note-card" onclick="toggle(this)">Mathematics
+        <div class="content">የማቲማቲክስ አጭር ማስታወሻ እዚህ ይገባል።</div>
+    </div>
+    <div class="note-card" onclick="toggle(this)">Logic & Critical Thinking
+        <div class="content">የሎጂክ አጭር ማስታወሻ እዚህ ይገባል።</div>
+    </div>
+    <div class="note-card" onclick="toggle(this)">Geography of Ethiopia
+        <div class="content">የጂኦግራፊ አጭር ማስታወሻ እዚህ ይገባል።</div>
+    </div>
+    <script>
+        function toggle(el) {
+            var content = el.querySelector('.content');
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
+        Telegram.WebApp.ready();
+    </script>
+</body>
+</html>
