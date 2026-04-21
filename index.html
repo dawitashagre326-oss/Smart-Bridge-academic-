@@ -21,9 +21,7 @@
             margin: 0; padding: 0; color: var(--text-main);
         }
 
-        /* ------------------------------------------- */
-        /* Updated Auth Styles (Image 1 Style) */
-        /* ------------------------------------------- */
+        /* Auth Styles */
         .auth-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #02132b; z-index: 9999; display: flex; justify-content: center; align-items: center;
@@ -51,9 +49,7 @@
         .auth-panel { display: none; }
         .auth-panel.active { display: block; }
 
-        /* ------------------------------------------- */
-        /* Profile View (Image 2 Style) */
-        /* ------------------------------------------- */
+        /* Profile View */
         .profile-header-box {
             background: var(--primary-green); color: white;
             padding: 40px 20px; text-align: center; border-radius: 0 0 35px 35px;
@@ -89,9 +85,7 @@
             cursor: pointer;
         }
 
-        /* ------------------------------------------- */
-        /* Course Library & Common */
-        /* ------------------------------------------- */
+        /* Library Section */
         .header-section { padding: 25px 20px; }
         .library-title { font-size: 28px; font-weight: 800; color: var(--primary-green); margin: 0; }
         .course-list { padding: 0 20px 100px 20px; }
@@ -142,9 +136,9 @@
             </div>
 
             <div id="forgot-panel" class="auth-panel">
-                <p style="color:white; font-size:13px; margin-bottom:15px;">Enter phone number to reset</p>
+                <p style="color:white; font-size:13px; margin-bottom:15px;">Enter your registered phone number</p>
                 <input type="tel" id="forgot-phone" class="auth-input" placeholder="Phone Number">
-                <button class="auth-btn" onclick="alert('Reset link sent!')">Reset Password</button>
+                <button class="auth-btn" onclick="recoverPassword()">Find Password</button>
                 <div class="auth-links">
                     <p><span onclick="switchPanel('login-panel')">Back to Login</span></p>
                 </div>
@@ -163,29 +157,17 @@
     <div id="profile-view" class="view">
         <div class="profile-header-box">
             <div class="profile-img-container">
-                <img src="https://via.placeholder.com/150" alt="Profile" id="prof-img">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="Profile" id="prof-img">
             </div>
-            <h2 id="user-name-disp" class="profile-user-name">Dawit</h2>
-            <p id="user-phone-disp" class="profile-user-phone">0912345678</p>
+            <h2 id="user-name-disp" class="profile-user-name">Guest</h2>
+            <p id="user-phone-disp" class="profile-user-phone">0900000000</p>
         </div>
 
         <div class="stats-grid">
-            <div class="stat-item">
-                <span class="stat-val">0</span>
-                <span class="stat-lab">Total Score</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">0%</span>
-                <span class="stat-lab">Avg Score</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">0</span>
-                <span class="stat-lab">Courses</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">0</span>
-                <span class="stat-lab">Saved</span>
-            </div>
+            <div class="stat-item"><span class="stat-val">0</span><span class="stat-lab">Total Score</span></div>
+            <div class="stat-item"><span class="stat-val">0%</span><span class="stat-lab">Avg Score</span></div>
+            <div class="stat-item"><span class="stat-val">14</span><span class="stat-lab">Courses</span></div>
+            <div class="stat-item"><span class="stat-val">0</span><span class="stat-lab">Saved</span></div>
         </div>
 
         <div class="recent-activity">
@@ -193,12 +175,12 @@
             <div class="activity-card">No recent activity</div>
         </div>
 
-        <button class="sign-out-btn" onclick="performLogout()">[→ Sign Out</button>
+        <button class="sign-out-btn" onclick="performLogout()">Sign Out</button>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="navigate('library-view')">🏠<br>Home</div>
-        <div class="nav-item" onclick="navigate('profile-view')">👤<br>Profile</div>
+        <div class="nav-item active" onclick="navigate('library-view', this)">🏠<br>Home</div>
+        <div class="nav-item" onclick="navigate('profile-view', this)">👤<br>Profile</div>
     </nav>
 
     <script>
@@ -232,10 +214,7 @@
                 </div>
             `).join('');
 
-            if (localStorage.getItem('isLogged') === 'true') {
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfile();
-            }
+            checkLoginStatus();
         }
 
         function switchPanel(panelId) {
@@ -247,342 +226,85 @@
             const n = document.getElementById('reg-name').value;
             const p = document.getElementById('reg-phone').value;
             const pass = document.getElementById('reg-pass').value;
-            if(!n || !p || !pass) return alert("Fill all fields");
 
+            if(!n || !p || !pass) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            // Save user to localStorage
             localStorage.setItem('user_name', n);
             localStorage.setItem('user_phone', p);
             localStorage.setItem('user_pass', pass);
             localStorage.setItem('isLogged', 'true');
-            location.reload();
+
+            completeAuth();
         }
 
         function performLogin() {
             const p = document.getElementById('login-phone').value;
             const pass = document.getElementById('login-pass').value;
-            const sP = localStorage.getItem('user_phone');
-            const sPass = localStorage.getItem('user_pass');
 
-            if((p === sP && pass === sPass) || (p === "0911111111" && pass === "1234")) {
+            const storedPhone = localStorage.getItem('user_phone');
+            const storedPass = localStorage.getItem('user_pass');
+
+            // Default Admin Login or Registered User
+            if ((p === storedPhone && pass === storedPass) || (p === "0911111111" && pass === "1234")) {
                 localStorage.setItem('isLogged', 'true');
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfile();
+                if(!localStorage.getItem('user_name')) localStorage.setItem('user_name', 'Dawit');
+                completeAuth();
             } else {
-                alert("Wrong phone or password!");
+                alert("Invalid phone or password!");
             }
         }
 
-        function updateProfile() {
+        function recoverPassword() {
+            const p = document.getElementById('forgot-phone').value;
+            const storedPhone = localStorage.getItem('user_phone');
+            const storedPass = localStorage.getItem('user_pass');
+
+            if (p === storedPhone) {
+                alert("Your password is: " + storedPass);
+                switchPanel('login-panel');
+            } else if (p === "0911111111") {
+                alert("Your password is: 1234");
+                switchPanel('login-panel');
+            } else {
+                alert("Phone number not found!");
+            }
+        }
+
+        function completeAuth() {
+            document.getElementById('auth-overlay').style.display = 'none';
+            updateProfileUI();
+        }
+
+        function checkLoginStatus() {
+            if (localStorage.getItem('isLogged') === 'true') {
+                document.getElementById('auth-overlay').style.display = 'none';
+                updateProfileUI();
+            }
+        }
+
+        function updateProfileUI() {
             document.getElementById('user-name-disp').innerText = localStorage.getItem('user_name') || "Dawit";
             document.getElementById('user-phone-disp').innerText = localStorage.getItem('user_phone') || "0911111111";
         }
 
         function performLogout() {
-            localStorage.removeItem('isLogged');
+            localStorage.setItem('isLogged', 'false');
             location.reload();
         }
 
-        function navigate(v) {
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            document.getElementById(v).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-
-        init();
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Bridge Academic</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root {
-            --bg-color: #f8f5f0;
-            --primary-green: #1a3a3a;
-            --auth-blue: #004a99;
-            --white: #ffffff;
-            --text-main: #1a1a1a;
-            --text-sub: #666;
-        }
-
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0; padding: 0; color: var(--text-main);
-        }
-
-        /* ------------------------------------------- */
-        /* Updated Auth Styles (Image 1 Style) */
-        /* ------------------------------------------- */
-        .auth-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #02132b; z-index: 9999; display: flex; justify-content: center; align-items: center;
-        }
-        .auth-card {
-            background: var(--auth-blue);
-            width: 85%; max-width: 360px; padding: 40px 20px; border-radius: 25px;
-            text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-        }
-        .auth-title { color: white; font-size: 26px; font-weight: 800; margin-bottom: 25px; }
-        .auth-input {
-            width: 100%; box-sizing: border-box; padding: 14px; margin-bottom: 15px;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 12px; color: white; outline: none; font-size: 15px;
-        }
-        .auth-input::placeholder { color: rgba(255,255,255,0.5); }
-        .auth-btn {
-            width: 100%; padding: 14px; border: none; border-radius: 12px;
-            background: #007bff; color: white; font-weight: bold; font-size: 16px;
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
-        }
-        .auth-links { margin-top: 20px; color: rgba(255,255,255,0.7); font-size: 13px; }
-        .auth-links span { color: #00c3ff; cursor: pointer; font-weight: bold; text-decoration: underline; }
-        
-        .auth-panel { display: none; }
-        .auth-panel.active { display: block; }
-
-        /* ------------------------------------------- */
-        /* Profile View (Image 2 Style) */
-        /* ------------------------------------------- */
-        .profile-header-box {
-            background: var(--primary-green); color: white;
-            padding: 40px 20px; text-align: center; border-radius: 0 0 35px 35px;
-        }
-        .profile-img-container {
-            width: 100px; height: 100px; margin: 0 auto 15px;
-            border-radius: 50%; border: 3px solid rgba(255,255,255,0.3);
-            overflow: hidden; background: #eee;
-        }
-        .profile-img-container img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-user-name { font-size: 24px; font-weight: bold; margin: 0; }
-        .profile-user-phone { font-size: 14px; opacity: 0.8; margin-top: 5px; }
-
-        .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px;
-        }
-        .stat-item {
-            background: white; padding: 20px; border-radius: 20px;
-            text-align: left; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-        .stat-val { font-size: 22px; font-weight: 800; color: #333; display: block; }
-        .stat-lab { font-size: 11px; color: #888; font-weight: bold; text-transform: uppercase; margin-top: 5px; display: block; }
-
-        .recent-activity { padding: 0 20px; }
-        .activity-card {
-            background: #fdfaf5; border-radius: 15px; padding: 30px;
-            text-align: center; color: #999; border: 1px solid #eee;
-        }
-
-        .sign-out-btn {
-            margin: 20px; background: #fff; color: #ff4d4d; border: 1px solid #ff4d4d;
-            padding: 14px; border-radius: 12px; font-weight: bold; width: calc(100% - 40px);
-            cursor: pointer;
-        }
-
-        /* ------------------------------------------- */
-        /* Course Library & Common */
-        /* ------------------------------------------- */
-        .header-section { padding: 25px 20px; }
-        .library-title { font-size: 28px; font-weight: 800; color: var(--primary-green); margin: 0; }
-        .course-list { padding: 0 20px 100px 20px; }
-        .course-card {
-            background: var(--white); border-radius: 20px;
-            padding: 20px; margin-bottom: 15px; display: flex; align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-        .course-icon-bg { width: 50px; height: 50px; background: #f0f4f4; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-right: 15px; }
-        
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 12px 0;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.05); z-index: 100;
-        }
-        .nav-item { text-align: center; font-size: 11px; color: #999; cursor: pointer; }
-        .nav-item.active { color: var(--primary-green); font-weight: bold; }
-
-        .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
-</head>
-<body>
-
-    <div id="auth-overlay" class="auth-overlay">
-        <div class="auth-card">
-            <h2 class="auth-title">Smart Bridge</h2>
+        function navigate(viewId, element) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
             
-            <div id="login-panel" class="auth-panel active">
-                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number (09...)">
-                <input type="password" id="login-pass" class="auth-input" placeholder="Password">
-                <button class="auth-btn" onclick="performLogin()">Login</button>
-                <div class="auth-links">
-                    <p>New Student? <span onclick="switchPanel('register-panel')">Create Account</span></p>
-                    <p><span onclick="switchPanel('forgot-panel')">Forgot Password?</span></p>
-                </div>
-            </div>
-
-            <div id="register-panel" class="auth-panel">
-                <input type="text" id="reg-name" class="auth-input" placeholder="Full Name">
-                <input type="tel" id="reg-phone" class="auth-input" placeholder="Phone Number">
-                <input type="password" id="reg-pass" class="auth-input" placeholder="Create Password">
-                <button class="auth-btn" onclick="performRegister()">Register</button>
-                <div class="auth-links">
-                    <p>Have an account? <span onclick="switchPanel('login-panel')">Login</span></p>
-                </div>
-            </div>
-
-            <div id="forgot-panel" class="auth-panel">
-                <p style="color:white; font-size:13px; margin-bottom:15px;">Enter phone number to reset</p>
-                <input type="tel" id="forgot-phone" class="auth-input" placeholder="Phone Number">
-                <button class="auth-btn" onclick="alert('Reset link sent!')">Reset Password</button>
-                <div class="auth-links">
-                    <p><span onclick="switchPanel('login-panel')">Back to Login</span></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="library-view" class="view active">
-        <div class="header-section">
-            <h1 class="library-title">Course Library</h1>
-            <p style="color:#888; font-size:14px;">All materials tailored for Ethiopian freshmen.</p>
-        </div>
-        <div class="course-list" id="course-container"></div>
-    </div>
-
-    <div id="profile-view" class="view">
-        <div class="profile-header-box">
-            <div class="profile-img-container">
-                <img src="https://via.placeholder.com/150" alt="Profile" id="prof-img">
-            </div>
-            <h2 id="user-name-disp" class="profile-user-name">Dawit</h2>
-            <p id="user-phone-disp" class="profile-user-phone">0912345678</p>
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-item">
-                <span class="stat-val">0</span>
-                <span class="stat-lab">Total Score</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">0%</span>
-                <span class="stat-lab">Avg Score</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">0</span>
-                <span class="stat-lab">Courses</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-val">0</span>
-                <span class="stat-lab">Saved</span>
-            </div>
-        </div>
-
-        <div class="recent-activity">
-            <h3 style="font-size:18px; margin-left:5px;">Recent Activity</h3>
-            <div class="activity-card">No recent activity</div>
-        </div>
-
-        <button class="sign-out-btn" onclick="performLogout()">[→ Sign Out</button>
-    </div>
-
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="navigate('library-view')">🏠<br>Home</div>
-        <div class="nav-item" onclick="navigate('profile-view')">👤<br>Profile</div>
-    </nav>
-
-    <script>
-        const courses = [
-            { id: 1, name: "Logic", icon: "📖", ch: 4 },
-            { id: 2, name: "General Psychology", icon: "🧠", ch: 4 },
-            { id: 3, name: "Geography of Ethiopia", icon: "🌍", ch: 3 },
-            { id: 4, name: "Anthropology", icon: "👤", ch: 3 },
-            { id: 5, name: "Economics", icon: "📊", ch: 6 },
-            { id: 6, name: "Math for Social Sciences", icon: "📐", ch: 3 },
-            { id: 7, name: "English II", icon: "💬", ch: 5 },
-            { id: 8, name: "Global Trends", icon: "🌐", ch: 4 },
-            { id: 9, name: "Entrepreneurship", icon: "💡", ch: 4 },
-            { id: 10, name: "History", icon: "🏛️", ch: 5 },
-            { id: 11, name: "Emerging Tech", icon: "🚀", ch: 3 },
-            { id: 12, name: "Critical Thinking", icon: "🔍", ch: 4 },
-            { id: 13, name: "Civics", icon: "⚖️", ch: 3 },
-            { id: 14, name: "Inclusiveness", icon: "🤝", ch: 3 }
-        ];
-
-        function init() {
-            const container = document.getElementById('course-container');
-            container.innerHTML = courses.map(c => `
-                <div class="course-card">
-                    <div class="course-icon-bg">${c.icon}</div>
-                    <div style="flex:1;">
-                        <div style="font-weight:700;">${c.name}</div>
-                        <div style="font-size:12px; color:#888;">${c.ch} chapters</div>
-                    </div>
-                    <div style="color:#ccc;">›</div>
-                </div>
-            `).join('');
-
-            if (localStorage.getItem('isLogged') === 'true') {
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfile();
-            }
-        }
-
-        function switchPanel(panelId) {
-            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(panelId).classList.add('active');
-        }
-
-        function performRegister() {
-            const n = document.getElementById('reg-name').value;
-            const p = document.getElementById('reg-phone').value;
-            const pass = document.getElementById('reg-pass').value;
-            if(!n || !p || !pass) return alert("Fill all fields");
-
-            localStorage.setItem('user_name', n);
-            localStorage.setItem('user_phone', p);
-            localStorage.setItem('user_pass', pass);
-            localStorage.setItem('isLogged', 'true');
-            location.reload();
-        }
-
-        function performLogin() {
-            const p = document.getElementById('login-phone').value;
-            const pass = document.getElementById('login-pass').value;
-            const sP = localStorage.getItem('user_phone');
-            const sPass = localStorage.getItem('user_pass');
-
-            if((p === sP && pass === sPass) || (p === "0911111111" && pass === "1234")) {
-                localStorage.setItem('isLogged', 'true');
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfile();
-            } else {
-                alert("Wrong phone or password!");
-            }
-        }
-
-        function updateProfile() {
-            document.getElementById('user-name-disp').innerText = localStorage.getItem('user_name') || "Dawit";
-            document.getElementById('user-phone-disp').innerText = localStorage.getItem('user_phone') || "0911111111";
-        }
-
-        function performLogout() {
-            localStorage.removeItem('isLogged');
-            location.reload();
-        }
-
-        function navigate(v) {
-            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
-            document.getElementById(v).classList.add('active');
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            element.classList.add('active');
         }
 
-        init();
+        window.onload = init;
     </script>
 </body>
 </html>
