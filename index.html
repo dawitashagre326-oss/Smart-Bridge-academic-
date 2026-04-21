@@ -25,274 +25,91 @@
         }
 
         /* ------------------------------------------- */
-        /* አዲሱ የ Login/Auth ዲዛይን (Makos Tech Style) */
+        /* Auth Overlay & Card Design */
         /* ------------------------------------------- */
         .auth-overlay {
             position: fixed;
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100vh;
-            background: #02132b; /* Dark navy background */
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #02132b;
             z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
         }
 
         .auth-card {
             background: linear-gradient(180deg, #044e9b 0%, #033a75 100%);
-            width: 80%;
+            width: 85%;
             max-width: 350px;
             padding: 30px 20px;
             border-radius: 20px;
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            /* Added max-height and overflow for registration form */
-            max-height: 85vh;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
-        /* Yellow Top-Right Border */
         .auth-card::before {
-            content: ''; 
-            position: absolute; 
-            top: -1px; 
-            right: -1px;
-            width: 50%; 
-            height: 50%;
-            border-top: 2px solid #ffea00; 
-            border-right: 2px solid #ffea00;
-            border-top-right-radius: 20px; 
-            pointer-events: none;
+            content: ''; position: absolute; top: -1px; right: -1px;
+            width: 50%; height: 50%;
+            border-top: 2px solid #ffea00; border-right: 2px solid #ffea00;
+            border-top-right-radius: 20px; pointer-events: none;
         }
 
-        /* Red Bottom-Left Border */
         .auth-card::after {
-            content: ''; 
-            position: absolute; 
-            bottom: -1px; 
-            left: -1px;
-            width: 50%; 
-            height: 50%;
-            border-bottom: 2px solid #ff3300; 
-            border-left: 2px solid #ff3300;
-            border-bottom-left-radius: 20px; 
-            pointer-events: none;
+            content: ''; position: absolute; bottom: -1px; left: -1px;
+            width: 50%; height: 50%;
+            border-bottom: 2px solid #ff3300; border-left: 2px solid #ff3300;
+            border-bottom-left-radius: 20px; pointer-events: none;
         }
 
-        .auth-title { 
-            text-align: center; 
-            color: white; 
-            font-size: 22px; 
-            margin: 0 0 5px 0; 
-            font-weight: bold; 
-        }
-
-        .auth-subtitle { 
-            text-align: center; 
-            color: white; 
-            font-size: 16px; 
-            margin-bottom: 15px; 
-        }
-
-        .auth-divider { 
-            border-bottom: 1px dotted rgba(255,255,255,0.4); 
-            margin-bottom: 20px; 
-            width: 80%; 
-            margin-left: auto; 
-            margin-right: auto; 
-        }
-
-        .auth-group { 
-            margin-bottom: 15px; 
-        }
-
-        .auth-label { 
-            color: white; 
-            font-size: 13px; 
-            margin-bottom: 5px; 
-            display: block; 
-            font-weight: 500;
-        }
+        .auth-title { text-align: center; color: white; font-size: 22px; margin: 0 0 5px 0; font-weight: bold; }
+        .auth-subtitle { text-align: center; color: white; font-size: 15px; margin-bottom: 15px; }
+        .auth-divider { border-bottom: 1px dotted rgba(255,255,255,0.4); margin-bottom: 20px; width: 80%; margin: 0 auto 20px auto; }
+        
+        .auth-group { margin-bottom: 15px; }
+        .auth-label { color: white; font-size: 13px; margin-bottom: 5px; display: block; }
 
         .auth-input {
-            width: 100%; 
-            box-sizing: border-box; 
-            padding: 10px 15px;
-            background: transparent; 
-            border-radius: 8px; 
-            color: white; 
-            font-size: 14px;
-            outline: none;
+            width: 100%; box-sizing: border-box; padding: 12px 15px;
+            background: rgba(255,255,255,0.05); border-radius: 8px; color: white;
+            font-size: 14px; outline: none; border: 1px solid rgba(255,255,255,0.2);
         }
 
-        .auth-input::placeholder { 
-            color: rgba(255,255,255,0.6); 
-        }
-
-        /* Neon Glow Effects for Inputs */
-        .blue-glow { 
-            border: 1px solid #00c3ff; 
-            box-shadow: inset 0 0 5px rgba(0,195,255,0.2), 0 0 8px rgba(0,195,255,0.5); 
-        }
-
-        .red-glow { 
-            border: 1px solid #ff4d4d; 
-            box-shadow: inset 0 0 5px rgba(255,77,77,0.2), 0 0 8px rgba(255,77,77,0.5); 
-        }
+        .blue-glow:focus { border: 1px solid #00c3ff; box-shadow: 0 0 8px rgba(0,195,255,0.5); }
+        .red-glow:focus { border: 1px solid #ff4d4d; box-shadow: 0 0 8px rgba(255,77,77,0.5); }
 
         .auth-btn {
-            width: 100%; 
-            padding: 12px; 
-            border: none; 
-            border-radius: 8px;
-            background: #007bff; 
-            color: white; 
-            font-size: 16px; 
-            font-weight: bold;
-            cursor: pointer; 
-            margin-top: 10px;
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.8), 0 0 20px rgba(255, 77, 77, 0.2); 
-            transition: 0.3s;
+            width: 100%; padding: 12px; border: none; border-radius: 8px;
+            background: #007bff; color: white; font-size: 16px; font-weight: bold;
+            cursor: pointer; margin-top: 10px; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.4);
         }
         
-        .auth-btn:active {
-            transform: scale(0.97);
-        }
-
-        .auth-links { 
-            text-align: center; 
-            margin-top: 20px; 
-            font-size: 12px; 
-            color: #ccc; 
-            line-height: 1.8; 
-        }
-
-        .auth-links a { 
-            color: #00c3ff; 
-            text-decoration: none; 
-            font-weight: bold; 
-            cursor: pointer;
-        }
-
-        /* Smooth hiding/showing for auth panels */
+        .auth-links { text-align: center; margin-top: 20px; font-size: 12px; color: #ccc; }
+        .auth-links a { color: #00c3ff; text-decoration: none; font-weight: bold; cursor: pointer; }
         .auth-panel { display: none; animation: fadeIn 0.3s; }
         .auth-panel.active { display: block; }
 
         /* ------------------------------------------- */
-
-        /* Header & Nav */
+        /* Main App Styles */
+        /* ------------------------------------------- */
         .app-header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-bottom-left-radius: 25px;
-            border-bottom-right-radius: 25px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            color: white; padding: 20px; text-align: center;
+            border-bottom-left-radius: 25px; border-bottom-right-radius: 25px;
         }
 
-        .lang-toggle {
-            position: absolute;
-            top: 20px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid white;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-
-        /* Navigation Tabs */
+        .view { display: none; padding: 20px; padding-bottom: 80px; }
+        .view.active { display: block; }
+        
         .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 10px 0;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 100;
         }
-
-        .nav-item {
-            text-align: center;
-            font-size: 12px;
-            color: var(--text-sub);
-            cursor: pointer;
-        }
-
+        .nav-item { text-align: center; font-size: 12px; color: var(--text-sub); cursor: pointer; }
         .nav-item.active { color: var(--primary-color); font-weight: bold; }
 
-        /* Views Management */
-        .view { display: none; padding: 20px; padding-bottom: 80px; animation: fadeIn 0.3s; }
-        .view.active { display: block; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        /* Course Grid */
-        .course-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .course-card {
-            background: white;
-            border-radius: 15px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: 0.2s;
-        }
-
-        .course-card:active { transform: scale(0.95); }
-
-        .course-icon { font-size: 30px; margin-bottom: 10px; }
-
-        .progress-bar {
-            height: 6px;
-            background: #eee;
-            border-radius: 3px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .progress-fill { height: 100%; background: var(--primary-color); width: 0%; }
-
-        /* Notes & Quiz Styles */
-        .chapter-card {
-            background: white;
-            margin-bottom: 10px;
-            padding: 15px;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-group { display: flex; gap: 5px; }
-        .btn {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: none;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .btn-notes { background: #e3f2fd; color: #1976d2; }
-        .btn-quiz { background: #e8f5e9; color: #388e3c; }
-        .btn-logout { background: #ffebee; color: #d32f2f; margin-top: 15px; width: 100%; padding: 12px; font-weight: bold;}
-
-        /* Typography */
-        h1 { font-size: 20px; margin: 0; }
-        h2 { font-size: 18px; color: var(--primary-color); }
     </style>
 </head>
 <body>
@@ -306,70 +123,58 @@
                 <div class="auth-divider"></div>
                 
                 <div class="auth-group">
-                    <label class="auth-label">User name</label>
-                    <input type="text" class="auth-input blue-glow" placeholder="Username">
+                    <label class="auth-label">Phone Number</label>
+                    <input type="tel" id="login-phone" class="auth-input blue-glow" placeholder="0912345678">
                 </div>
                 
                 <div class="auth-group">
                     <label class="auth-label">Password</label>
-                    <input type="password" class="auth-input red-glow" placeholder="Password">
+                    <input type="password" id="login-pass" class="auth-input red-glow" placeholder="Enter Password">
                 </div>
                 
                 <button class="auth-btn" onclick="performLogin()">Login</button>
                 
                 <div class="auth-links">
-                    <p>Forget password ? <a onclick="switchAuthView('forgot-panel')">Click Here</a></p>
-                    <p>Dont have an account ? <a onclick="switchAuthView('register-panel')">Register Here</a></p>
+                    <p>Forgot password? <a onclick="switchAuthView('forgot-panel')">Click Here</a></p>
+                    <p>New Student? <a onclick="switchAuthView('register-panel')">Register Now</a></p>
                 </div>
             </div>
 
             <div id="register-panel" class="auth-panel">
                 <h1 class="auth-title">Create Account</h1>
-                <div class="auth-subtitle">Join Smart Bridge</div>
+                <div class="auth-subtitle">Academic Registration</div>
                 <div class="auth-divider"></div>
                 
                 <div class="auth-group">
-                    <label class="auth-label">First Name</label>
-                    <input type="text" class="auth-input blue-glow" placeholder="First Name">
+                    <input type="text" id="reg-name" class="auth-input blue-glow" placeholder="Full Name">
                 </div>
                 <div class="auth-group">
-                    <label class="auth-label">Last Name</label>
-                    <input type="text" class="auth-input blue-glow" placeholder="Last Name">
+                    <input type="tel" id="reg-phone" class="auth-input blue-glow" placeholder="Phone Number">
                 </div>
                 <div class="auth-group">
-                    <label class="auth-label">Email</label>
-                    <input type="email" class="auth-input blue-glow" placeholder="Email Address">
+                    <input type="email" id="reg-email" class="auth-input blue-glow" placeholder="Email Address">
                 </div>
                 <div class="auth-group">
-                    <label class="auth-label">Phone Number</label>
-                    <input type="tel" class="auth-input blue-glow" placeholder="Phone Number">
-                </div>
-                <div class="auth-group">
-                    <label class="auth-label">Password</label>
-                    <input type="password" class="auth-input red-glow" placeholder="Create Password">
+                    <input type="password" id="reg-pass" class="auth-input red-glow" placeholder="Create Password">
                 </div>
                 
-                <button class="auth-btn" onclick="performRegister()">Register & Login</button>
+                <button class="auth-btn" onclick="performRegister()">Sign Up</button>
                 
                 <div class="auth-links">
-                    <p>Already have an account? <a onclick="switchAuthView('login-panel')">Login Here</a></p>
+                    <p>Already registered? <a onclick="switchAuthView('login-panel')">Login Here</a></p>
                 </div>
             </div>
 
             <div id="forgot-panel" class="auth-panel">
-                <h1 class="auth-title">Recover Password</h1>
-                <div class="auth-subtitle">Reset your account</div>
+                <h1 class="auth-title">Recovery</h1>
+                <div class="auth-subtitle">Reset Password</div>
                 <div class="auth-divider"></div>
-                
                 <div class="auth-group">
-                    <label class="auth-label">Email or Phone</label>
-                    <input type="text" class="auth-input blue-glow" placeholder="Enter Email or Phone">
+                    <input type="tel" id="forgot-phone" class="auth-input blue-glow" placeholder="Enter your Phone Number">
                 </div>
-                
-                <button class="auth-btn" onclick="performResetPassword()">Send Reset Link</button>
-                
+                <button class="auth-btn" onclick="performReset()">Send Reset SMS</button>
                 <div class="auth-links">
-                    <p>Remembered your password? <a onclick="switchAuthView('login-panel')">Login Here</a></p>
+                    <p><a onclick="switchAuthView('login-panel')">Back to Login</a></p>
                 </div>
             </div>
 
@@ -377,62 +182,18 @@
     </div>
 
     <header class="app-header">
-        <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧/🇪🇹</button>
-        <h1 id="app-title">Smart Bridge Academic</h1>
+        <h1>Smart Bridge Academic</h1>
         <p id="welcome-msg">Welcome, Student!</p>
     </header>
 
     <div id="home-view" class="view active">
-        <h2 id="courses-heading">Available Courses</h2>
-        <div class="course-grid">
-            <div class="course-card" onclick="showCourse('Logic')">
-                <div class="course-icon">🧠</div>
-                <div class="course-name" data-en="Logic" data-am="ስነ-አመክንዮ">Logic</div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 45%;"></div></div>
-            </div>
-            <div class="course-card" onclick="showCourse('Math')">
-                <div class="course-icon">📐</div>
-                <div class="course-name" data-en="Math" data-am="ማቲማቲክስ">Math</div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 20%;"></div></div>
-            </div>
-            <div class="course-card" onclick="showCourse('Geography')">
-                <div class="course-icon">🌍</div>
-                <div class="course-name" data-en="Geography" data-am="ጂኦግራፊ">Geography</div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 70%;"></div></div>
-            </div>
-            <div class="course-card" onclick="showCourse('Psychology')">
-                <div class="course-icon">🧘</div>
-                <div class="course-name" data-en="Psychology" data-am="ስነ-ልቦና">Psychology</div>
-                <div class="progress-bar"><div class="progress-fill" style="width: 10%;"></div></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="course-view" class="view">
-        <button onclick="navigate('home-view')" style="background:none; border:none; color:var(--primary-color); font-weight:bold; margin-bottom:15px;">← Back</button>
-        <h2 id="selected-course-name">Course Chapters</h2>
-        <div id="chapters-list">
-            <div class="chapter-card">
-                <span>Chapter 1: Introduction</span>
-                <div class="btn-group">
-                    <button class="btn btn-notes">Notes</button>
-                    <button class="btn btn-quiz">Quiz</button>
-                </div>
-            </div>
-        </div>
+        <h2>Dashboard</h2>
+        <p>You are now logged in with your phone number.</p>
     </div>
 
     <div id="profile-view" class="view">
-        <h2>Your Progress</h2>
-        <div class="course-card">
-            <p><strong>GPA Goal:</strong> 4.0 🎯</p>
-            <p><strong>Quizzes Taken:</strong> 12</p>
-            <p><strong>Average Score:</strong> 85%</p>
-        </div>
-        <h2 style="margin-top:20px;">Leaderboard</h2>
-        <p>Ranking: #4 among freshmen</p>
-
-        <button class="btn btn-logout" onclick="performLogout()">Logout (Log out of app)</button>
+        <h2>Your Profile</h2>
+        <button class="auth-btn" style="background:#d32f2f;" onclick="performLogout()">Logout</button>
     </div>
 
     <nav class="bottom-nav">
@@ -442,88 +203,84 @@
     </nav>
 
     <script>
-        // 1. Check if user is already logged in permanently (kuami login)
-        window.onload = function() {
-            if (localStorage.getItem('smartBridgeLoggedIn') === 'true') {
-                document.getElementById('auth-overlay').style.display = 'none';
-            }
-        };
-
-        // Switch between Auth Views (Login, Register, Forgot Password)
-        function switchAuthView(panelId) {
-            document.querySelectorAll('.auth-panel').forEach(panel => panel.classList.remove('active'));
-            document.getElementById(panelId).classList.add('active');
-        }
-
-        // Login Function (Saves session to stay logged in)
-        function performLogin() {
-            localStorage.setItem('smartBridgeLoggedIn', 'true'); // Save login state
-            document.getElementById('auth-overlay').style.display = 'none';
-        }
-
-        // Register Function
-        function performRegister() {
-            // Here you would normally save the First name, Email, Phone, etc.
-            alert("Registration Successful!");
-            localStorage.setItem('smartBridgeLoggedIn', 'true'); // Auto-login after register
-            document.getElementById('auth-overlay').style.display = 'none';
-        }
-
-        // Forgot Password Function
-        function performResetPassword() {
-            alert("A password reset link/code has been sent to your email or phone number.");
-            switchAuthView('login-panel'); // Go back to login
-        }
-
-        // Logout function added to allow testing of the persistence
-        function performLogout() {
-            localStorage.removeItem('smartBridgeLoggedIn');
-            document.getElementById('auth-overlay').style.display = 'flex';
-            switchAuthView('login-panel');
-            navigate('home-view'); // Reset underlying app view
-        }
-
-        // ----------------------------------------------------
-        // ORIGINAL LOGIC REMAINS INTACT BELOW
-        // ----------------------------------------------------
-        let currentLang = 'en';
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
-        // Get student name from Telegram
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById('welcome-msg').innerText = `Welcome, ${user.first_name}!`;
+        // 1. Load Session
+        window.onload = function() {
+            if (localStorage.getItem('isLogged') === 'true') {
+                document.getElementById('auth-overlay').style.display = 'none';
+            }
+        };
+
+        // 2. View Switching
+        function switchAuthView(id) {
+            document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // 3. Register Logic
+        function performRegister() {
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+            const name = document.getElementById('reg-name').value.trim();
+
+            if (!phone || !pass || !name) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            localStorage.setItem('savedPhone', phone);
+            localStorage.setItem('savedPass', pass);
+            localStorage.setItem('savedName', name);
+            localStorage.setItem('isLogged', 'true');
+            
+            alert("Registration Successful!");
+            location.reload();
+        }
+
+        // 4. Login Logic (Strict Check)
+        function performLogin() {
+            const phoneIn = document.getElementById('login-phone').value.trim();
+            const passIn = document.getElementById('login-pass').value.trim();
+            
+            const savedPhone = localStorage.getItem('savedPhone');
+            const savedPass = localStorage.getItem('savedPass');
+
+            // Default Testing Account (Optional)
+            if (phoneIn === "0911111111" && passIn === "1234") {
+                loginDone();
+                return;
+            }
+
+            // Strict Validation
+            if (savedPhone && phoneIn === savedPhone && passIn === savedPass) {
+                loginDone();
+            } else {
+                alert("Incorrect Phone Number or Password!");
+            }
+        }
+
+        function loginDone() {
+            localStorage.setItem('isLogged', 'true');
+            document.getElementById('auth-overlay').style.display = 'none';
+        }
+
+        function performLogout() {
+            localStorage.removeItem('isLogged');
+            location.reload();
+        }
+
+        function performReset() {
+            const ph = document.getElementById('forgot-phone').value;
+            if(ph) alert("Recovery code sent to " + ph);
+            else alert("Enter phone number!");
         }
 
         function navigate(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
-            
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if(viewId === 'home-view') document.querySelectorAll('.nav-item')[0].classList.add('active');
-            if(viewId === 'profile-view') document.querySelectorAll('.nav-item')[1].classList.add('active');
-        }
-
-        function showCourse(name) {
-            document.getElementById('selected-course-name').innerText = name;
-            navigate('course-view');
-        }
-
-        function toggleLanguage() {
-            currentLang = currentLang === 'en' ? 'am' : 'en';
-            document.querySelectorAll('.course-name').forEach(el => {
-                el.innerText = el.getAttribute(`data-${currentLang}`);
-            });
-            
-            // Toggle other UI elements
-            const titles = {
-                en: { h: "Available Courses", t: "Smart Bridge Academic" },
-                am: { h: "የሚገኙ ትምህርቶች", t: "ስማርት ብሪጅ አካዳሚክ" }
-            };
-            document.getElementById('courses-heading').innerText = titles[currentLang].h;
-            document.getElementById('app-title').innerText = titles[currentLang].t;
         }
     </script>
 </body>
