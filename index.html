@@ -1,34 +1,246 @@
 <!DOCTYPE html>
-<html lang="am">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Bridge</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Bridge Academic</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background-color: #f0f4f8; margin: 0; padding: 15px; }
-        .header { background: #0088cc; color: white; text-align: center; padding: 30px; border-radius: 20px; margin-bottom: 20px; }
-        .note-card { background: white; margin-bottom: 15px; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; }
-        .note-card h2 { margin: 0; font-size: 18px; color: #0088cc; }
-        .note-content { display: none; padding-top: 15px; border-top: 1px solid #eee; margin-top: 10px; color: #444; line-height: 1.6; }
+        :root {
+            --tg-theme-bg: #f0f2f5;
+            --primary-color: #0088cc;
+            --secondary-color: #005580;
+            --white: #ffffff;
+            --text-main: #333;
+            --text-sub: #666;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Header & Nav */
+        .app-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-bottom-left-radius: 25px;
+            border-bottom-right-radius: 25px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Navigation Tabs */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-sub);
+            cursor: pointer;
+        }
+
+        .nav-item.active { color: var(--primary-color); font-weight: bold; }
+
+        /* Views Management */
+        .view { display: none; padding: 20px; padding-bottom: 80px; animation: fadeIn 0.3s; }
+        .view.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Course Grid */
+        .course-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: 0.2s;
+        }
+
+        .course-card:active { transform: scale(0.95); }
+
+        .course-icon { font-size: 30px; margin-bottom: 10px; }
+
+        .progress-bar {
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill { height: 100%; background: var(--primary-color); width: 0%; }
+
+        /* Notes & Quiz Styles */
+        .chapter-card {
+            background: white;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-group { display: flex; gap: 5px; }
+        .btn {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .btn-notes { background: #e3f2fd; color: #1976d2; }
+        .btn-quiz { background: #e8f5e9; color: #388e3c; }
+
+        /* Typography */
+        h1 { font-size: 20px; margin: 0; }
+        h2 { font-size: 18px; color: var(--primary-color); }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Smart Bridge</h1>
-        <p>የተማሪዎች ማስታወሻ</p>
+
+    <header class="app-header">
+        <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧/🇪🇹</button>
+        <h1 id="app-title">Smart Bridge Academic</h1>
+        <p id="welcome-msg">Welcome, Student!</p>
+    </header>
+
+    <div id="home-view" class="view active">
+        <h2 id="courses-heading">Available Courses</h2>
+        <div class="course-grid">
+            <div class="course-card" onclick="showCourse('Logic')">
+                <div class="course-icon">🧠</div>
+                <div class="course-name" data-en="Logic" data-am="ስነ-አመክንዮ">Logic</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 45%;"></div></div>
+            </div>
+            <div class="course-card" onclick="showCourse('Math')">
+                <div class="course-icon">📐</div>
+                <div class="course-name" data-en="Math" data-am="ማቲማቲክስ">Math</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 20%;"></div></div>
+            </div>
+            <div class="course-card" onclick="showCourse('Geography')">
+                <div class="course-icon">🌍</div>
+                <div class="course-name" data-en="Geography" data-am="ጂኦግራፊ">Geography</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 70%;"></div></div>
+            </div>
+            <div class="course-card" onclick="showCourse('Psychology')">
+                <div class="course-icon">🧘</div>
+                <div class="course-name" data-en="Psychology" data-am="ስነ-ልቦና">Psychology</div>
+                <div class="progress-bar"><div class="progress-fill" style="width: 10%;"></div></div>
+            </div>
+        </div>
     </div>
-    <div class="note-card" onclick="this.querySelector('.note-content').style.display = this.querySelector('.note-content').style.display === 'block' ? 'none' : 'block'">
-        <h2>Mathematics</h2>
-        <div class="note-content">እዚህ ጋር ለማቲማቲክስ የሚሆን አጭር ማስታወሻ ይኖራል።</div>
+
+    <div id="course-view" class="view">
+        <button onclick="navigate('home-view')" style="background:none; border:none; color:var(--primary-color); font-weight:bold; margin-bottom:15px;">← Back</button>
+        <h2 id="selected-course-name">Course Chapters</h2>
+        <div id="chapters-list">
+            <div class="chapter-card">
+                <span>Chapter 1: Introduction</span>
+                <div class="btn-group">
+                    <button class="btn btn-notes">Notes</button>
+                    <button class="btn btn-quiz">Quiz</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="note-card" onclick="this.querySelector('.note-content').style.display = this.querySelector('.note-content').style.display === 'block' ? 'none' : 'block'">
-        <h2>Logic</h2>
-        <div class="note-content">እዚህ ጋር ለሎጂክ የሚሆን አጭር ማስታወሻ ይኖራል።</div>
+
+    <div id="profile-view" class="view">
+        <h2>Your Progress</h2>
+        <div class="course-card">
+            <p><strong>GPA Goal:</strong> 4.0 🎯</p>
+            <p><strong>Quizzes Taken:</strong> 12</p>
+            <p><strong>Average Score:</strong> 85%</p>
+        </div>
+        <h2 style="margin-top:20px;">Leaderboard</h2>
+        <p>Ranking: #4 among freshmen</p>
     </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="navigate('home-view')">🏠<br>Home</div>
+        <div class="nav-item" onclick="navigate('profile-view')">👤<br>Profile</div>
+        <div class="nav-item" onclick="Telegram.WebApp.close()">✖<br>Exit</div>
+    </nav>
+
     <script>
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
+        let currentLang = 'en';
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        // Get student name from Telegram
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('welcome-msg').innerText = `Welcome, ${user.first_name}!`;
+        }
+
+        function navigate(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if(viewId === 'home-view') document.querySelectorAll('.nav-item')[0].classList.add('active');
+            if(viewId === 'profile-view') document.querySelectorAll('.nav-item')[1].classList.add('active');
+        }
+
+        function showCourse(name) {
+            document.getElementById('selected-course-name').innerText = name;
+            navigate('course-view');
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'am' : 'en';
+            document.querySelectorAll('.course-name').forEach(el => {
+                el.innerText = el.getAttribute(`data-${currentLang}`);
+            });
+            
+            // Toggle other UI elements
+            const titles = {
+                en: { h: "Available Courses", t: "Smart Bridge Academic" },
+                am: { h: "የሚገኙ ትምህርቶች", t: "ስማርት ብሪጅ አካዳሚክ" }
+            };
+            document.getElementById('courses-heading').innerText = titles[currentLang].h;
+            document.getElementById('app-title').innerText = titles[currentLang].t;
+        }
     </script>
 </body>
 </html>
