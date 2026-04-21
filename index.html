@@ -48,6 +48,9 @@
             border-radius: 20px;
             position: relative;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            /* Added max-height and overflow for registration form */
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         /* Yellow Top-Right Border */
@@ -150,7 +153,6 @@
             font-weight: bold;
             cursor: pointer; 
             margin-top: 10px;
-            /* Blue button with slight red outer glow */
             box-shadow: 0 0 15px rgba(0, 123, 255, 0.8), 0 0 20px rgba(255, 77, 77, 0.2); 
             transition: 0.3s;
         }
@@ -171,7 +173,13 @@
             color: #00c3ff; 
             text-decoration: none; 
             font-weight: bold; 
+            cursor: pointer;
         }
+
+        /* Smooth hiding/showing for auth panels */
+        .auth-panel { display: none; animation: fadeIn 0.3s; }
+        .auth-panel.active { display: block; }
+
         /* ------------------------------------------- */
 
         /* Header & Nav */
@@ -280,6 +288,7 @@
         }
         .btn-notes { background: #e3f2fd; color: #1976d2; }
         .btn-quiz { background: #e8f5e9; color: #388e3c; }
+        .btn-logout { background: #ffebee; color: #d32f2f; margin-top: 15px; width: 100%; padding: 12px; font-weight: bold;}
 
         /* Typography */
         h1 { font-size: 20px; margin: 0; }
@@ -290,28 +299,83 @@
 
     <div id="auth-overlay" class="auth-overlay">
         <div class="auth-card">
-            <h1 class="auth-title">Smart Bridge</h1>
-            <div class="auth-subtitle">Academic Login</div>
-            <div class="auth-divider"></div>
             
-            <div class="auth-group">
-                <label class="auth-label">User name</label>
-                <input type="text" class="auth-input blue-glow" placeholder="Username">
+            <div id="login-panel" class="auth-panel active">
+                <h1 class="auth-title">Smart Bridge</h1>
+                <div class="auth-subtitle">Academic Login</div>
+                <div class="auth-divider"></div>
+                
+                <div class="auth-group">
+                    <label class="auth-label">User name</label>
+                    <input type="text" class="auth-input blue-glow" placeholder="Username">
+                </div>
+                
+                <div class="auth-group">
+                    <label class="auth-label">Password</label>
+                    <input type="password" class="auth-input red-glow" placeholder="Password">
+                </div>
+                
+                <button class="auth-btn" onclick="performLogin()">Login</button>
+                
+                <div class="auth-links">
+                    <p>Forget password ? <a onclick="switchAuthView('forgot-panel')">Click Here</a></p>
+                    <p>Dont have an account ? <a onclick="switchAuthView('register-panel')">Register Here</a></p>
+                </div>
             </div>
-            
-            <div class="auth-group">
-                <label class="auth-label">Password</label>
-                <input type="password" class="auth-input red-glow" placeholder="Password">
+
+            <div id="register-panel" class="auth-panel">
+                <h1 class="auth-title">Create Account</h1>
+                <div class="auth-subtitle">Join Smart Bridge</div>
+                <div class="auth-divider"></div>
+                
+                <div class="auth-group">
+                    <label class="auth-label">First Name</label>
+                    <input type="text" class="auth-input blue-glow" placeholder="First Name">
+                </div>
+                <div class="auth-group">
+                    <label class="auth-label">Last Name</label>
+                    <input type="text" class="auth-input blue-glow" placeholder="Last Name">
+                </div>
+                <div class="auth-group">
+                    <label class="auth-label">Email</label>
+                    <input type="email" class="auth-input blue-glow" placeholder="Email Address">
+                </div>
+                <div class="auth-group">
+                    <label class="auth-label">Phone Number</label>
+                    <input type="tel" class="auth-input blue-glow" placeholder="Phone Number">
+                </div>
+                <div class="auth-group">
+                    <label class="auth-label">Password</label>
+                    <input type="password" class="auth-input red-glow" placeholder="Create Password">
+                </div>
+                
+                <button class="auth-btn" onclick="performRegister()">Register & Login</button>
+                
+                <div class="auth-links">
+                    <p>Already have an account? <a onclick="switchAuthView('login-panel')">Login Here</a></p>
+                </div>
             </div>
-            
-            <button class="auth-btn" onclick="performLogin()">Login</button>
-            
-            <div class="auth-links">
-                <p>Forget password ? <a href="#">Click Here</a></p>
-                <p>Dont have an account ? <a href="#">Click Here</a></p>
+
+            <div id="forgot-panel" class="auth-panel">
+                <h1 class="auth-title">Recover Password</h1>
+                <div class="auth-subtitle">Reset your account</div>
+                <div class="auth-divider"></div>
+                
+                <div class="auth-group">
+                    <label class="auth-label">Email or Phone</label>
+                    <input type="text" class="auth-input blue-glow" placeholder="Enter Email or Phone">
+                </div>
+                
+                <button class="auth-btn" onclick="performResetPassword()">Send Reset Link</button>
+                
+                <div class="auth-links">
+                    <p>Remembered your password? <a onclick="switchAuthView('login-panel')">Login Here</a></p>
+                </div>
             </div>
+
         </div>
     </div>
+
     <header class="app-header">
         <button class="lang-toggle" onclick="toggleLanguage()">🇬🇧/🇪🇹</button>
         <h1 id="app-title">Smart Bridge Academic</h1>
@@ -367,6 +431,8 @@
         </div>
         <h2 style="margin-top:20px;">Leaderboard</h2>
         <p>Ranking: #4 among freshmen</p>
+
+        <button class="btn btn-logout" onclick="performLogout()">Logout (Log out of app)</button>
     </div>
 
     <nav class="bottom-nav">
@@ -376,11 +442,50 @@
     </nav>
 
     <script>
-        // አዲሱ የ Login Function (ይህን ሲነኩ ፎርሙ ይጠፋና አፑ ይታያል)
+        // 1. Check if user is already logged in permanently (kuami login)
+        window.onload = function() {
+            if (localStorage.getItem('smartBridgeLoggedIn') === 'true') {
+                document.getElementById('auth-overlay').style.display = 'none';
+            }
+        };
+
+        // Switch between Auth Views (Login, Register, Forgot Password)
+        function switchAuthView(panelId) {
+            document.querySelectorAll('.auth-panel').forEach(panel => panel.classList.remove('active'));
+            document.getElementById(panelId).classList.add('active');
+        }
+
+        // Login Function (Saves session to stay logged in)
         function performLogin() {
+            localStorage.setItem('smartBridgeLoggedIn', 'true'); // Save login state
             document.getElementById('auth-overlay').style.display = 'none';
         }
 
+        // Register Function
+        function performRegister() {
+            // Here you would normally save the First name, Email, Phone, etc.
+            alert("Registration Successful!");
+            localStorage.setItem('smartBridgeLoggedIn', 'true'); // Auto-login after register
+            document.getElementById('auth-overlay').style.display = 'none';
+        }
+
+        // Forgot Password Function
+        function performResetPassword() {
+            alert("A password reset link/code has been sent to your email or phone number.");
+            switchAuthView('login-panel'); // Go back to login
+        }
+
+        // Logout function added to allow testing of the persistence
+        function performLogout() {
+            localStorage.removeItem('smartBridgeLoggedIn');
+            document.getElementById('auth-overlay').style.display = 'flex';
+            switchAuthView('login-panel');
+            navigate('home-view'); // Reset underlying app view
+        }
+
+        // ----------------------------------------------------
+        // ORIGINAL LOGIC REMAINS INTACT BELOW
+        // ----------------------------------------------------
         let currentLang = 'en';
         const tg = window.Telegram.WebApp;
         tg.ready();
