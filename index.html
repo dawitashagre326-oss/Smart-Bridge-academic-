@@ -16,6 +16,15 @@
             --card-radius: 16px;
         }
 
+        /* ሰነዱ ኮፒ እንዳይደረግ የሚከለክል (Anti-Copy) */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
@@ -110,9 +119,7 @@
         .mode-box { border: 1px solid #eee; border-radius: 10px; padding: 12px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; background: #fafafa; }
     </style>
 </head>
-<body>
-
-    <div id="auth-overlay" class="auth-overlay">
+<body oncontextmenu="return false;"> <div id="auth-overlay" class="auth-overlay">
         <div class="auth-card">
             <h1 style="color:var(--accent-gold); margin-bottom: 5px;">Smart Bridge</h1>
             <p style="color: #ccc; font-size: 12px; margin-bottom: 25px;">Road to 4.0 CGPA 🚀</p>
@@ -127,6 +134,7 @@
             <div id="signup-panel" style="display: none;">
                 <input type="text" id="reg-name" class="auth-input" placeholder="Full Name">
                 <input type="tel" id="reg-phone" class="auth-input" placeholder="Phone Number">
+                <input type="text" id="reg-uni" class="auth-input" placeholder="Your University">
                 <input type="password" id="reg-pass" class="auth-input" placeholder="Create Password">
                 <button class="auth-btn" onclick="handleSignup()">Create Account</button>
                 <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">Already have one? <b style="color:white">Login</b></p>
@@ -171,8 +179,9 @@
             <h2 id="user-display">Student Name</h2>
             <p id="user-phone-display" style="color: #666;"></p>
             <div style="margin-top:30px; padding:20px; background:white; border-radius:15px; text-align:left;">
-                <p><b>University:</b> Bahir Dar University</p>
-                <p><b>Target:</b> 4.0 CGPA</p>
+                <p><b>University:</b> <span id="user-uni-display">Not Set</span></p>
+                <p><b>Target:</b> 4.0 CGPA 🚀</p>
+                <p style="font-size: 11px; color: #888;">Security: Screenshots & Recording Disabled.</p>
             </div>
             <button class="auth-btn" style="background:#ff4d4d; color:white; margin-top:30px;" onclick="logout()">Logout</button>
         </div>
@@ -184,9 +193,15 @@
     </nav>
 
     <script>
-        // Database
+        // --- Telegram Security Setup ---
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        // ስክሪንሾት መከልከል (Android & Desktop)
+        tg.setSettings({ allow_screenshots: false });
+
         const courses = [
-            { id: 1, name: "Logic", amName: "ሎጂክ", chapters: 4, icon: "📖", desc: "Master critical thinking." },
+            { id: 1, name: "Logic", amName: "ሎጂክ", chapters: 4, icon: "📖" },
             { id: 2, name: "General Psychology", amName: "ሳይኮሎጂ", chapters: 4, icon: "🧠" },
             { id: 3, name: "Geography of Ethiopia", amName: "የኢትዮጵያ ጂኦግራፊ", chapters: 3, icon: "🌍" },
             { id: 4, name: "Anthropology", amName: "አንትሮፖሎጂ", chapters: 3, icon: "👤" },
@@ -203,9 +218,8 @@
         ];
 
         const logicNotes = [
-            { heading: "1. What is Philosophy?", text: "Philosophy is a rational and critical enterprise that tries to answer fundamental questions about life, knowledge, and values. It comes from 'Philo' (Love) and 'Sophia' (Wisdom)." },
-            { heading: "2. The Four Pillars", text: "<b>Metaphysics:</b> Reality<br><b>Epistemology:</b> Knowledge<br><b>Axiology:</b> Values<br><b>Logic:</b> Reasoning" },
-            { heading: "3. Epistemology (Knowledge)", text: "Explores the nature of truth. Sources include: Senses (Empiricism), Reason (Rationalism), and Intuition." }
+            { heading: "1. What is Philosophy?", text: "Philosophy is a rational and critical enterprise that tries to answer fundamental questions about life and knowledge. It comes from 'Philo' (Love) and 'Sophia' (Wisdom)." },
+            { heading: "2. The Four Pillars", text: "<b>Metaphysics:</b> Reality<br><b>Epistemology:</b> Knowledge<br><b>Axiology:</b> Values<br><b>Logic:</b> Reasoning" }
         ];
 
         let currentLang = 'en';
@@ -219,9 +233,10 @@
         function handleSignup() {
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
+            const uni = document.getElementById('reg-uni').value;
             const pass = document.getElementById('reg-pass').value;
-            if(!name || !phone || !pass) return alert("Fill all fields");
-            localStorage.setItem('user_' + phone, JSON.stringify({name, phone, pass}));
+            if(!name || !phone || !pass || !uni) return alert("Fill all fields");
+            localStorage.setItem('user_' + phone, JSON.stringify({name, phone, pass, uni}));
             alert("Success! Now Login.");
             toggleAuth(false);
         }
@@ -253,7 +268,7 @@
                     <div class="course-icon-bg">${c.icon}</div>
                     <div class="course-info">
                         <div class="course-name">${currentLang === 'en' ? c.name : c.amName}</div>
-                        <div class="course-meta">${c.chapters} Chapters • Power Notes</div>
+                        <div class="course-meta">${c.chapters} Chapters • Secure Notes</div>
                     </div>
                 </div>
             `).join('');
@@ -261,10 +276,7 @@
 
         function filterCourses() {
             const query = document.getElementById('course-search').value.toLowerCase();
-            const filtered = courses.filter(c => 
-                c.name.toLowerCase().includes(query) || 
-                c.amName.toLowerCase().includes(query)
-            );
+            const filtered = courses.filter(c => c.name.toLowerCase().includes(query) || c.amName.toLowerCase().includes(query));
             renderCourses(filtered);
         }
 
@@ -276,7 +288,7 @@
 
             let html = '';
             for(let i=1; i<=course.chapters; i++) {
-                const noteFn = (id === 1 && i === 1) ? `openNotes()` : `alert('Notes coming soon')`;
+                const noteFn = (id === 1 && i === 1) ? `openNotes()` : `alert('Coming soon')`;
                 html += `
                     <div class="chapter-card">
                         <div style="font-weight:bold; color:var(--primary-green)">Chapter ${i}</div>
@@ -316,15 +328,9 @@
             if(user) {
                 document.getElementById('user-display').innerText = user.name;
                 document.getElementById('user-phone-display').innerText = user.phone;
+                document.getElementById('user-uni-display').innerText = user.uni || "University Student";
                 document.getElementById('auth-overlay').style.display = 'none';
             }
-        }
-
-        // --- SERVICE WORKER FOR OFFLINE ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(() => {});
-            });
         }
 
         renderCourses(courses);
@@ -332,3 +338,4 @@
     </script>
 </body>
 </html>
+
