@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Bridge Academic | 4.0 CGPA</title>
+    <title>Smart Bridge Academic</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
@@ -14,7 +14,6 @@
             --text-main: #1a1a1a;
             --text-sub: #666;
             --card-radius: 16px;
-            --accent-blue: #007bff;
         }
 
         body {
@@ -22,374 +21,314 @@
             background-color: var(--bg-color);
             margin: 0; padding: 0; color: var(--text-main);
             -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
         }
 
-        /* --- Auth Styles --- */
+        /* --- Auth Overlay --- */
         .auth-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background: #02132b; z-index: 9999; display: flex; justify-content: center; align-items: center;
         }
         .auth-card {
             background: linear-gradient(180deg, #1a3a3a 0%, #0d1f1f 100%);
-            width: 85%; max-width: 350px; padding: 30px 20px; border-radius: 25px; position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;
+            width: 85%; max-width: 350px; padding: 30px 20px; border-radius: 25px; text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .auth-input {
             width: 100%; box-sizing: border-box; padding: 14px; margin-bottom: 15px;
             background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; color: white; outline: none; transition: 0.3s;
+            border-radius: 12px; color: white; outline: none;
         }
-        .auth-input:focus { border-color: var(--accent-gold); }
-        
         .auth-btn {
             width: 100%; padding: 14px; border: none; border-radius: 12px;
             background: var(--accent-gold); color: #000; font-weight: 800; cursor: pointer;
-            margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;
+            text-transform: uppercase; margin-top: 5px;
         }
 
-        /* --- Header & Search --- */
+        /* --- Header Section --- */
         .header-section { 
-            padding: 30px 20px 50px; 
+            padding: 30px 20px 45px; 
             background: linear-gradient(135deg, var(--primary-green) 0%, #2c5d5d 100%);
-            color: white;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
+            color: white; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px;
         }
-        .search-container {
-            padding: 0 20px;
-            margin-top: -25px;
-        }
+        .search-container { padding: 0 20px; margin-top: -25px; position: relative; z-index: 10; }
         .search-input {
             width: 100%; padding: 15px; border-radius: 15px; border: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); outline: none; font-size: 14px;
-            box-sizing: border-box;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); outline: none; box-sizing: border-box;
+            font-size: 14px;
         }
 
-        .library-title { font-size: 24px; font-weight: 800; margin: 0; }
-        .library-subtitle { font-size: 13px; opacity: 0.8; margin-top: 5px; }
-
-        /* Progress Bar Style */
-        .progress-container {
-            width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-top: 10px; overflow: hidden;
-        }
-        .progress-fill { height: 100%; background: var(--accent-gold); width: 0%; transition: width 0.8s ease; }
-
+        /* --- Course Cards --- */
         .course-list { padding: 20px; padding-bottom: 100px; }
         .course-card {
             background: var(--white); border-radius: var(--card-radius);
             padding: 18px; margin-bottom: 15px; display: flex; align-items: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer;
+            transition: transform 0.2s;
         }
+        .course-card:active { transform: scale(0.98); }
         .course-icon-bg {
-            width: 55px; height: 55px; background: #f0f7f7;
-            border-radius: 15px; display: flex; align-items: center;
-            justify-content: center; font-size: 28px; margin-right: 15px;
+            width: 50px; height: 50px; background: #f0f7f7;
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; font-size: 24px; margin-right: 15px;
         }
-        .course-info { flex-grow: 1; }
+        .course-info { flex: 1; }
         .course-name { font-size: 16px; font-weight: 700; color: var(--primary-green); margin: 0; }
         .course-meta { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
 
-        /* --- Language Toggle --- */
+        /* --- Tabs & Navigation --- */
+        .view { display: none; min-height: 100vh; }
+        .view.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.08); z-index: 1000;
+        }
+        .nav-item { text-align: center; font-size: 11px; color: #bbb; flex: 1; cursor: pointer; }
+        .nav-item.active { color: var(--primary-green); font-weight: bold; }
+
+        /* --- Note Reader View --- */
+        .note-reader-content { padding: 20px; padding-bottom: 100px; }
+        .note-block { background: white; border-radius: 15px; padding: 20px; margin-bottom: 15px; border-left: 5px solid var(--accent-gold); }
+        .note-block h3 { color: var(--primary-green); margin-top: 0; font-size: 16px; margin-bottom: 10px; }
+        .note-block p { line-height: 1.6; font-size: 14px; color: #444; margin: 0; }
+
         .lang-switch {
             display: flex; background: rgba(255,255,255,0.1); border-radius: 20px;
             padding: 4px; margin-top: 15px; width: fit-content;
         }
         .lang-btn {
-            padding: 5px 15px; border-radius: 15px; font-size: 12px; cursor: pointer; border: none;
+            padding: 5px 12px; border-radius: 15px; font-size: 11px; cursor: pointer; border: none;
             background: transparent; color: white;
         }
         .lang-btn.active { background: var(--accent-gold); color: black; font-weight: bold; }
 
-        /* --- Chapter Detail UI --- */
-        .chapter-card {
-            background: white; border-radius: var(--card-radius);
-            margin: 15px 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .chapter-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-green); }
-        .mode-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .mode-box {
-            border: 1px solid #f0f0f0; border-radius: 12px; padding: 12px;
-            text-align: center; cursor: pointer; background: #fdfdfd;
-        }
-        .mode-box:active { background: #f0f7f7; }
-        .mode-label { font-size: 13px; font-weight: 700; display: block; }
-
-        /* --- Note Reader View Styles --- */
-        .note-reader-content { padding: 20px; padding-bottom: 80px; }
-        .note-block { background: white; border-radius: 12px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
-        .note-block h3 { color: var(--primary-green); margin-top: 0; border-bottom: 2px solid #f0f2f5; padding-bottom: 10px; }
-        .note-block p { line-height: 1.6; font-size: 14px; color: #444; }
-        .note-block ul { padding-left: 20px; font-size: 14px; color: #444; }
-        .note-block li { margin-bottom: 8px; }
-
-        /* --- Bottom Nav --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 10px 0;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.08); z-index: 100;
-        }
-        .nav-item { text-align: center; font-size: 10px; color: #bbb; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--primary-green); font-weight: bold; }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
-
-        .view { display: none; min-height: 100vh; }
-        .view.active { display: block; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .chapter-card { background: white; border-radius: 15px; margin: 15px 20px; padding: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .mode-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .mode-box { border: 1px solid #eee; border-radius: 10px; padding: 12px; text-align: center; font-size: 13px; font-weight: bold; cursor: pointer; background: #fafafa; }
     </style>
 </head>
 <body>
 
     <div id="auth-overlay" class="auth-overlay">
         <div class="auth-card">
-            <h1 style="color:var(--accent-gold); font-size: 28px; margin-bottom: 5px;">Smart Bridge</h1>
+            <h1 style="color:var(--accent-gold); margin-bottom: 5px;">Smart Bridge</h1>
             <p style="color: #ccc; font-size: 12px; margin-bottom: 25px;">Road to 4.0 CGPA 🚀</p>
+            
             <div id="login-panel">
-                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number (09...)">
+                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number">
                 <input type="password" id="login-pass" class="auth-input" placeholder="Password">
-                <button class="auth-btn" onclick="performLogin()">Login</button>
-                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(true)">New here? <b style="color:white">Register</b></p>
+                <button class="auth-btn" onclick="handleLogin()">Login</button>
+                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(true)">New? <b style="color:white">Register</b></p>
             </div>
+
             <div id="signup-panel" style="display: none;">
                 <input type="text" id="reg-name" class="auth-input" placeholder="Full Name">
                 <input type="tel" id="reg-phone" class="auth-input" placeholder="Phone Number">
-                <input type="password" id="reg-pass" class="auth-input" placeholder="Password">
-                <button class="auth-btn" onclick="performSignup()">Create Account</button>
-                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">Have account? <b style="color:white">Login</b></p>
+                <input type="password" id="reg-pass" class="auth-input" placeholder="Create Password">
+                <button class="auth-btn" onclick="handleSignup()">Create Account</button>
+                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">Already have one? <b style="color:white">Login</b></p>
             </div>
         </div>
     </div>
 
     <div id="library-view" class="view active">
         <div class="header-section">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h1 class="library-title">Course Library</h1>
-                <span id="gpa-badge" style="background:var(--accent-gold); color:black; padding:4px 10px; border-radius:10px; font-weight:bold; font-size:12px;">Goal: 4.0</span>
-            </div>
-            <p class="library-subtitle">Bilingual materials for Freshman Social Science.</p>
+            <h1 style="margin:0; font-size: 24px;">Course Library</h1>
+            <p style="font-size: 12px; opacity: 0.8; margin-top: 5px;">Search through all 14 Freshman courses.</p>
         </div>
-        
         <div class="search-container">
-            <input type="text" id="course-search" class="search-input" placeholder="Search your courses..." onkeyup="filterCourses()">
+            <input type="text" id="course-search" class="search-input" placeholder="🔍 Search courses (e.g. Logic, Math...)" onkeyup="filterCourses()">
         </div>
-
         <div class="course-list" id="course-container"></div>
     </div>
 
     <div id="detail-view" class="view">
         <div class="header-section">
-            <button onclick="navigate('library-view')" style="background:none; border:none; color:white; font-size:18px; cursor:pointer; padding:0; margin-bottom:10px;">← Back</button>
-            <h1 id="selected-course-title" style="margin:0; font-size: 22px;">Course</h1>
+            <button onclick="navigate('library-view')" style="background:none; border:none; color:white; font-size: 18px; cursor:pointer;">← Back</button>
+            <h1 id="selected-course-title" style="margin:10px 0 0; font-size: 22px;">Course Name</h1>
             <div class="lang-switch">
-                <button id="btn-en" class="lang-btn active" onclick="setLanguage('en')">English 🇬🇧</button>
-                <button id="btn-am" class="lang-btn" onclick="setLanguage('am')">አማርኛ 🇪🇹</button>
+                <button id="btn-en" class="lang-btn active" onclick="setLanguage('en')">English</button>
+                <button id="btn-am" class="lang-btn" onclick="setLanguage('am')">አማርኛ</button>
             </div>
         </div>
         <div id="chapters-container"></div>
     </div>
 
     <div id="note-view" class="view">
-        <div class="header-section" style="padding-bottom: 30px; border-radius: 0;">
-            <button onclick="navigate('detail-view')" style="background:none; border:none; color:white; font-size:18px; cursor:pointer; padding:0; margin-bottom:10px;">← Back to Chapters</button>
-            <h1 id="note-title" style="margin:0; font-size: 20px;">Chapter Notes</h1>
+        <div class="header-section" style="padding-bottom: 25px;">
+            <button onclick="navigate('detail-view')" style="background:none; border:none; color:white; font-size: 18px;">← Back</button>
+            <h1 id="note-title" style="margin:5px 0 0; font-size: 19px;">Unit Notes</h1>
         </div>
-        <div id="note-content" class="note-reader-content">
-            </div>
+        <div id="note-content" class="note-reader-content"></div>
     </div>
 
     <div id="profile-view" class="view">
-        <div style="padding:40px 20px; text-align:center;">
+        <div style="padding:60px 20px; text-align:center;">
             <div style="width:80px; height:80px; background:var(--primary-green); border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; color:white; font-size:35px;">👤</div>
-            <h2 id="user-display" style="margin-bottom:5px;">Student Name</h2>
-            <p id="user-phone-display" style="color: #666; margin-top:0;"></p>
-            <button class="auth-btn" style="background:#ff4d4d; color:white;" onclick="performLogout()">Logout Account</button>
+            <h2 id="user-display">Student Name</h2>
+            <p id="user-phone-display" style="color: #666;"></p>
+            <div style="margin-top:30px; padding:20px; background:white; border-radius:15px; text-align:left;">
+                <p><b>University:</b> Bahir Dar University</p>
+                <p><b>Target:</b> 4.0 CGPA</p>
+            </div>
+            <button class="auth-btn" style="background:#ff4d4d; color:white; margin-top:30px;" onclick="logout()">Logout</button>
         </div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="navigate('library-view')">
-            <div class="nav-icon">📚</div>Courses
-        </div>
-        <div class="nav-item" onclick="navigate('profile-view')">
-            <div class="nav-icon">👤</div>Profile
-        </div>
+        <div class="nav-item active" id="nav-lib" onclick="navigate('library-view')">📚 Courses</div>
+        <div class="nav-item" id="nav-prof" onclick="navigate('profile-view')">👤 Profile</div>
     </nav>
 
     <script>
-        // Store progress
-        let courseProgress = JSON.parse(localStorage.getItem('courseProgress')) || {};
-
+        // Database
         const courses = [
-    { id: 1, name: "Logic", amName: "ሎጂክ", chapters: 4, qs: 4, icon: "📖", desc: "Master critical thinking and formal reasoning." },
-    { id: 2, name: "General Psychology", amName: "አጠቃላይ ሳይኮሎጂ", chapters: 4, qs: 1, icon: "🧠", desc: "Understanding human behavior and mind." },
-    { id: 3, name: "Geography of Ethiopia", amName: "የኢትዮጵያ ጂኦግራፊ", chapters: 3, qs: 1, icon: "🌍", desc: "Explore the Horn of Africa's landscape." },
-    { id: 4, name: "Anthropology", amName: "አንትሮፖሎጂ", chapters: 3, qs: 0, icon: "👤", desc: "Study of human societies and cultures." },
-    { id: 5, name: "Moral & Civic Education", amName: "ሲቪክስ እና ስነ-ምግባር", chapters: 3, qs: 1, icon: "⚖️", desc: "Ethics and citizenship in Ethiopia." },
-    { id: 6, name: "Math for Social Sciences", amName: "ሂሳብ ለሶሻል ሳይንስ", chapters: 3, qs: 0, icon: "📐", desc: "Applied mathematics for economics." },
-    { id: 7, name: "Communicative English II", amName: "እንግሊዝኛ II", chapters: 5, qs: 2, icon: "💬", desc: "Advanced language and writing skills." },
-    { id: 8, name: "Economics", amName: "ኢኮኖሚክስ", chapters: 6, qs: 5, icon: "📊", desc: "Principles of micro and macro economics." },
-    { id: 9, name: "Global Trends", amName: "ግሎባል ትሬንድስ", chapters: 4, qs: 1, icon: "🌐", desc: "Understanding international relations." },
-    { id: 10, name: "Entrepreneurship", amName: "ስራ ፈጠራ", chapters: 4, qs: 2, icon: "💡", desc: "Developing business and innovation skills." },
-    { id: 11, name: "History of Ethiopia", amName: "የኢትዮጵያ ታሪክ", chapters: 5, qs: 3, icon: "🏛️", desc: "Chronicles of the Horn of Africa." },
-    { id: 12, name: "Emerging Technology", amName: "አዳዲስ ቴክኖሎጂዎች", chapters: 3, qs: 4, icon: "🚀", desc: "AI, IoT, and future tech trends." },
-    { id: 13, name: "Communicative English I", amName: "እንግሊዝኛ I", chapters: 4, qs: 2, icon: "🗣️", desc: "Basic communication and grammar skills." },
-    { id: 14, name: "Inclusiveness", amName: "አካታችነት", chapters: 3, qs: 1, icon: "🤝", desc: "Special needs and inclusive society." }
-];
-        // NEW: Logic Chapter 1 Notes Data (Bilingual Concept)
-        const logicUnit1Notes = [
-            {
-                heading: "1. Introducing Philosophy",
-                [span_2](start_span)[span_3](start_span)text: "Philosophy is difficult to define due to its universal nature[span_2](end_span)[span_3](end_span). [span_4](start_span)[span_5](start_span)Etymologically, it comes from 'Philo' (Love) and 'Sophia' (Wisdom), meaning 'love of wisdom'[span_4](end_span)[span_5](end_span). [span_6](start_span)It involves the continuous search for truth and the questioning of the apparent[span_6](end_span)."
-            },
-            {
-                heading: "2. Basic Features of Philosophy",
-                [span_7](start_span)text: "• It is a set of views or beliefs about life and the universe[span_7](end_span)[span_8](start_span).<br>• It tackles perennial problems (e.g., What is truth? What is beauty?)[span_8](end_span)[span_9](start_span).<br>• It is the logical analysis of language and words[span_9](end_span)[span_10](start_span).<br>• It is a rational attempt to look at the world as a whole[span_10](end_span)[span_11](start_span).<br>• It is a process of reflecting on and criticizing our deeply held beliefs[span_11](end_span)."
-            },
-            {
-                heading: "3. Epistemology (Theory of Knowledge)",
-                [span_12](start_span)text: "Epistemology studies the nature, scope, meaning, and possibility of knowledge[span_12](end_span). The 5 main sources of knowledge are:<br><b>1. [span_13](start_span)Empiricism:</b> Knowledge obtained through the senses[span_13](end_span).<br><b>2. [span_14](start_span)Rationalism:</b> Knowledge obtained through reason, thought, or logic[span_14](end_span).<br><b>3. [span_15](start_span)[span_16](start_span)Intuition:</b> Direct apprehension of knowledge not derived from conscious reasoning (e.g., sudden flash of insight)[span_15](end_span)[span_16](end_span).<br><b>4. [span_17](start_span)[span_18](start_span)Revelation:</b> Knowledge from a transcendent supernatural reality (e.g., religious visions)[span_17](end_span)[span_18](end_span).<br><b>5. [span_19](start_span)Authority:</b> Knowledge accepted as true because it comes from experts or tradition[span_19](end_span)."
-            },
-            {
-                heading: "4. Axiology (Study of Value)",
-                [span_20](start_span)text: "Axiology is the philosophical study of value, originating from Greek words 'Axios' (worth) and 'logy' (study)[span_20](end_span). It asks: What is a value? [span_21](start_span)Where do values come from?[span_21](end_span). [span_22](start_span)It has three main areas[span_22](end_span):<br><b>A. [span_23](start_span)Ethics (Moral Philosophy):</b> Studies moral principles to determine right or wrong human conduct[span_23](end_span). [span_24](start_span)Includes Normative Ethics, Meta Ethics, and Applied Ethics[span_24](end_span).<br><b>B. Aesthetics:</b> The theory of beauty. [span_25](start_span)Deals with art, enjoyment, and sensory perception[span_25](end_span).<br><b>C. [span_26](start_span)Social/Political Philosophy:</b> Studies value judgments in civil society, questioning the best forms of government and justice[span_26](end_span)."
-            }
+            { id: 1, name: "Logic", amName: "ሎጂክ", chapters: 4, icon: "📖", desc: "Master critical thinking." },
+            { id: 2, name: "General Psychology", amName: "ሳይኮሎጂ", chapters: 4, icon: "🧠" },
+            { id: 3, name: "Geography of Ethiopia", amName: "የኢትዮጵያ ጂኦግራፊ", chapters: 3, icon: "🌍" },
+            { id: 4, name: "Anthropology", amName: "አንትሮፖሎጂ", chapters: 3, icon: "👤" },
+            { id: 5, name: "Moral & Civic Education", amName: "ሲቪክስ", chapters: 3, icon: "⚖️" },
+            { id: 6, name: "Math for Social Sciences", amName: "ሂሳብ", chapters: 3, icon: "📐" },
+            { id: 7, name: "Communicative English II", amName: "እንግሊዝኛ II", chapters: 5, icon: "💬" },
+            { id: 8, name: "Economics", amName: "ኢኮኖሚክስ", chapters: 6, icon: "📊" },
+            { id: 9, name: "Global Trends", amName: "ግሎባል ትሬንድስ", chapters: 4, icon: "🌐" },
+            { id: 10, name: "Entrepreneurship", amName: "ስራ ፈጠራ", chapters: 4, icon: "💡" },
+            { id: 11, name: "History of Ethiopia", amName: "የኢትዮጵያ ታሪክ", chapters: 5, icon: "🏛️" },
+            { id: 12, name: "Emerging Technology", amName: "ቴክኖሎጂ", chapters: 3, icon: "🚀" },
+            { id: 13, name: "Communicative English I", amName: "እንግሊዝኛ I", chapters: 4, icon: "🗣️" },
+            { id: 14, name: "Inclusiveness", amName: "አካታችነት", chapters: 3, icon: "🤝" }
+        ];
+
+        const logicNotes = [
+            { heading: "1. What is Philosophy?", text: "Philosophy is a rational and critical enterprise that tries to answer fundamental questions about life, knowledge, and values. It comes from 'Philo' (Love) and 'Sophia' (Wisdom)." },
+            { heading: "2. The Four Pillars", text: "<b>Metaphysics:</b> Reality<br><b>Epistemology:</b> Knowledge<br><b>Axiology:</b> Values<br><b>Logic:</b> Reasoning" },
+            { heading: "3. Epistemology (Knowledge)", text: "Explores the nature of truth. Sources include: Senses (Empiricism), Reason (Rationalism), and Intuition." }
         ];
 
         let currentLang = 'en';
 
-        function renderCourses(filteredData) {
-            const container = document.getElementById('course-container');
-            container.innerHTML = filteredData.map(c => {
-                const prog = courseProgress[c.id] || 0;
-                return `
-                <div class="course-card" onclick="showCourse(${c.id})">
-                    <div class="course-icon-bg">${c.icon}</div>
-                    <div class="course-info">
-                        <div class="course-name">${c.name}</div>
-                        <div class="course-meta">${c.chapters} Chapters • Short Notes + MCQ</div>
-                        <div class="progress-container">
-                            <div class="progress-fill" style="width: ${prog}%"></div>
-                        </div>
-                    </div>
-                    <div style="color:#ccc; margin-left:10px;">›</div>
-                </div>
-            `}).join('');
-        }
-
-        function filterCourses() {
-            const term = document.getElementById('course-search').value.toLowerCase();
-            const filtered = courses.filter(c => 
-                c.name.toLowerCase().includes(term) || 
-                c.amName.toLowerCase().includes(term)
-            );
-            renderCourses(filtered);
-        }
-
-        function initApp() {
-            renderCourses(courses);
-            if (localStorage.getItem('isLogged') === 'true') {
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfileUI();
-            }
-        }
-
-        function showCourse(id) {
-            const course = courses.find(c => c.id === id);
-            const titleElem = document.getElementById('selected-course-title');
-            titleElem.innerText = currentLang === 'en' ? course.name : course.amName;
-            titleElem.dataset.id = id;
-            
-            const chaptersContainer = document.getElementById('chapters-container');
-            let chaptersHTML = '';
-            for(let i=1; i<=course.chapters; i++) {
-                // Attach real note reader to Logic Chapter 1, else generic alert
-                const noteAction = (id === 1 && i === 1) 
-                    ? `openNoteReader(${id}, ${i})` 
-                    : `updateProgress(${id}, 10); alert('Notes for Chapter ${i} coming soon!')`;
-
-                chaptersHTML += `
-                    <div class="chapter-card">
-                        <div class="chapter-title">${currentLang === 'en' ? 'Chapter' : 'ምዕራፍ'} ${i}</div>
-                        <div class="mode-container">
-                            <div class="mode-box" onclick="${noteAction}">
-                                <span class="mode-label">⚡ Power Notes</span>
-                            </div>
-                            <div class="mode-box" onclick="updateProgress(${id}, 20)">
-                                <span class="mode-label">❓ Quiz Mode</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            chaptersContainer.innerHTML = chaptersHTML;
-            navigate('detail-view');
-        }
-
-        // NEW: Function to open notes
-        function openNoteReader(courseId, chapterNum) {
-            updateProgress(courseId, 15); // Update progress when reading
-            document.getElementById('note-title').innerText = `Logic Unit ${chapterNum} Notes`;
-            
-            const contentContainer = document.getElementById('note-content');
-            contentContainer.innerHTML = logicUnit1Notes.map(note => `
-                <div class="note-block">
-                    <h3>${note.heading}</h3>
-                    <p>${note.text}</p>
-                </div>
-            `).join('');
-
-            navigate('note-view');
-        }
-
-        function updateProgress(courseId, amount) {
-            if(!courseProgress[courseId]) courseProgress[courseId] = 0;
-            if(courseProgress[courseId] < 100) {
-                courseProgress[courseId] += amount;
-                if(courseProgress[courseId] > 100) courseProgress[courseId] = 100;
-                localStorage.setItem('courseProgress', JSON.stringify(courseProgress));
-                renderCourses(courses);
-            }
-        }
-
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('btn-am').classList.toggle('active', lang === 'am');
-            const activeCourseId = document.getElementById('selected-course-title').dataset.id;
-            if(activeCourseId) showCourse(parseInt(activeCourseId));
-        }
-
-        // --- Auth Logic ---
+        // --- AUTH ---
         function toggleAuth(isSignup) {
             document.getElementById('login-panel').style.display = isSignup ? 'none' : 'block';
             document.getElementById('signup-panel').style.display = isSignup ? 'block' : 'none';
         }
-        function performLogin() {
-            localStorage.setItem('isLogged', 'true');
-            localStorage.setItem('userData', JSON.stringify({name: "Dawit Student", phone: "09..."}));
-            document.getElementById('auth-overlay').style.display = 'none';
-            updateProfileUI();
+
+        function handleSignup() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const pass = document.getElementById('reg-pass').value;
+            if(!name || !phone || !pass) return alert("Fill all fields");
+            localStorage.setItem('user_' + phone, JSON.stringify({name, phone, pass}));
+            alert("Success! Now Login.");
+            toggleAuth(false);
         }
+
+        function handleLogin() {
+            const phone = document.getElementById('login-phone').value;
+            const pass = document.getElementById('login-pass').value;
+            const user = JSON.parse(localStorage.getItem('user_' + phone));
+            if(user && user.pass === pass) {
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                updateUI();
+            } else { alert("Wrong info!"); }
+        }
+
+        function logout() { localStorage.removeItem('currentUser'); location.reload(); }
+
+        // --- CORE FUNCTIONS ---
         function navigate(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.getElementById(viewId).classList.add('active');
+            document.getElementById('nav-lib').classList.toggle('active', viewId === 'library-view');
+            document.getElementById('nav-prof').classList.toggle('active', viewId === 'profile-view');
         }
-        function updateProfileUI() {
-            const data = JSON.parse(localStorage.getItem('userData'));
-            if(data) {
-                document.getElementById('user-display').innerText = data.name;
-                document.getElementById('user-phone-display').innerText = data.phone;
+
+        function renderCourses(list) {
+            const container = document.getElementById('course-container');
+            container.innerHTML = list.map(c => `
+                <div class="course-card" onclick="showCourse(${c.id})">
+                    <div class="course-icon-bg">${c.icon}</div>
+                    <div class="course-info">
+                        <div class="course-name">${currentLang === 'en' ? c.name : c.amName}</div>
+                        <div class="course-meta">${c.chapters} Chapters • Power Notes</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterCourses() {
+            const query = document.getElementById('course-search').value.toLowerCase();
+            const filtered = courses.filter(c => 
+                c.name.toLowerCase().includes(query) || 
+                c.amName.toLowerCase().includes(query)
+            );
+            renderCourses(filtered);
+        }
+
+        function showCourse(id) {
+            const course = courses.find(c => c.id === id);
+            const title = document.getElementById('selected-course-title');
+            title.innerText = currentLang === 'en' ? course.name : course.amName;
+            title.dataset.id = id;
+
+            let html = '';
+            for(let i=1; i<=course.chapters; i++) {
+                const noteFn = (id === 1 && i === 1) ? `openNotes()` : `alert('Notes coming soon')`;
+                html += `
+                    <div class="chapter-card">
+                        <div style="font-weight:bold; color:var(--primary-green)">Chapter ${i}</div>
+                        <div class="mode-container">
+                            <div class="mode-box" onclick="${noteFn}">⚡ Read Notes</div>
+                            <div class="mode-box" onclick="alert('Quiz coming soon')">❓ Take Quiz</div>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('chapters-container').innerHTML = html;
+            navigate('detail-view');
+        }
+
+        function openNotes() {
+            document.getElementById('note-title').innerText = "Logic: Unit 1 Notes";
+            document.getElementById('note-content').innerHTML = logicNotes.map(n => `
+                <div class="note-block">
+                    <h3>${n.heading}</h3>
+                    <p>${n.text}</p>
+                </div>
+            `).join('');
+            navigate('note-view');
+        }
+
+        function setLanguage(l) {
+            currentLang = l;
+            document.getElementById('btn-en').classList.toggle('active', l === 'en');
+            document.getElementById('btn-am').classList.toggle('active', l === 'am');
+            const id = document.getElementById('selected-course-title').dataset.id;
+            if(id) showCourse(parseInt(id));
+            renderCourses(courses);
+        }
+
+        function updateUI() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if(user) {
+                document.getElementById('user-display').innerText = user.name;
+                document.getElementById('user-phone-display').innerText = user.phone;
+                document.getElementById('auth-overlay').style.display = 'none';
             }
         }
-        function performLogout() { localStorage.removeItem('isLogged'); location.reload(); }
 
-        initApp();
-
-        // --- Offline Access (Service Worker) ---
+        // --- SERVICE WORKER FOR OFFLINE ---
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW failed'));
+                navigator.serviceWorker.register('sw.js').catch(() => {});
             });
         }
+
+        renderCourses(courses);
+        updateUI();
     </script>
 </body>
 </html>
