@@ -75,15 +75,20 @@
             <p style="color: #ccc; font-size: 12px; margin-bottom: 25px;">Road to 4.0 CGPA 🚀</p>
             
             <div id="login-panel">
-                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number (09...)">
+                 <label for="login-phone" style="color:#fff; font-size:13px; display:block; text-align:left;">Phone Number (09...)</label>
+                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number (09...)" pattern="^09\d{8}$">
+                <label for="login-pass" style="color:#fff; font-size:13px; display:block; text-align:left;">Password</label>
                 <input type="password" id="login-pass" class="auth-input" placeholder="Password">
                 <button class="auth-btn" onclick="performLogin()">Login</button>
                 <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(true)">New here? <b style="color:white">Register</b></p>
             </div>
 
             <div id="signup-panel" style="display: none;">
+                <label for="reg-name" style="color:#fff; font-size:13px; display:block; text-align:left;">Full Name</label>
                 <input type="text" id="reg-name" class="auth-input" placeholder="Full Name">
-                <input type="tel" id="reg-phone" class="auth-input" placeholder="Phone Number">
+                <label for="reg-phone" style="color:#fff; font-size:13px; display:block; text-align:left;">Phone Number (09...)</label>
+                <input type="tel" id="reg-phone" class="auth-input" placeholder="Phone Number" pattern="^09\d{8}$">
+                <label for="reg-pass" style="color:#fff; font-size:13px; display:block; text-align:left;">Password</label>
                 <input type="password" id="reg-pass" class="auth-input" placeholder="Password">
                 <button class="auth-btn" onclick="performSignup()">Create Account</button>
                 <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">Have account? <b style="color:white">Login</b></p>
@@ -97,7 +102,7 @@
                 <h1 class="library-title">Course Library</h1>
                 <span id="gpa-badge" style="background:var(--accent-gold); color:black; padding:4px 10px; border-radius:10px; font-weight:bold; font-size:12px;">Goal: 4.0</span>
             </div>
-            <p class="library-subtitle">Bilingual materials for Freshman Social Science.</p>
+            <p class="library-subtitle">Bilingual materials for All Freshman Students.</p>
         </div>
         <div class="course-list" id="course-container"></div>
     </div>
@@ -157,13 +162,13 @@
             { id: 4, name: "Anthropology", amName: "አንትሮፖሎጂ", chapters: 3, qs: 0, icon: "👤", desc: "Study of human societies and cultures.", progress: 0 },
             { id: 5, name: "Moral & Civic Education", amName: "ሞራል እና ሲቪክ", chapters: 3, qs: 1, icon: "⚖️", desc: "Ethics and citizenship in Ethiopia.", progress: 0 },
             { id: 6, name: "Math for Social Sciences", amName: "ለማህበራዊ ሳይንሳት ሂሳብ", chapters: 3, qs: 0, icon: "📐", desc: "Applied mathematics for economics.", progress: 0 },
-            { id: 7, name: "Communicative English II", amName: "የመገናኛ እንሊዝኛ II", chapters: 5, qs: 2, icon: "💬", desc: "Advanced language and writing skills.", progress: 0 },
+            { id: 7, name: "Communicative English skill II", amName: "የመገናኛ እንሊዝኛ II", chapters: 5, qs: 2, icon: "💬", desc: "Advanced language and writing skills.", progress: 0 },
             { id: 8, name: "Economics", amName: "ኢኮኖሚክስ", chapters: 6, qs: 5, icon: "📊", desc: "Principles of micro and macro economics.", progress: 0 },
             { id: 9, name: "Global Trends", amName: "ዓለም አቀፍ ትውልድ", chapters: 4, qs: 1, icon: "🌐", desc: "Understanding international relations.", progress: 0 },
             { id: 10, name: "Entrepreneurship", amName: "ኢንተርፕሩነርሺፕ", chapters: 4, qs: 2, icon: "💡", desc: "Developing business and innovation skills.", progress: 0 },
             { id: 11, name: "History of Ethiopia", amName: "የኢትዮጵያ ታሪክ", chapters: 5, qs: 3, icon: "🏛️", desc: "Chronicles of the Horn of Africa.", progress: 0 },
             { id: 12, name: "Emerging Technology", amName: "አዳዲስ ቴክኖሎጂዎች", chapters: 3, qs: 4, icon: "🚀", desc: "AI, IoT, and future tech trends.", progress: 0 },
-            { id: 13, name: "Critical Thinking", amName: "አስተዳደራዊ አስተካከያ", chapters: 4, qs: 2, icon: "🔍", desc: "Analyzing arguments and fallacies.", progress: 0 },
+            { id: 13, name: "Communicative English skill I", amName: "እንግሊዝኛ I", chapters: 4, qs: 2, icon: "🔍", desc: "Advanced language and writing skills.", progress: 0 },
             { id: 14, name: "Inclusiveness", amName: "ስተዳደርነት", chapters: 3, qs: 1, icon: "🤝", desc: "Special needs and inclusive society.", progress: 0 }
         ];
 
@@ -297,6 +302,15 @@
             chaptersContainer.innerHTML = chaptersHTML;
             navigate('detail-view');
         }
+        // For demo: Show alert instead of real PDF/quiz
+        function loadNotes(courseId, chapterNum) {
+            alert('PDF/notes viewer here for courseId: ' + courseId + ', chapter: ' + chapterNum);
+            // TODO: Implement document fetch/viewer
+        }
+        function startQuiz(courseId, chapterNum) {
+            alert('Quiz for courseId: ' + courseId + ', chapter: ' + chapterNum);
+            // TODO: Implement quiz logic
+        }
 
         // --- Standard Auth and UI Logic ---
         function toggleAuth(isSignup) {
@@ -317,8 +331,10 @@
             const phone = document.getElementById('login-phone').value;
             const pass = document.getElementById('login-pass').value;
             const savedData = JSON.parse(localStorage.getItem('userData'));
+              // Demo Account: 0911111111 / 1234
             if ((phone === "0911111111" && pass === "1234") || (savedData && phone === savedData.phone && pass === savedData.pass)) {
                 localStorage.setItem('isLogged', 'true');
+                // If using demo, add a name
                 if (!savedData) localStorage.setItem('userData', JSON.stringify({ name: "Smart Learner", phone: phone }));
                 document.getElementById('auth-overlay').style.display = 'none';
                 updateProfileUI();
@@ -336,8 +352,11 @@
         function updateProfileUI() {
             const data = JSON.parse(localStorage.getItem('userData'));
             if (data) {
-                document.getElementById('user-display').innerText = data.name;
-                document.getElementById('user-phone-display').innerText = data.phone;
+                document.getElementById('user-display').innerText = data.name || "";
+                document.getElementById('user-phone-display').innerText = data.phone || "";
+            } else {
+                document.getElementById('user-display').innerText = "No Name";
+                document.getElementById('user-phone-display').innerText = "";
             }
         }
         function performLogout() { localStorage.removeItem('isLogged'); location.reload(); }
