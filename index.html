@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Smart Bridge Academic | 4.0 CGPA</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         :root {
             --bg-color: #f0f2f5; 
@@ -121,29 +122,77 @@
 </head>
 <body>
 
+    <!-- Auth overlay: shown only if Telegram data not available -->
     <div id="auth-overlay" class="auth-overlay">
-        <div class="auth-card">
-            <h1 style="color:var(--accent-gold); font-size: 28px; margin-bottom: 5px;">Smart Bridge</h1>
-            <p style="color: #ccc; font-size: 12px; margin-bottom: 25px;">Road to 4.0 CGPA 🚀</p>
-            
-            <div id="login-panel">
-                 <label for="login-phone" style="color:#fff; font-size:13px; display:block; text-align:left;">Phone Number (09...)</label>
-                <input type="tel" id="login-phone" class="auth-input" placeholder="Phone Number (09...)" pattern="^09\d{8}$">
-                <label for="login-pass" style="color:#fff; font-size:13px; display:block; text-align:left;">Password</label>
-                <input type="password" id="login-pass" class="auth-input" placeholder="Password">
-                <button class="auth-btn" onclick="performLogin()">Login</button>
-                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(true)">New here? <b style="color:white">Register</b></p>
+        <div class="auth-card" style="max-height:90vh; overflow-y:auto; text-align:center;">
+            <h1 style="color:var(--accent-gold); font-size:28px; margin-bottom:5px;">Smart Bridge</h1>
+            <p style="color:#ccc; font-size:12px; margin-bottom:24px;">Road to 4.0 CGPA 🚀</p>
+
+            <!-- Telegram loading state -->
+            <div id="tg-loading-panel">
+                <div style="font-size:48px; margin-bottom:12px;">✈️</div>
+                <p style="color:#ccc; font-size:14px; margin-bottom:6px;">Connecting to Telegram...</p>
+                <p style="color:#888; font-size:12px;">Please wait</p>
             </div>
 
-            <div id="signup-panel" style="display: none;">
-                <label for="reg-name" style="color:#fff; font-size:13px; display:block; text-align:left;">Full Name</label>
-                <input type="text" id="reg-name" class="auth-input" placeholder="Full Name">
-                <label for="reg-phone" style="color:#fff; font-size:13px; display:block; text-align:left;">Phone Number (09...)</label>
-                <input type="tel" id="reg-phone" class="auth-input" placeholder="Phone Number" pattern="^09\d{8}$">
-                <label for="reg-pass" style="color:#fff; font-size:13px; display:block; text-align:left;">Password</label>
-                <input type="password" id="reg-pass" class="auth-input" placeholder="Password">
-                <button class="auth-btn" onclick="performSignup()">Create Account</button>
-                <p style="color: #888; font-size: 13px; margin-top: 15px;" onclick="toggleAuth(false)">Have account? <b style="color:white">Login</b></p>
+            <!-- Fallback: manual phone login (if not in Telegram) -->
+            <div id="login-panel" style="display:none;">
+                <div style="background:rgba(255,184,0,0.12); border:1px solid rgba(255,184,0,0.3); border-radius:12px; padding:12px; margin-bottom:18px;">
+                    <p style="color:#ffb800; font-size:12px; margin:0;">⚠️ Open this app inside Telegram for automatic login</p>
+                </div>
+
+                <!-- Tab row -->
+                <div style="display:flex; background:rgba(255,255,255,0.08); border-radius:12px; padding:4px; margin-bottom:18px;">
+                    <button id="tab-email-btn" onclick="switchLoginTab('email')"
+                        style="flex:1; padding:9px 0; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; background:var(--accent-gold); color:#000; transition:0.2s;">
+                        📧 Email
+                    </button>
+                    <button id="tab-phone-btn" onclick="switchLoginTab('phone')"
+                        style="flex:1; padding:9px 0; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; background:transparent; color:#aaa; transition:0.2s;">
+                        📱 Phone
+                    </button>
+                </div>
+
+                <!-- Email tab -->
+                <div id="login-email-tab">
+                    <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Email address</label>
+                    <input type="email" id="login-email" class="auth-input" placeholder="you@example.com">
+                    <button class="auth-btn" onclick="performLoginEmail()">CONTINUE</button>
+                </div>
+
+                <!-- Phone tab -->
+                <div id="login-phone-tab" style="display:none;">
+                    <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Phone Number</label>
+                    <input type="tel" id="login-phone" class="auth-input" placeholder="09XXXXXXXX" pattern="^09\d{8}$">
+                    <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Password</label>
+                    <input type="password" id="login-pass" class="auth-input" placeholder="Password">
+                    <button class="auth-btn" onclick="performLogin()">LOGIN</button>
+                </div>
+
+                <p style="color:#888; font-size:13px; margin-top:15px;" onclick="toggleAuth(true)">New here? <b style="color:white; cursor:pointer;">Register</b></p>
+            </div>
+
+            <!-- REGISTER PANEL -->
+            <div id="signup-panel" style="display:none;">
+                <button onclick="toggleAuth(false)"
+                    style="background:none; border:none; color:#aaa; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:5px; margin-bottom:14px; padding:0;">
+                    ← Back to login
+                </button>
+                <p style="color:#ccc; font-size:13px; margin-bottom:18px;">Create your account</p>
+                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Full Name</label>
+                <input type="text" id="reg-name" class="auth-input" placeholder="e.g. Dawit Bekele">
+                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Phone Number</label>
+                <input type="tel" id="reg-phone" class="auth-input" placeholder="09XXXXXXXX" pattern="^09\d{8}$">
+                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Email (optional)</label>
+                <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com">
+                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">University / College</label>
+                <input type="text" id="reg-university" class="auth-input" placeholder="e.g. Jimma University">
+                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Password</label>
+                <input type="password" id="reg-pass" class="auth-input" placeholder="Min. 8 characters">
+                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Confirm Password</label>
+                <input type="password" id="reg-pass2" class="auth-input" placeholder="Re-enter password">
+                <button class="auth-btn" onclick="performSignup()">CREATE ACCOUNT</button>
+                <p style="color:#888; font-size:13px; margin-top:15px;" onclick="toggleAuth(false)">Have account? <b style="color:white; cursor:pointer;">Login</b></p>
             </div>
         </div>
     </div>
@@ -173,11 +222,12 @@
 
     <div id="profile-view" class="view">
         <div style="padding:40px 20px; text-align:center;">
-            <div style="width:80px; height:80px; background:var(--primary-green); border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; color:white; font-size:36px;">
+            <div id="profile-avatar" style="width:80px; height:80px; background:var(--primary-green); border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; color:white; font-size:36px;">
                 👤
             </div>
             <h2 id="user-display" style="margin-bottom:5px;">Student Name</h2>
             <p id="user-phone-display" style="color: #666; margin-top:0;"></p>
+            <span id="tg-login-badge" style="display:none; background:#229ED9; color:white; font-size:11px; padding:3px 10px; border-radius:20px; font-weight:600;">✈️ Telegram Login</span>
             
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin:25px 0;">
                 <div style="background:white; padding:15px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
@@ -365,32 +415,84 @@
         }
 
         // --- Standard Auth and UI Logic ---
+        // ========== TELEGRAM AUTH (Primary) ==========
+        function initTelegramAuth() {
+            const tg = window.Telegram && window.Telegram.WebApp;
+
+            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                // ✅ Inside Telegram — get user data automatically
+                const tgUser = tg.initDataUnsafe.user;
+                tg.ready();
+                tg.expand();
+
+                const userData = {
+                    name: [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' '),
+                    telegramId: tgUser.id,
+                    username: tgUser.username || '',
+                    picture: tgUser.photo_url || '',
+                    loginMethod: 'telegram'
+                };
+
+                localStorage.setItem('userData', JSON.stringify(userData));
+                localStorage.setItem('isLogged', 'true');
+                document.getElementById('auth-overlay').style.display = 'none';
+                updateProfileUI();
+            } else {
+                // ⚠️ Not inside Telegram — show manual login
+                document.getElementById('tg-loading-panel').style.display = 'none';
+                document.getElementById('login-panel').style.display = 'block';
+            }
+        }
+        // ========== END TELEGRAM AUTH ==========
+
         function toggleAuth(isSignup) {
             document.getElementById('login-panel').style.display = isSignup ? 'none' : 'block';
             document.getElementById('signup-panel').style.display = isSignup ? 'block' : 'none';
         }
+        function switchLoginTab(tab) {
+            const isEmail = tab === 'email';
+            document.getElementById('login-email-tab').style.display = isEmail ? 'block' : 'none';
+            document.getElementById('login-phone-tab').style.display = isEmail ? 'none' : 'block';
+            document.getElementById('tab-email-btn').style.background = isEmail ? 'var(--accent-gold)' : 'transparent';
+            document.getElementById('tab-email-btn').style.color = isEmail ? '#000' : '#aaa';
+            document.getElementById('tab-phone-btn').style.background = isEmail ? 'transparent' : 'var(--accent-gold)';
+            document.getElementById('tab-phone-btn').style.color = isEmail ? '#aaa' : '#000';
+        }
         function performSignup() {
-            const name = document.getElementById('reg-name').value;
-            const phone = document.getElementById('reg-phone').value;
+            const name = document.getElementById('reg-name').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const university = document.getElementById('reg-university').value.trim();
             const pass = document.getElementById('reg-pass').value;
-            if (name && phone && pass) {
-                localStorage.setItem('userData', JSON.stringify({ name, phone, pass }));
-                alert("Success! Now Login.");
-                toggleAuth(false);
-            }
+            const pass2 = document.getElementById('reg-pass2').value;
+            if (!name || !phone || !pass) { alert("Please fill Name, Phone, and Password."); return; }
+            if (pass !== pass2) { alert("Passwords do not match!"); return; }
+            if (pass.length < 8) { alert("Password must be at least 8 characters."); return; }
+            localStorage.setItem('userData', JSON.stringify({ name, phone, email, university, pass }));
+            alert("Account created! Please login.");
+            toggleAuth(false);
+        }
+        function performLoginEmail() {
+            const email = document.getElementById('login-email').value.trim();
+            const savedData = JSON.parse(localStorage.getItem('userData'));
+            if (!email) { alert("Please enter your email."); return; }
+            if (savedData && email === savedData.email) {
+                localStorage.setItem('isLogged', 'true');
+                document.getElementById('auth-overlay').style.display = 'none';
+                updateProfileUI();
+            } else { alert("Email not found. Please register first."); }
         }
         function performLogin() {
-            const phone = document.getElementById('login-phone').value;
+            const phone = document.getElementById('login-phone').value.trim();
             const pass = document.getElementById('login-pass').value;
             const savedData = JSON.parse(localStorage.getItem('userData'));
-              // Demo Account: 0911111111 / 1234
+            // Demo Account: 0911111111 / 1234
             if ((phone === "0911111111" && pass === "1234") || (savedData && phone === savedData.phone && pass === savedData.pass)) {
                 localStorage.setItem('isLogged', 'true');
-                // If using demo, add a name
                 if (!savedData) localStorage.setItem('userData', JSON.stringify({ name: "Smart Learner", phone: phone }));
                 document.getElementById('auth-overlay').style.display = 'none';
                 updateProfileUI();
-            } else { alert("Error: Check phone/password"); }
+            } else { alert("Incorrect phone or password. Try: 0911111111 / 1234 for demo."); }
         }
         function navigate(viewId) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -404,8 +506,34 @@
         function updateProfileUI() {
             const data = JSON.parse(localStorage.getItem('userData'));
             if (data) {
-                document.getElementById('user-display').innerText = data.name || "";
-                document.getElementById('user-phone-display').innerText = data.phone || "";
+                document.getElementById('user-display').innerText = data.name || "Student";
+
+                // Subtitle: show @username for Telegram, email for email login, phone for phone login
+                let sub = '';
+                if (data.loginMethod === 'telegram') {
+                    sub = data.username ? '@' + data.username : 'Telegram User';
+                } else if (data.loginMethod === 'email') {
+                    sub = data.email || '';
+                } else {
+                    sub = data.phone || '';
+                }
+                document.getElementById('user-phone-display').innerText = sub;
+
+                // Avatar: Telegram photo or fallback emoji
+                const avatarEl = document.getElementById('profile-avatar');
+                if (avatarEl) {
+                    if (data.picture) {
+                        avatarEl.innerHTML = '<img src="' + data.picture + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" onerror="this.parentElement.innerHTML='👤'">';
+                    } else {
+                        avatarEl.innerHTML = '👤';
+                    }
+                }
+
+                // Show Telegram badge on profile if logged in via Telegram
+                const badgeEl = document.getElementById('tg-login-badge');
+                if (badgeEl) {
+                    badgeEl.style.display = data.loginMethod === 'telegram' ? 'inline-block' : 'none';
+                }
             } else {
                 document.getElementById('user-display').innerText = "No Name";
                 document.getElementById('user-phone-display').innerText = "";
@@ -414,6 +542,8 @@
         function performLogout() { localStorage.removeItem('isLogged'); location.reload(); }
 
         initApp();
+        // Auto-login via Telegram on startup
+        initTelegramAuth();
     </script>
 </body>
 </html>
