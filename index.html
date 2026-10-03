@@ -1,549 +1,1018 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Bridge Academic | 4.0 CGPA</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <style>
-        :root {
-            --bg-color: #f0f2f5; 
-            --primary-green: #1a3a3a;
-            --accent-gold: #ffb800; /* For 4.0 GPA Motivation */
-            --white: #ffffff;
-            --text-main: #1a1a1a;
-            --text-sub: #666;
-            --card-radius: 16px;
-            --accent-blue: #007bff;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Smart Bridge Academic</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Noto+Sans+Ethiopic:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ---------- ገጽታ / theme ---------- */
+:root{
+  --page:#E9E5D8; --bg:#F4F1E8; --surface:#FFFFFF; --surface2:#FAF8F1;
+  --ink:#20251D; --muted:#6C7365; --line:#E4E0D1;
+  --brand:#186B47; --on-brand:#FBFAF4; --hero:#14382A; --hero-ink:#F2EFE3;
+  --amber:#DD9523; --amber-soft:#F6E7CC; --amber-ink:#8A5A10;
+  --ok:#1F7A3D; --ok-soft:#E1F1E3; --bad:#B3372E; --bad-soft:#F9E4E1;
+  --shadow:0 1px 2px rgba(28,32,24,.05), 0 10px 26px -14px rgba(28,32,24,.16);
+}
+html[data-theme="dark"]{
+  --page:#0B0E09; --bg:#12160F; --surface:#1B2118; --surface2:#161B13;
+  --ink:#ECEAE0; --muted:#99A18D; --line:#2B3226;
+  --brand:#4FB57E; --on-brand:#0D130E; --hero:#182A20; --hero-ink:#ECEAE0;
+  --amber:#E4A64C; --amber-soft:#3A2F1B; --amber-ink:#EBC98A;
+  --ok:#57B876; --ok-soft:#1D2B1F; --bad:#E07A6E; --bad-soft:#331D1A;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 26px -14px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--page);color:var(--ink);font-family:'Noto Sans Ethiopic',-apple-system,'Segoe UI',sans-serif;font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+#app{max-width:480px;margin:0 auto;min-height:100dvh;background:var(--bg);position:relative}
+#screen{padding-bottom:88px}
+.ic{width:20px;height:20px;flex:none;display:inline-block;vertical-align:middle}
+b,strong{font-weight:700}
+mark{background:var(--amber-soft);color:var(--amber-ink);border-radius:3px;padding:0 2px}
+button{-webkit-tap-highlight-color:transparent}
 
-        body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0; padding: 0; color: var(--text-main);
-            -webkit-tap-highlight-color: transparent;
-        }
-        /* ... styles unchanged ... */
-        .auth-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #02132b; z-index: 9999; display: flex; justify-content: center; align-items: center;
-        }
-        .auth-card {
-            background: linear-gradient(180deg, #1a3a3a 0%, #0d1f1f 100%);
-            width: 85%; max-width: 350px; padding: 30px 20px; border-radius: 25px; position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;
-        }
-        .auth-input {
-            width: 100%; box-sizing: border-box; padding: 14px; margin-bottom: 15px;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px; color: white; outline: none; transition: 0.3s;
-        }
-        .auth-input:focus { border-color: var(--accent-gold); }
-        .auth-btn {
-            width: 100%; padding: 14px; border: none; border-radius: 12px;
-            background: var(--accent-gold); color: #000; font-weight: 800; cursor: pointer;
-            margin-top: 10px; text-transform: uppercase; letter-spacing: 1px;
-        }
-        /* Rest of your CSS remains unchanged ... */
-           /* --- Course Library UI --- */
-        .header-section { 
-            padding: 30px 20px; 
-            background: linear-gradient(135deg, var(--primary-green) 0%, #2c5d5d 100%);
-            color: white;
-            border-bottom-left-radius: 30px;
-            border-bottom-right-radius: 30px;
-        }
-        .library-title { font-size: 24px; font-weight: 800; margin: 0; }
-        .library-subtitle { font-size: 13px; opacity: 0.8; margin-top: 5px; }
+/* ---------- ጭብጥ / header ---------- */
+.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:10px 14px;background:color-mix(in srgb, var(--bg) 88%, transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.top-title{font-family:'Fraunces','Noto Sans Ethiopic',serif;font-weight:600;font-size:16.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wordmark{font-family:'Fraunces','Noto Sans Ethiopic',serif;font-weight:700;font-size:16px;flex:1;display:flex;align-items:center;gap:9px;min-width:0}
+.wordmark span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;flex:none}
+.seg{display:flex;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px;flex:none}
+.seg button{border:0;background:transparent;color:var(--muted);font-family:inherit;font-weight:700;font-size:12px;padding:4px 11px;border-radius:999px;cursor:pointer}
+.seg button.on{background:var(--brand);color:var(--on-brand)}
 
-        /* Progress Bar Style */
-        .progress-container {
-            width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-top: 10px; overflow: hidden;
-        }
-        .progress-fill { height: 100%; background: var(--accent-gold); width: 0%; transition: width 0.5s; }
+/* ---------- አጠቃላይ ኤለመንቶች ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:inherit;font-weight:700;font-size:14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:11px 16px;cursor:pointer}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.big{width:100%;padding:14px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.view{animation:vin .3s ease both}
+@keyframes vin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
 
-        .course-list { padding: 20px; padding-bottom: 100px; }
-        .course-card {
-            background: var(--white); border-radius: var(--card-radius);
-            padding: 18px; margin-bottom: 15px; display: flex; align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); cursor: pointer;
-            position: relative;
-        }
-        .course-icon-bg {
-            width: 55px; height: 55px; background: #f0f7f7;
-            border-radius: 15px; display: flex; align-items: center;
-            justify-content: center; font-size: 28px; margin-right: 15px;
-        }
-        .course-info { flex-grow: 1; }
-        .course-name { font-size: 16px; font-weight: 700; color: var(--primary-green); margin: 0; }
-        .course-meta { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+/* ---------- የግብዣ ሰሌዳ / login ---------- */
+.login-wrap{padding:8px 22px 28px;display:flex;flex-direction:column;min-height:calc(100dvh - 120px)}
+.bridge-art{position:relative;margin:18px auto 4px;max-width:330px;width:100%}
+.bridge-art svg{width:100%;display:block}
+.fpill{position:absolute;font-size:11px;font-weight:700;padding:4px 11px;border-radius:99px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow)}
+.lg-title{font-family:'Fraunces','Noto Sans Ethiopic',serif;font-size:28px;font-weight:700;text-align:center;margin-top:10px;line-height:1.25}
+.lg-sub{text-align:center;color:var(--muted);font-size:13.5px;margin:8px 0 26px}
+.lg-btns{display:flex;flex-direction:column;gap:10px}
+.lg-note{text-align:center;color:var(--muted);font-size:11.5px;margin-top:auto;padding-top:24px}
+.field{margin-top:14px}
+.field label{font-size:12.5px;font-weight:700;color:var(--muted);display:block;margin-bottom:7px}
+.phone-row{display:flex;gap:8px}
+.prefix{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-weight:700;flex:none}
+.inp{width:100%;font-family:inherit;font-size:15px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);outline:none}
+.inp:focus{border-color:var(--brand)}
+.otp{font-size:26px;letter-spacing:14px;text-align:center;font-family:'Fraunces',serif}
+.hintrow{text-align:center;margin-top:12px}
+.hint{display:inline-flex;font-size:12px;color:var(--amber-ink);background:var(--amber-soft);padding:5px 13px;border-radius:99px;font-weight:700}
 
-        /* --- Language Toggle --- */
-        .lang-switch {
-            display: flex; background: rgba(255,255,255,0.1); border-radius: 20px;
-            padding: 4px; margin-top: 15px; width: fit-content;
-        }
-        .lang-btn {
-            padding: 5px 15px; border-radius: 15px; font-size: 12px; cursor: pointer; border: none;
-            background: transparent; color: white;
-        }
-        .lang-btn.active { background: var(--accent-gold); color: black; font-weight: bold; }
+/* ---------- መነሻ / home ---------- */
+.hero{position:relative;margin:14px 16px 0;padding:18px;border-radius:20px;background:var(--hero);color:var(--hero-ink);overflow:hidden}
+.hero-bridge{position:absolute;right:-8px;bottom:-4px;width:230px;opacity:.4;pointer-events:none}
+.hero-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative;z-index:2}
+.eyebrow{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.7;font-weight:700}
+.hero h1{font-family:'Fraunces','Noto Sans Ethiopic',serif;font-size:25px;font-weight:700;margin:3px 0 5px;line-height:1.2}
+.hero-sub{opacity:.82;font-size:13px;max-width:230px}
+.avatar{width:46px;height:46px;border-radius:50%;background:var(--amber);color:#231703;display:grid;place-items:center;font-weight:700;font-family:'Fraunces',serif;font-size:19px;overflow:hidden;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.hero-stats{display:flex;gap:8px;margin-top:16px;position:relative;z-index:2}
+.hstat{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 6px;border-radius:13px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13)}
+.hstat .hbig{display:flex;align-items:center;gap:5px;font-weight:700;font-size:15px;font-family:'Fraunces','Noto Sans Ethiopic',serif}
+.hstat .hbig .ic{color:var(--amber)}
+.hstat .hlab{font-size:10px;opacity:.75;font-weight:600}
+.miniring{position:relative;width:38px;height:38px}
+.miniring svg{transform:rotate(-90deg);width:38px;height:38px}
+.miniring .mr-bg{fill:none;stroke:rgba(255,255,255,.22);stroke-width:5}
+.miniring .mr-fg{fill:none;stroke:var(--amber);stroke-width:5;stroke-linecap:round;stroke-dasharray:100;transition:stroke-dashoffset .6s}
+.miniring span{position:absolute;inset:0;display:grid;place-items:center;font-size:10px;font-weight:700}
+.sec{padding:20px 16px 0;display:flex;align-items:baseline;gap:8px}
+.sec h2{font-family:'Fraunces','Noto Sans Ethiopic',serif;font-size:17.5px;font-weight:600}
+.sec .count{font-size:12px;color:var(--muted);font-weight:600}
+.sec .more{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--brand);background:none;border:0;cursor:pointer;font-family:inherit}
+.courses{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 16px 0}
+.course{text-align:left;padding:14px;display:flex;flex-direction:column;gap:8px;cursor:pointer;font-family:inherit;color:inherit}
+.course-top{display:flex;justify-content:space-between;align-items:center}
+.ctile{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--cc) 14%, transparent);color:var(--cc)}
+.pct{font-size:11.5px;font-weight:700;color:var(--muted)}
+.course-name{font-weight:700;font-size:14px;line-height:1.35}
+.course-sub{font-size:11.5px;color:var(--muted);line-height:1.4}
+.pbar{height:5px;border-radius:99px;background:var(--line);overflow:hidden}
+.pbar i{display:block;height:100%;border-radius:99px;background:var(--cc)}
+.course-meta{font-size:11px;color:var(--muted)}
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:10px 16px 4px}
+.qchip{display:flex;align-items:center;gap:10px;padding:13px 14px;font-family:inherit;color:inherit;cursor:pointer;text-align:left}
+.qchip .ic{color:var(--brand)}
+.qchip b{margin-left:auto;font-family:'Fraunces',serif;font-size:16px}
+.cont{display:flex;align-items:center;gap:12px;margin:14px 16px 0;padding:12px 14px;cursor:pointer;width:calc(100% - 32px);font-family:inherit;color:inherit;text-align:left}
+.cont-ic{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:color-mix(in srgb,var(--cc) 14%, transparent);color:var(--cc);flex:none}
+.lbl{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.cont-title{font-weight:700;font-size:14px}
 
-        /* --- Chapter Detail UI --- */
-        .chapter-card {
-            background: white; border-radius: var(--card-radius);
-            margin: 15px 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
-        .chapter-title { font-size: 15px; font-weight: 700; margin-bottom: 12px; color: var(--primary-green); }
-        .mode-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .mode-box {
-            border: 1px solid #f0f0f0; border-radius: 12px; padding: 12px;
-            text-align: center; cursor: pointer; background: #fdfdfd;
-        }
-        .mode-box:active { background: #f0f7f7; }
-        .mode-label { font-size: 13px; font-weight: 700; display: block; }
-        .mode-count { font-size: 10px; color: #888; margin-top: 4px; }
-        
-        /* ...omitted for brevity... */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; background: white;
-            display: flex; justify-content: space-around; padding: 10px 0;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.08); z-index: 100;
-        }
-        .nav-item { text-align: center; font-size: 10px; color: #bbb; cursor: pointer; flex: 1; }
-        .nav-item.active { color: var(--primary-green); font-weight: bold; }
-        .nav-icon { font-size: 20px; margin-bottom: 2px; }
+/* ---------- ኮርስ / ምዕራፍ ---------- */
+.course-head{display:flex;gap:14px;align-items:center;margin:14px 16px 0;padding:16px}
+.chlist{display:flex;flex-direction:column;gap:10px;padding:12px 16px 0}
+.chrow{display:flex;gap:12px;padding:14px;align-items:center;cursor:pointer}
+.ch-num{font-family:'Fraunces',serif;font-weight:700;font-size:16px;color:var(--muted);width:24px;flex:none}
+.ch-mid{flex:1;min-width:0}
+.ch-title{font-weight:700;font-size:14.5px;line-height:1.3}
+.ch-sub{font-size:11.5px;color:var(--muted)}
+.ch-tags{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:var(--ok-soft);color:var(--ok);display:inline-flex;align-items:center;gap:4px}
+.tag.amber{background:var(--amber-soft);color:var(--amber-ink)}
+.ch-btns{display:flex;flex-direction:column;gap:6px;flex:none}
+.mini{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:12px;font-weight:700;padding:7px 11px;border-radius:9px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);cursor:pointer}
+.mini .ic{width:14px;height:14px}
+.mini.acc{background:var(--brand);border-color:var(--brand);color:var(--on-brand)}
 
-        .view { display: none; min-height: 100vh; }
-        .view.active { display: block; animation: slideUp 0.3s ease-out; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    </style>
+/* ---------- ማስታወሻዎች ---------- */
+.notes-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px;gap:10px}
+.notes-bar .lbl{letter-spacing:.14em}
+.bm-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;color:var(--muted);cursor:pointer;flex:none}
+.bm-btn.on{color:var(--amber);border-color:var(--amber);background:var(--amber-soft)}
+.notes-card{margin:0 16px;padding:4px 18px}
+ol.notes{list-style:none;counter-reset:n}
+ol.notes li{counter-increment:n;display:flex;gap:12px;padding:14px 0;border-bottom:1px dashed var(--line)}
+ol.notes li:last-child{border-bottom:0}
+ol.notes li::before{content:counter(n,decimal-leading-zero);font-family:'Fraunces',serif;font-weight:700;font-size:13px;color:var(--brand);padding-top:2px;flex:none}
+ol.notes p{font-size:14px;flex:1}
+.gotit{margin:14px 16px 0;width:calc(100% - 32px)}
+.chipx{font-size:12px;font-weight:700;padding:6px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer;font-family:inherit}
+
+/* ---------- ፈተና / quiz ---------- */
+.qwrap{padding:14px 16px 0}
+.qmeta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);font-weight:700}
+.qbar{height:4px;background:var(--line);border-radius:99px;margin:8px 0 14px;overflow:hidden}
+.qbar i{display:block;height:100%;background:var(--brand);border-radius:99px;transition:width .3s}
+.qtext{font-family:'Fraunces','Noto Sans Ethiopic',serif;font-size:19px;font-weight:600;line-height:1.45;margin-bottom:14px}
+.qtext.sm{font-size:15px;margin-bottom:10px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opts.ro .opt{cursor:default}
+.opt{display:flex;align-items:center;gap:11px;width:100%;text-align:left;font-family:inherit;padding:12px;border-radius:13px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;color:var(--ink);font-size:14px}
+.opt .lt{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--surface2);border:1px solid var(--line);font-weight:700;font-size:12.5px;font-family:'Fraunces',serif;flex:none}
+.opt .ot{flex:1}
+.opt .mk{width:20px;flex:none}
+.opt .mk .ic{width:18px;height:18px}
+.opt.sel{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 8%, var(--surface))}
+.opt.sel .lt{background:var(--brand);color:var(--on-brand);border-color:var(--brand)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok .lt{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.ok .mk{color:var(--ok)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft);animation:shake .3s}
+.opt.bad .lt{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.bad .mk{color:var(--bad)}
+.opt.dim{opacity:.5}
+.qfoot{margin-top:14px}
+.qfoot .btn{width:100%}
+.expl{margin-top:14px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface2);animation:rise .35s ease both}
+.expl.good{border-color:color-mix(in srgb,var(--ok) 45%, var(--line))}
+.ex-verdict{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13.5px;margin-bottom:6px}
+.ex-verdict.good{color:var(--ok)}
+.ex-verdict.poor{color:var(--bad)}
+.ex-verdict .ic{width:17px;height:17px}
+.expl p{font-size:13.5px}
+.bm-q{margin-top:11px;display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:12px;font-weight:700;color:var(--muted);background:none;border:0;cursor:pointer;padding:0}
+.bm-q .ic{width:15px;height:15px}
+.bm-q.on{color:var(--amber)}
+.rescard{margin:18px 16px 0;padding:24px 20px;text-align:center}
+.ring{width:132px;height:132px;margin:0 auto 12px;position:relative}
+.ring svg{transform:rotate(-90deg);width:132px;height:132px}
+.rbg{fill:none;stroke:var(--line);stroke-width:9}
+.rfg{fill:none;stroke:var(--cc);stroke-width:9;stroke-linecap:round;stroke-dasharray:100;transition:stroke-dashoffset .9s cubic-bezier(.2,.7,.3,1)}
+.rnum{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:700;font-size:30px;line-height:1}
+.rnum span{font-size:13px;color:var(--muted);font-family:'Noto Sans Ethiopic'}
+.resline{font-size:14px;display:flex;justify-content:center;align-items:center;gap:6px;flex-wrap:wrap}
+.xpchip{display:inline-flex;align-items:center;gap:4px;color:var(--amber-ink);background:var(--amber-soft);border-radius:99px;padding:3px 10px;font-weight:700;font-size:12.5px}
+.xpchip .ic{width:13px;height:13px;color:var(--amber)}
+.resmsg{color:var(--muted);font-size:13.5px;margin:8px 0 18px}
+.btnrow{display:flex;gap:10px;justify-content:center}
+.btnrow .btn{flex:1}
+
+/* ---------- ደረጃ / leaderboard ---------- */
+.blist{display:flex;flex-direction:column;gap:8px;padding:12px 16px 0}
+.brow{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.brow .rank{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:700;font-size:13.5px;background:var(--surface2);border:1px solid var(--line);color:var(--muted);flex:none}
+.rank.g{background:var(--amber-soft);color:var(--amber-ink);border-color:var(--amber)}
+.rank.s{background:var(--surface2);color:var(--ink)}
+.rank.b{background:color-mix(in srgb,#A15C2E 14%, var(--surface));color:#A15C2E;border-color:#A15C2E}
+.bname{flex:1;font-weight:700;font-size:14px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.me-tag{font-size:10px;background:var(--brand);color:var(--on-brand);border-radius:99px;padding:2px 9px;font-weight:700;flex:none}
+.bpts{font-family:'Fraunces',serif;font-weight:700;flex:none}
+.brow.me{border-color:var(--brand);background:color-mix(in srgb,var(--brand) 8%, var(--surface))}
+
+/* ---------- መገለጫ / profile ---------- */
+.pcard{display:flex;gap:14px;align-items:center;margin:14px 16px 0;padding:16px}
+.pcard .avatar{width:52px;height:52px;font-size:21px}
+.pname{font-family:'Fraunces','Noto Sans Ethiopic',serif;font-weight:700;font-size:17px}
+.prole{font-size:12px;color:var(--muted)}
+.prank{margin-left:auto;font-size:11px;font-weight:700;color:var(--amber-ink);background:var(--amber-soft);border-radius:99px;padding:4px 10px;flex:none}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 16px 0}
+.stat{padding:13px 8px;text-align:center}
+.stat b{display:block;font-family:'Fraunces',serif;font-size:20px}
+.stat span{font-size:10.5px;color:var(--muted);font-weight:600}
+.plist{padding:8px 16px 0;display:flex;flex-direction:column;gap:9px}
+.prow{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.pdot{width:9px;height:9px;border-radius:3px;flex:none}
+.ppct{margin-left:auto;font-family:'Fraunces',serif}
+.pbar.sm{height:4px}
+.signout{margin:20px 16px 0;width:calc(100% - 32px);color:var(--bad)}
+
+/* ---------- ፍለጋ / ቡክማርክ ---------- */
+.srch{padding:12px 16px 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap;padding:12px 16px 0}
+.srlist{display:flex;flex-direction:column;gap:9px;padding:12px 16px 0}
+.sr{display:flex;gap:11px;padding:13px;text-align:left;font-family:inherit;color:inherit;cursor:pointer;width:100%;flex-wrap:wrap}
+.sr-main{flex:1;min-width:0}
+.sr-ic{width:34px;height:34px;border-radius:10px;background:var(--surface2);border:1px solid var(--line);display:grid;place-items:center;color:var(--brand);flex:none}
+.sr-t{font-weight:700;font-size:13.5px;line-height:1.35}
+.sr-s{font-size:12px;color:var(--muted);margin-top:2px}
+.sr-c{font-size:10.5px;color:var(--brand);font-weight:700;margin-top:4px;letter-spacing:.05em;text-transform:uppercase}
+.srq{flex-basis:100%;max-height:0;overflow:hidden;transition:max-height .35s ease}
+.sr.open .srq{max-height:800px}
+.qcard{padding:14px;background:var(--surface2)}
+.qex{font-size:12.5px;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+.empty{text-align:center;color:var(--muted);padding:44px 30px;font-size:13.5px}
+.empty .ic{width:34px;height:34px;margin-bottom:10px;color:var(--line)}
+.bmrow{display:flex;align-items:center;gap:11px;padding:13px 14px;cursor:pointer;font-family:inherit;color:inherit;text-align:left;width:100%}
+.bmrow .del{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--surface2);color:var(--muted);display:grid;place-items:center;cursor:pointer;flex:none}
+.bmrow .del .ic{width:15px;height:15px}
+
+/* ---------- ታብ ባር ---------- */
+#tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;display:flex;background:color-mix(in srgb, var(--surface) 92%, transparent);backdrop-filter:blur(14px);border-top:1px solid var(--line);padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:30}
+#tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;font-size:10.5px;font-weight:700;color:var(--muted);background:none;border:0;cursor:pointer;padding:5px 0;border-radius:10px}
+#tabbar button.on{color:var(--brand)}
+#tabbar.hidden{display:none}
+#toasts{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:60;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:max-content;max-width:90vw}
+.toast{display:flex;align-items:center;gap:7px;background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:99px;font-size:13px;font-weight:700;opacity:0;transform:translateY(-12px);transition:.25s;box-shadow:var(--shadow)}
+.toast.on{opacity:1;transform:none}
+.toast .ic{width:15px;height:15px;color:var(--amber)}
+</style>
 </head>
 <body>
+<div id="app"><div id="screen"></div></div>
+<nav id="tabbar" class="hidden"></nav>
+<div id="toasts"></div>
 
-    <!-- Auth overlay: shown only if Telegram data not available -->
-    <div id="auth-overlay" class="auth-overlay">
-        <div class="auth-card" style="max-height:90vh; overflow-y:auto; text-align:center;">
-            <h1 style="color:var(--accent-gold); font-size:28px; margin-bottom:5px;">Smart Bridge</h1>
-            <p style="color:#ccc; font-size:12px; margin-bottom:24px;">Road to 4.0 CGPA 🚀</p>
+<script>
+'use strict';
+/* ============ አገልግሎቶች / helpers ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const T = o => (o == null ? '' : (o[S.lang] ?? o.en));
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+const hl = (s, q) => { let x = md(s); if(!q) return x;
+  const qq = esc(q).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  try{ x = x.replace(new RegExp(qq,'gi'), m => '<mark>'+m+'</mark>'); }catch(e){}
+  return x; };
+const today = () => new Date().toISOString().slice(0,10);
+const yest = () => new Date(Date.now()-864e5).toISOString().slice(0,10);
 
-            <!-- Telegram loading state -->
-            <div id="tg-loading-panel">
-                <div style="font-size:48px; margin-bottom:12px;">✈️</div>
-                <p style="color:#ccc; font-size:14px; margin-bottom:6px;">Connecting to Telegram...</p>
-                <p style="color:#888; font-size:12px;">Please wait</p>
-            </div>
+/* ============ አዶዎች / icons (SVG) ============ */
+const I = {
+  back:'<path d="M15 5l-7 7 7 7"/>', chev:'<path d="M9 5l7 7-7 7"/>',
+  home:'<path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+  trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 5H5a3 3 0 0 0 3 5M16 5h3a3 3 0 0 1-3 5M12 13v4M9 20h6M10 17h4"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0 1 14 0"/>',
+  book:'<path d="M5 5a2 2 0 0 1 2-2h12v16H7a2 2 0 0 0-2 2z"/><path d="M5 19a2 2 0 0 1 2-2h12"/>',
+  checksq:'<rect x="4" y="4" width="16" height="16" rx="4"/><path d="M8.5 12.5l2.5 2.5 5-6"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7"/>',
+  x:'<path d="M6 6l12 12M18 6L6 18"/>',
+  bm:'<path d="M7 4h10v17l-5-4-5 4z"/>',
+  bmf:'<path d="M7 4h10v17l-5-4-5 4z" fill="currentColor"/>',
+  flame:'<path d="M12 3c.8 3.2 4.2 4.6 4.2 8.4a4.2 4.2 0 1 1-8.4 0c0-1.6.6-3 1.6-4.3.3 1.1 1 2 1.9 2.4C11 7.2 11 5 12 3z" fill="currentColor" stroke="none"/>',
+  spark:'<path d="M12 3l1.9 5.6L19.5 10.5l-5.6 1.9L12 18l-1.9-5.6L4.5 10.5l5.6-1.9z" fill="currentColor" stroke="none"/>',
+  redo:'<path d="M4 10a8 8 0 1 1 2.3 6.3M4 10V5M4 10h5"/>',
+  out:'<path d="M14 4h4a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-4M4 12h11M11 8l4 4-4 4"/>',
+  phone:'<path d="M6 3h4l1.5 5-2.5 1.5a12 12 0 0 0 5.5 5.5L16 12.5l5 1.5v4a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2z"/>',
+  plane:'<path d="M21 4L3 11l6 2 2 6 3.5-4.5L19 17z" fill="currentColor" stroke="none"/>',
+  logic:'<circle cx="7" cy="6" r="2.3"/><circle cx="17" cy="6" r="2.3"/><circle cx="12" cy="18" r="2.3"/><path d="M8.3 8l2.6 7.9M15.7 8l-2.6 7.9"/>',
+  brain:'<path d="M12 4.5a3.2 3.2 0 0 0-6 1.2A3 3 0 0 0 5 11a3.2 3.2 0 0 0 1.6 5.2A3 3 0 0 0 12 19.5zM12 4.5a3.2 3.2 0 0 1 6 1.2A3 3 0 0 1 19 11a3.2 3.2 0 0 1-1.6 5.2A3 3 0 0 1 12 19.5z"/>',
+  globe:'<circle cx="12" cy="12" r="8.5"/><ellipse cx="12" cy="12" rx="3.8" ry="8.5"/><path d="M3.8 12h16.4"/>',
+  people:'<circle cx="8.5" cy="8" r="3"/><path d="M3.5 19a5 5 0 0 1 10 0"/><circle cx="16.5" cy="9.5" r="2.4"/><path d="M14.5 14.6a4.4 4.4 0 0 1 6 4.4"/>',
+  shield:'<path d="M12 3l7 3v6c0 4.4-3 7.6-7 9-4-1.4-7-4.6-7-9V6z"/><path d="M9 12l2.2 2.2L15.5 9.8"/>',
+  sigma:'<path d="M7 5h10l-7.5 7L17 19H7"/>'
+};
+const ic = (n, style) => '<svg class="ic"'+(style?' style="'+style+'"':'')+' viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">'+I[n]+'</svg>';
+const LOGO = '<svg width="30" height="30" viewBox="0 0 40 40"><rect width="40" height="40" rx="12" fill="var(--brand)"/><path d="M8 26 Q20 10 32 26" stroke="var(--on-brand)" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M8 26 H32" stroke="var(--on-brand)" stroke-width="2.2" stroke-linecap="round"/><path d="M13 23.4V26M20 22V26M27 23.4V26" stroke="var(--on-brand)" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const BRIDGE_ART = '<svg viewBox="0 0 360 150" fill="none">'+
+ '<path d="M10 118 H350" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" opacity=".8"/>'+
+ '<path d="M40 118 Q180 28 320 118" stroke="var(--brand)" stroke-width="2.6" stroke-linecap="round"/>'+
+ '<path d="M96 91V118M152 77V118M180 73V118M208 77V118M264 91V118" stroke="var(--brand)" stroke-width="1.6" opacity=".7"/>'+
+ '<path d="M18 118v18M342 118v18" stroke="var(--ink)" stroke-width="2.6" stroke-linecap="round" opacity=".55"/></svg>';
+const HERO_BRIDGE = '<svg class="hero-bridge" viewBox="0 0 230 60" fill="none"><path d="M0 46 H230" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/><path d="M18 46 Q115 2 212 46" stroke="var(--amber)" stroke-width="2" stroke-linecap="round"/><path d="M52 32V46M84 20V46M115 17V46M146 20V46M178 32V46" stroke="var(--amber)" stroke-width="1.4" opacity=".8"/></svg>';
 
-            <!-- Fallback: manual phone login (if not in Telegram) -->
-            <div id="login-panel" style="display:none;">
-                <div style="background:rgba(255,184,0,0.12); border:1px solid rgba(255,184,0,0.3); border-radius:12px; padding:12px; margin-bottom:18px;">
-                    <p style="color:#ffb800; font-size:12px; margin:0;">⚠️ Open this app inside Telegram for automatic login</p>
-                </div>
+/* ============ ይዘት / content (bilingual) ============ */
+const COURSES = [
+{ id:'logic', lt:'#C2410C', dk:'#FF9264', icon:'logic',
+  name:{en:'Logic & Critical Thinking', am:'አመክንዮና ተንትኔ አሳብ'},
+  desc:{en:'Arguments, validity, definitions and fallacies.', am:'ነገሮች፣ ትክክለኛነት፣ ትርጉምና ስህተቶች።'},
+  chapters:[
+  { id:'logic-1', title:{en:'Basic Concepts of Logic', am:'የአመክንዮ መሠረታዊ ጽንሰ-ሀሳቦች'}, notes:[
+    {en:'**Logic** is the study of the methods and principles used to distinguish good (correct) reasoning from bad (incorrect) reasoning.', am:'**አመክንዮ (Logic)** ትክክለኛ ከሆነ እና ከአልሆነ አመክንዮአዊ ማሰብ መካከል ልዩነት እንዲፈጽም የሚያስችሉ ዘዴዎችንና መርሆችን የሚያጠና እውቀት ነው።'},
+    {en:'An **argument** is a group of statements in which some (the **premises**) are claimed to support another (the **conclusion**).', am:'**ነገር (Argument)** አባባሎችን ያካትታል — ድጋፍ የሚሰጡት **እምቢቶች (Premises)** ሲሆኑ፣ የሚደገፈው አባባል ደግሞ **ማስፈንጠሪያ (Conclusion)** ይባላል።'},
+    {en:'A **deductive** argument claims its conclusion follows **necessarily**; if valid and all premises are true, it is **sound**.', am:'**ዲዳክቲቭ** ነገር ማስፈንጠሪያው ከእምቢቶቹ **በአስገዳጅነት (necessarily)** እንደሚከተል ይጠይቃል፤ ትክክለኛ (valid) ከሆነና እምቢቶቹ ሁሉ እውነት ከሆኑ **ጽኑ (sound)** ይባላል።'},
+    {en:'An **inductive** argument claims its conclusion follows **probably**; it is judged **strong** or **weak** — never “valid”.', am:'**ኢንዳክቲቭ** ነገር ማስፈንጠሪያው ከእምቢቶቹ **በእድል (probably)** እንደሚከተል ይጠይቃል፤ **strong** ወይም **weak** ተብሎ ይገመገማል — “valid” አይባልም።'},
+    {en:'**Validity** is about structure: it is impossible for the premises to be true while the conclusion is false.', am:'**ትክክለኛነት (Validity)** በአወቃቀሩ ላይ የተመሠረተ ነው፦ እምቢቶቹ እውነት ሆነው ማስፈንጠሪያው ሐሰት መሆን የማይቻል ከሆነ ነገሩ valid ነው።'},
+    {en:'A **sound argument** = a valid argument with **all true premises**.', am:'**Sound ነገር** = valid የሆነ + እምቢቶቹ **ሙሉ በሙሉ እውነት** የሆኑበት ነገር ነው።'}],
+   quiz:[
+    {q:{en:'The statements in an argument that provide the support are called…', am:'በነገር ውስጥ ድጋፍ የሚሰጡ አባባሎች ___ ተብለው ይጠራሉ።'}, opts:{en:['Conclusion','Premises','Fallacies','Definitions'], am:['ማስፈንጠሪያ (Conclusion)','እምቢቶች (Premises)','ስህተቶች (Fallacies)','ትርጉሞች (Definitions)']}, a:1,
+     ex:{en:'Premises give the support; the statement they support is the conclusion.', am:'እምቢቶች ድጋፍ የሚሰጡ ናቸው፤ የሚደገፈው አባባል ደግሞ ማስፈንጠሪያ ነው።'}},
+    {q:{en:'“All humans are mortal. Socrates is a human. Therefore, Socrates is mortal.” This argument is…', am:'«ሁሉም ሰዎች የሚሞቱ (mortal) ናቸው። ሶክራቲስ ሰው ነው። በስለዚህ ሶክራቲስ የሚሞት ነው።» ይህ ነገር…'}, opts:{en:['Inductive and strong','Deductive and invalid','Deductive and valid','Inductive and weak'], am:['ኢንዳክቲቭ እና ጠንካራ','ዲዳክቲቭ እና invalid','ዲዳክቲቭ እና valid','ኢንዳክቲቭ እና ደካማ']}, a:2,
+     ex:{en:'A classic syllogism — the conclusion follows with necessity, so it is deductive and valid.', am:'ክላሲካል ሲሎጂዝም ነው — ማስፈንጠሪያው በአስገዳጅነት ይከተላል፣ ስለዚህ ዲዳክቲቭና ትክክለኛ (valid) ነው።'}},
+    {q:{en:'A sound argument is one that is…', am:'Sound የሚባለው ነገር…'}, opts:{en:['Strong with true premises','Valid with one false premise','Emotional and persuasive','Valid with all true premises'], am:['ጠንካራ እና እምቢቶቹ እውነት','valid ግን አንድ እምቢት ሐሰት','ስሜታዊና አሳማኝ','valid እና እምቢቶቹ ሙሉ በሙሉ እውነት']}, a:3,
+     ex:{en:'Sound = valid + all premises true.', am:'Sound ማለት = valid + እምቢቶቹ ሙሉ በሙሉ እውነት የሆኑበት።'}},
+    {q:{en:'Which can NOT be said of an inductive argument?', am:'ለኢንዳክቲቭ ነገር የማይባለው የቱ ነው?'}, opts:{en:['It is strong','It is valid','It is weak','It is based on probability'], am:['ጠንካራ ነው','valid ነው','ደካማ ነው','በእድል ላይ የተመሠረተ ነው']}, a:1,
+     ex:{en:'Validity applies only to deductive arguments; induction is judged strong or weak.', am:'Validity ለዲዳክቲቭ ብቻ ይሠራል፤ ኢንዳክቲቭ ደግሞ strong ወይም weak ተብሎ ይገመገማል።'}}]},
+  { id:'logic-2', title:{en:'Definitions & Fallacies', am:'የትርጉም ዓይነቶችና ስህተቶች'}, notes:[
+    {en:'A **definition** states the meaning of a word: the word defined is the **definiendum**, the defining words are the **definiens**.', am:'**ትርጉም (Definition)** የቃልን ማንነት ይገልጻል፤ የሚገለጸው ቃል **definiendum**፣ የሚገልጸው ደግሞ **definiens** ይባላል።'},
+    {en:'**Intensional** definitions use the attributes of the concept; **extensional** definitions list or point to its members.', am:'**Intensional** ትርጉም የጽንሰ-ሀሳቡን ባህርያት ይጠቀማል፤ **extensional** ደግሞ የክፍሉን አባላት ዘርዝሮ ወይም በማሳየት ይገልጻል።'},
+    {en:'A **stipulative** definition assigns a new meaning; a **lexical** definition reports how a word is actually used.', am:'**Stipulative** ትርጉም አዲስ ትርጉም ይሰጣል፤ **lexical** ትርጉም ቃሉ በእውኑ እንዴት እንደሚውል ይዘረዝራል።'},
+    {en:'A **precising** definition reduces vagueness; a **theoretical** definition explains the nature of a concept (e.g. “heat” in physics).', am:'**Precising** ትርጉም ግልጽነት እንዲኖር ግልባጭነትን (vagueness) ይቀንሳል፤ **theoretical** የጽንሰ-ሀሳቡን ውስብስብ ማንነት ያብራራል (ለምሳሌ በፊዚክስ “heat”)።'},
+    {en:'A **persuasive** definition aims to influence attitudes, not just report meaning.', am:'**Persuasive** ትርጉም ትርጉሙን ብቻ ሳይሆን የሰውን አመለካከትና ስሜት ለመቀየር የሚውል ነው።'},
+    {en:'A **fallacy** is a defect in an argument: **formal** (broken structure) or **informal** (bad content).', am:'**ስህተት (Fallacy)** በነገሩ ውስጥ የሚኖር የማሰብ ድህነት ነው — **formal** (የቅርጽ ብልሽት) ወይም **informal** (የይዘት ብልሽት)።'}],
+   quiz:[
+    {q:{en:'“Lightning is a natural electrical discharge” — as used in physics, this is a ___ definition.', am:'«መብረቅ (lightning) የተፈጥሮ የኤሌክትሪክ ፈሰሳ ነው» — በፊዚክስ ውስጥ ___ ትርጉም ነው።'}, opts:['Stipulative','Theoretical','Persuasive','Lexical'], a:1,
+     ex:{en:'Theoretical definitions explain the nature of a scientific concept like heat or lightning.', am:'Theoretical ትርጉም እንደ heat ወይም lightning ያሉ የሳይንስ ጽንሰ-ሀሳቦችን ውስብስብ ማንነት ያብራራል።'}},
+    {q:{en:'Defining “chair” by pointing at chairs is an ___ definition.', am:'ወንበርን በወንበሮች ላይ በማሳየት መገለጽ ___ ትርጉም ነው።'}, opts:['Intensional','Stipulative','Extensional (ostensive)','Precising'], a:2,
+     ex:{en:'Pointing at members of the class is extensional (ostensive) definition.', am:'የክፍሉን አባላት በማሳየት መገለጽ extensional (ostensive) ትርጉም ነው።'}},
+    {q:{en:'A politician defines “freedom” so the audience will love it. This is a ___ definition.', am:'ፖለቲከኛ «ነጻነት»ን ሕዝቡ እንዲወደው በሚያደርግ መልኩ የገለጸው ___ ትርጉም ነው።'}, opts:['Persuasive','Lexical','Theoretical','Precising'], a:0,
+     ex:{en:'Persuasive definitions aim to influence attitude, not just report meaning.', am:'Persuasive ትርጉም የሰውን አመለካከት ለመቀየር ያለመ ነው፤ ትርጉሙን ብቻ ለመዘረዘር አይደለም።'}},
+    {q:{en:'Formal fallacies are detected by examining the argument’s…', am:'Formal ስህተቶች የሚገኙት የነገሩን ___ በመመርመር ነው።'}, opts:{en:['Emotional appeal','Length','Origin','Form / structure'], am:['የስሜት ጭንቀት','ርዝመት','መነሻ','ቅርጽ (form) / አወቃቀር']}, a:3,
+     ex:{en:'Formal fallacies come from broken structure — check the form of the argument.', am:'Formal ስህተቶች የሚመጡት የነገሩ አወቃቀር ሲበላሽ ነው — የነገሩን form ይመርምሩ።'}}]}]},
+{ id:'psych', lt:'#0F766E', dk:'#4CC8BC', icon:'brain',
+  name:{en:'General Psychology', am:'አጠቃላይ ሥነ ልብ ሳይንስ'},
+  desc:{en:'Behavior, mind, memory and the schools of thought.', am:'ባህሪ፣ አእምሮ፣ ትውስታና የጥናት አቀራረቦች።'},
+  chapters:[
+  { id:'psych-1', title:{en:'Nature & Schools of Psychology', am:'የሥነ ልብ ሳይንስ ባህርይና አቀራረቦች'}, notes:[
+    {en:'**Psychology** is the scientific study of **behavior and mental processes**.', am:'**ሥነ ልብ ሳይንስ (Psychology)** ባህሪንና **የአእምሮ ሥራዎችን** በሳይንሳዊ መንገድ የሚያጠና እውቀት ነው።'},
+    {en:'Its four goals: **describe, explain, predict, and control (influence)** behavior.', am:'አራቱ ዓላማዎቹ፦ ባህሪን **መግለጽ (describe)፣ ማብራራት (explain)፣ መተንበይ (predict) እና መቆጣጠር (control)** ናቸው።'},
+    {en:'**Structuralism** (Wundt, Titchener) broke consciousness into elements using **introspection**.', am:'**Structuralism** (Wundt, Titchener) ንቃተ ህሊናን ወደ ክፍሎች በመከፋፈል በ**introspection** (ወደ ውስጥ መመልከት) ያጠናል።'},
+    {en:'**Functionalism** (William James) studied the **function and purpose** of behavior and mind.', am:'**Functionalism** (William James) የባህሪና የአእምሮ **ተግባርና ዓላማ** ላይ ያተኩራል።'},
+    {en:'**Behaviorism** (Watson, Skinner): only **observable behavior** deserves scientific study.', am:'**Behaviorism** (Watson, Skinner)፦ ሊጠና የሚገባው በዓይን **የሚታየው ባህሪ ብቻ** ነው ይላል።'},
+    {en:'**Psychoanalysis** (Freud): unconscious conflicts drive us. **Gestalt**: the whole exceeds the sum of parts. **Humanistic** (Rogers, Maslow): growth and free will.', am:'**Psychoanalysis** (Freud)፦ ያልተገለጸ አእምሮ (unconscious) ባህሪን ይነዳል። **Gestalt**፦ ሙሉው ከክፍሎቹ ድምር የበለጠ ነው። **Humanistic** (Rogers, Maslow)፦ የሰው እድገትና ነጻ ምርጫ ያተኩራል።'}],
+   quiz:[
+    {q:{en:'Psychology is best defined as the scientific study of…', am:'ሥነ ልብ ሳይንስ በተሻለ ሁኔታ ___ የሳይንሳዊ ጥናት ተብሎ ይገለጻል።'}, opts:{en:['The soul only','Behavior and mental processes','Disease and treatment','Society and culture'], am:['ነፍስን ብቻ','ባህሪንና የአእምሮ ሥራዎች','በሽታና ሕክምና','ማህበርንና ባህል']}, a:1,
+     ex:{en:'Psychology studies behavior and mental processes scientifically.', am:'ሥነ ልብ ሳይንስ ባህሪንና የአእምሮ ሥራዎችን በሳይንሳዊ መንገድ ያጠናል።'}},
+    {q:{en:'“The whole is greater than the sum of its parts” is a core claim of…', am:'«ሙሉው ከክፍሎቹ ድምር የበለጠ ነው» የሚለው የ___ ዋና አቋም ነው።'}, opts:['Gestalt psychology','Behaviorism','Structuralism','Psychoanalysis'], a:0,
+     ex:{en:'That principle is the core claim of Gestalt psychology.', am:'ይህ መርህ የGestalt ሥነ ልብ ዋና አቋም ነው።'}},
+    {q:{en:'The school insisting that only observable behavior deserves study is…', am:'ሊጠና የሚገባው በዓይን የሚታየው ባህሪ ብቻ ነው የሚለው የ___ አቀራረብ ነው።'}, opts:['Humanistic','Functionalism','Gestalt','Behaviorism'], a:3,
+     ex:{en:'Watson and Skinner’s behaviorism accepts only observable behavior.', am:'Watsonና Skinner የbehaviorism አቀራረብ በዓይን የሚታየውን ባህሪ ብቻ ይቀበላል።'}},
+    {q:{en:'Introspection was the main method of…', am:'Introspection ዋና ዘዴ የነበረው የ___ ነው።'}, opts:['Structuralism','Behaviorism','Psychoanalysis','Humanistic'], a:0,
+     ex:{en:'Introspection (“looking inward”) was Wundt and Titchener’s main method.', am:'Introspection (ወደ ውስጥ መመልከት) የWundtና የTitchener ዋና ዘዴ ነበር።'}}]},
+  { id:'psych-2', title:{en:'Memory', am:'ትውስታ / ማስታወስ'}, notes:[
+    {en:'Memory = **encoding → storage → retrieval** of information.', am:'ትውስታ (Memory) = መረጃን **ማስገባት (encoding) → ማከማቸት (storage) → ማውጣት (retrieval)** የሚባሉ ሂደቶች ውጤት ነው።'},
+    {en:'Three stores: **sensory** (very brief), **short-term** (~7 items, ~30 sec), **long-term** (huge capacity).', am:'ሦስት ማከማቻዎች፦ **Sensory** (በጣም አጭር)፣ **Short-term** (~7 ንብረቶች፣ ~30 ሰከንድ)፣ **Long-term** (ትልቅ አቅም)።'},
+    {en:'**Rehearsal** (repetition) keeps information in STM and helps transfer it to LTM.', am:'**ድግግሞሽ (Rehearsal)** መረጃን በSTM ውስጥ ይይዛልና ወደ LTM እንዲቀየር ይረዳል።'},
+    {en:'Types of long-term memory: **episodic** (events), **semantic** (facts), **procedural** (skills).', am:'የLTM ዓይነቶች፦ **Episodic** (ክስተቶች)፣ **Semantic** (እውነታዎች)፣ **Procedural** (ክህሎቶች)።'},
+    {en:'Forgetting: **decay** (fading), **interference** (memories conflict), **retrieval failure** (missing cue), **motivated forgetting** (repression).', am:'መርሳት ምክንያቶች፦ **Decay** (ከጊዜ ጋር መዳከም)፣ **Interference** (ትውስታዎች መታወር)፣ **Retrieval failure** (ፍንጭ ማጣት)፣ **Motivated forgetting** (repression)።'},
+    {en:'Effective study: **spaced practice, self-testing, elaboration** — not passive rereading.', am:'ውጤታማ ጥናት፦ **የተለያየ ጊዜ ላይ መድገም (spaced)፣ ራስን መፈተሽ፣ በጥልቀት ማሰብ** — ንቁ ተሳትፎ ያስፈልጋል፤ ድንበር የሌለው ድግግሞሽ ብቻ በቂ አይደለም።'}],
+   quiz:[
+    {q:{en:'The correct order of memory processes is:', am:'የትውስታ ሂደቶች ትክክለኛ ቅደም ተከተል፦'}, opts:['Storage → Encoding → Retrieval','Encoding → Storage → Retrieval','Retrieval → Encoding → Storage','Encoding → Retrieval → Storage'], a:1,
+     ex:{en:'Memory flows: encoding → storage → retrieval.', am:'ትውስታ እንዲህ ይንቀሳቀሳል፦ encoding → storage → retrieval።'}},
+    {q:{en:'Short-term memory holds roughly:', am:'የShort-term memory አቅም ገደማ ___ ነው።'}, opts:['Unlimited information','3 items','7±2 items','100 items'], a:2,
+     ex:{en:'STM holds about 7±2 items for roughly 30 seconds.', am:'STM ገደማ 7±2 ንብረቶችን ለገደማ 30 ሰከንድ ይይዛል።'}},
+    {q:{en:'Riding a bicycle is stored as ___ memory.', am:'ስይክል መንዳት ___ ትውስታ ውስጥ ይከማቻል።'}, opts:['Episodic','Semantic','Sensory','Procedural'], a:3,
+     ex:{en:'Skills like cycling are procedural (implicit) memories.', am:'እንደ ስይክል መንዳት ያሉ ክህሎቶች procedural (implicit) ትውስታዎች ናቸው።'}},
+    {q:{en:'Forgetting because old and new memories conflict is called:', am:'የድሮና የአዲስ መረጃ መታወር ምክንያት መርሳት ___ ይባላል።'}, opts:['Decay','Interference','Repression','Encoding failure'], a:1,
+     ex:{en:'Old and new memories competing = interference.', am:'የድሮና የአዲስ ትውስታ መታወር = interference ይባላል።'}}]}]},
+{ id:'geo', lt:'#0369A1', dk:'#62B4E6', icon:'globe',
+  name:{en:'Geography of Ethiopia', am:'የኢትዮጵያ ጂኦግራፊ'},
+  desc:{en:'Location, size, climate and seasons.', am:'አካባኪ፣ ስፋት፣ አየር ንብረትና ወቅቶች።'},
+  chapters:[
+  { id:'geo-1', title:{en:'Ethiopia: Location & Size', am:'የኢትዮጵያ አካባኪና መጠን'}, notes:[
+    {en:'Ethiopia lies in the **Horn of Africa**, between **3°N–15°N** latitude and **33°E–48°E** longitude.', am:'ኢትዮጵያ በ**አፍሪካ ቀንድ** ውስጥ፣ ከ**3°N–15°N** ኬክሮስና ከ**33°E–48°E** ሜሪዲያን መካከል ትገኛለች።'},
+    {en:'The **astronomical location** affects climate: near the equator the climate is warm and day length varies little.', am:'**የሥነ ፈለክ አካባኪ (astronomical location)** አየር ንብረትን ይናዘባል፦ ከኢኳቶር ጥቂት ርቃ መገኘት ሙቅ አየር ንብረትና የቀን ርዝመት ውሱን ልዩነት ያስከትላል።'},
+    {en:'Total area ≈ **1.1 million km²** — among the ten largest countries of Africa.', am:'ስፋቷ ገደማ **1.1 ሚሊዮን ኪ.ሜ²** — በአፍሪካ ከትላልቅ አገሮች አንዷ ናት።'},
+    {en:'Borders: **Eritrea** (N), **Djibouti** (NE), **Somalia** (E & SE), **Kenya** (S), **Sudan & South Sudan** (W).', am:'ድንበሮች፦ **ኤርትራ** (ሰሜን)፣ **ጅቡቲ** (ሰሜን ምሥራቅ)፣ **ሶማሊያ** (ምሥራቅና ደቡብ ምሥራቅ)፣ **ኬንያ** (ደቡብ)፣ **ሱዳንና ደቡብ ሱዳን** (ምዕራብ)።'},
+    {en:'Ethiopia is **landlocked**; it mainly uses the port of Djibouti.', am:'ኢትዮጵያ **ወደ ባሕር የማይወጣ (landlocked)** አገር ስትሆን በዋናነት የጅቡቲን ባሕር ዳር ትጠቀማለች።'},
+    {en:'Proximity to the **Middle East and Europe** gives Ethiopia geopolitical significance.', am:'ከ**መካከለኛ ምሥራቅና አውሮፓ** ጥቂት ርቃ መገኘቷ የጂኦ-ፖለቲካል ጠቀሜታ ሰጥቷታል።'}],
+   quiz:[
+    {q:{en:'Ethiopia’s latitude range is:', am:'የኢትዮጵያ የኬክሮስ ክልል፦'}, opts:['3°N–15°N','23°N–33°N','3°S–15°S','15°N–30°N'], a:0,
+     ex:{en:'Ethiopia lies between 3°N and 15°N.', am:'ኢትዮጵያ በ3°N እና 15°N መካከል ትገኛለች።'}},
+    {q:{en:'Ethiopia’s western neighbors are:', am:'ወደ ምዕራብ ከሚዋስሷት አገሮች፦'}, opts:['Kenya','Djibouti','Sudan & South Sudan','Eritrea'], a:2,
+     ex:{en:'Sudan and South Sudan share Ethiopia’s western border.', am:'ሱዳንና ደቡብ ሱዳን የኢትዮጵያ ምዕራባዊ ድንበር ይጋራሉ።'}},
+    {q:{en:'Ethiopia’s area is about:', am:'የኢትዮጵያ ስፋት ገደማ፦'}, opts:['600,000 km²','2.5 million km²','940,000 km²','1.1 million km²'], a:3,
+     ex:{en:'Ethiopia’s area is about 1.1 million km².', am:'የኢትዮጵያ ስፋት ገደማ 1.1 ሚሊዮን ኪ.ሜ² ነው።'}},
+    {q:{en:'Being near the equator means:', am:'ከኢኳቶር ጥቂት ርቀት ላይ መገኘት ማለት፦'}, opts:{en:['Long winters','Small seasonal variation in day length','Polar nights','No rainfall'], am:['ረጅም ክረምት','የቀን ርዝመት ውሱን ልዩነት','ፖላር ሌሊት','ዝናብ አለመኖር']}, a:1,
+     ex:{en:'Near the equator, day length barely changes across the year.', am:'ከኢኳቶር ጥቂት ርቆ መገኘት የቀን ርዝመት በዓመቱ ውስጥ በጥቂቱ ብቻ እንዲለወጥ ያደርጋል።'}}]},
+  { id:'geo-2', title:{en:'Climate & Seasons', am:'አየር ንብረትና ወቅቶች'}, notes:[
+    {en:'Factors affecting Ethiopia’s climate: **latitude, altitude, winds & ITCZ**, and distance from water bodies.', am:'የኢትዮጵያን አየር ንብረት የሚያኘዙ፦ **ኬክሮስ አካባኪ፣ ከፍታ፣ ነፋሶችና ITCZ**፣ እንዲሁም ከውሃ አካላት ርቀት ናቸው።'},
+    {en:'Altitude creates vertical zones: **Bereha** (<500 m), **Kolla** (500–1,500), **Woina Dega** (≈1,500–2,300), **Dega** (2,300–3,200), **Wurch** (>3,200).', am:'ከፍታ ቫርቲካላዊ ዞኖችን ይፈጥራል፦ **በርሃ** (<500 ሜ)፣ **ቆላ** (500–1,500)፣ **ወይና ደጋ** (≈1,500–2,300)፣ **ደጋ** (2,300–3,200)፣ **ዉርሕ** (>3,200)።'},
+    {en:'Three seasons: **Bega** (dry, Oct–Jan), **Belg** (short rains, Feb–May), **Kiremt** (main rains, Jun–Sep).', am:'ሦስት ወቅቶች፦ **በጋ** (ደረቅ፣ ጥቅምት–ጥር)፣ **በልግ** (አጭር ዝናብ፣ የካቲት–ግንቦት)፣ **ክረምት** (ዋና ዝናብ፣ ሰኔ–መስከረም)።'},
+    {en:'Kiremt rain peaks as the **ITCZ** shifts north and moist south-westerly winds arrive.', am:'የክረምት ዝናብ **ITCZ** ወደ ሰሜን ሲዛወርና ጭቃማ የደቡብ-ምዕራብ ነፋሶች ሲመጡ ከፍተኛ ይሆናል።'},
+    {en:'Highlands get most rain in **Kiremt**; southern lowlands also receive **Belg** rains.', am:'በከፍታ አካባቢዎች ዋናው ዝናብ በ**ክረምት**፤ በደቡብ ዝቅተኛ ሜዳዎች ደግሞ በ**በልግ** ይዘታል።'},
+    {en:'**Altitude**, not latitude, is the strongest local control on temperature in Ethiopia.', am:'በኢትዮጵያ የሙቀት መጠንን በአካባቢ ደረጃ ከሚቆጣጠሩ ኃይሎች በጣም ጠንካራው **ከፍታ** ነው፤ ኬክሮስ አይደለም።'}],
+   quiz:[
+    {q:{en:'Woina Dega’s altitude range is roughly:', am:'የወይና ደጋ (Woina Dega) የከፍታ ክልል ገደማ፦'}, opts:['Below 500 m','500–1,000 m','1,500–2,300 m','3,200–3,700 m'], a:2,
+     ex:{en:'Woina Dega (temperate) lies roughly between 1,500–2,300 m.', am:'ወይና ደጋ (temperate) ገደማ ከ1,500–2,300 ሜትር መካከል ይገኛል።'}},
+    {q:{en:'Kiremt (main rains) covers:', am:'ክረምት ወቅት የሚሆነው፦'}, opts:['Oct–Jan','Jun–Sep','Feb–May','Year-round'], a:1,
+     ex:{en:'Kiremt, the main rainy season, runs June–September.', am:'ዋናው የዝናብ ወቅት ክረምት ከሰኔ እስከ መስከረም ይቆያል።'}},
+    {q:{en:'The dry season is called:', am:'ደረቁ ወቅት ___ ይባላል።'}, opts:['Belg','Kiremt','Wurch','Bega'], a:3,
+     ex:{en:'Bega (Oct–Jan) is the dry season.', am:'በጋ (ጥቅምት–ጥር) ደረቁ ወቅት ነው።'}},
+    {q:{en:'The main factor creating vertical climate zones is:', am:'ቫርቲካላዊ የአየር ንብረት ዞኖችን የሚፈጥረው ዋና ምክንያት፦'}, opts:['Altitude','Latitude','Ocean currents','Day length'], a:0,
+     ex:{en:'Altitude creates the vertical (altitudinal) climate zones.', am:'ከፍታ ቫርቲካላዊ (altitudinal) የአየር ንብረት ዞኖችን ይፈጥራል።'}}]}]},
+{ id:'anthro', lt:'#B45309', dk:'#E8A54B', icon:'people',
+  name:{en:'Anthropology', am:'አንትሮፖሎጂ (ሥነ ሰው)'},
+  desc:{en:'Humans, culture, kinship and belief.', am:'ሰው ልጅ፣ ባህል፣ ዘመድነትና እምነት።'},
+  chapters:[
+  { id:'anthro-1', title:{en:'The Nature of Anthropology', am:'የአንትሮፖሎጂ ባህርይ'}, notes:[
+    {en:'Anthropology is the **holistic** study of humans — biology, society, culture, language, past and present.', am:'አንትሮፖሎጂ ስለ ሰው ልጅ (ባዮሎጂ፣ ማህበር፣ ባህል፣ ቋንቋ፣ ያለፈና አሁን) **አጠቃላይ (holistic)** ጥናት ነው።'},
+    {en:'Four branches: **physical/biological, archaeology, linguistic, sociocultural**.', am:'አራት ቅርንጫፎች፦ **physical/biological፣ archaeology፣ linguistic፣ sociocultural** ናቸው።'},
+    {en:'Culture is **learned, shared, symbolic, all-encompassing, integrated and dynamic**.', am:'ባህል **የሚማር፣ የሚጋራ፣ ምልክታዊ፣ ሁሉን-የሚያካትት፣ ተቀናጅና ተለዋዋጭ** ነው።'},
+    {en:'**Ethnocentrism** = judging others by your own culture’s standards; **cultural relativism** = understanding a culture on its own terms.', am:'**Ethnocentrism** = የራስዎን መስፈርት ተጠቅመው ሌሎችን ባህሎች መገምገም፤ **cultural relativism** = ባህልን በራሱ መስፈርት መረዳት።'},
+    {en:'Anthropologists do **fieldwork** through **participant observation**, producing **ethnography**.', am:'አንትሮፖሎጂስቶች **participant observation** (ተሳታፊ ጉብኝት) በማድረግ **fieldwork** ይሠራሉ፤ ውጤቱ **ethnography** ይባላል።'},
+    {en:'Holism means connecting all aspects of human life instead of studying one piece in isolation.', am:'Holism ማለት የሰው ሕይወትን ጎኖች ተነጥሎ ሳይሆን እርስ በርስ ተያይዘው መጠናት ማለት ነው።'}],
+   quiz:[
+    {q:{en:'Which belongs to anthropology’s four branches?', am:'ከአንትሮፖሎጂ አራት ቅርንጫፎች አንዱ የቱ ነው?'}, opts:['Economics','Archaeology','Statistics','Theology'], a:1,
+     ex:{en:'The four branches: physical, archaeology, linguistic, sociocultural.', am:'አራቱ ቅርንጫፎች፦ physical፣ archaeology፣ linguistic፣ sociocultural ናቸው።'}},
+    {q:{en:'Judging other cultures by your own standards is:', am:'የራስዎን ባህል መስፈርት ተጠቅመው ሌሎችን ባህሎች መገምገም = ___'}, opts:['Cultural relativism','Holism','Ethnocentrism','Diffusion'], a:2,
+     ex:{en:'Judging others by your own standards is ethnocentrism.', am:'የራስዎን መስፈርት ተጠቅመው ሌሎችን መገምገም ethnocentrism ነው።'}},
+    {q:{en:'Which is NOT a feature of culture?', am:'የባህል ባህርይ ያልሆነው የቱ ነው?'}, opts:{en:['Learned','Shared','Symbolic','Inherited biologically'], am:['የሚማር','የሚጋራ','ምልክታዊ','በባዮሎጂ የሚወረስ']}, a:3,
+     ex:{en:'Culture is learned, not inherited biologically.', am:'ባህል የሚማር ነው፤ በባዮሎጂ አይወርስም።'}},
+    {q:{en:'Living in the community while collecting data is called:', am:'በማህበረሰቡ ውስጥ ተሳትፎ መኖርና መረጃ መሰበሰብ ___ ይባላል።'}, opts:['Survey','Participant observation','Experiment','Census'], a:1,
+     ex:{en:'Participant observation = living in and joining the community’s life.', am:'Participant observation = በማህበረሰቡ ውስጥ ተሳትፎ መኖርና መረጃ መሰበሰብ ማለት ነው።'}}]},
+  { id:'anthro-2', title:{en:'Culture, Kinship & Belief', am:'ባህል፣ ዘመድነትና እምነት'}, notes:[
+    {en:'**Marriage** is a socially approved union: **monogamy** (one spouse), **polygyny** (one man, many wives), **polyandry** (one woman, many husbands).', am:'**ጋብቻ** በማህበር የተፈቀደ መተዳደር ነው፦ **monogamy** (አንድ ባል/ሚስት)፣ **polygyny** (አንድ ወንድ ብዙ ሚስቶች)፣ **polyandry** (አንድ ሴት ብዙ ባሎች)።'},
+    {en:'**Nuclear family** = parents + children; **extended family** includes other relatives.', am:'**Nuclear ቤተሰብ** = ወላጆችና ልጆች ብቻ፤ **extended ቤተሰብ** ሌሎች ዘመዶችንም ያካትታል።'},
+    {en:'Descent is traced **patrilineally** (father), **matrilineally** (mother) or **bilaterally** (both).', am:'ዘመድነት በ**አባት በኩል (patrilineal)**፣ በ**እናት በኩል (matrilineal)** ወይም በ**ሁለቱም (bilateral)** ይከታተላል።'},
+    {en:'Forms of religion: **animism, totemism, polytheism, monotheism** — Tylor saw **animism** as the earliest.', am:'የሃይማኖት ዓይነቶች፦ **animism፣ totemism፣ polytheism፣ monotheism** — ታይለር **animism**ን ቀደምቲ ይላል።'},
+    {en:'**Socialization** passes culture from one generation to the next.', am:'**ማህበራዊ ትምህርት (Socialization)** ባህልን ከትውልድ ወደ ትውልድ ያስተላልፋል።'},
+    {en:'A **clan** claims common ancestry; a **lineage** can demonstrate it genealogically.', am:'**ክላን (Clan)** ጋራ ቅድመ-አያት ይክልሳል፤ **lineage** ግን ዘመነ-ዘመድ (genealogy) በማስረዳት ማሳየት ይችላል።'}],
+   quiz:[
+    {q:{en:'One woman with several husbands is:', am:'አንድ ሴት ብዙ ባሎች መያዝ = ___'}, opts:['Polygyny','Monogamy','Exogamy','Polyandry'], a:3,
+     ex:{en:'One woman with several husbands = polyandry.', am:'አንድ ሴት ብዙ ባሎች መያዝ = polyandry ነው።'}},
+    {q:{en:'Parents + children only is:', am:'ወላጆችና ልጆች ብቻ ያካተተ = ___'}, opts:{en:['Extended family','Nuclear family','Clan','Lineage'], am:['Extended ቤተሰብ','Nuclear ቤተሰብ','ክላን (Clan)','የዘመድ ሐረግ (Lineage)']}, a:1,
+     ex:{en:'Parents + children only = nuclear family.', am:'ወላጆችና ልጆች ብቻ = nuclear family ናቸው።'}},
+    {q:{en:'The earliest form of religion, per Tylor, is:', am:'በታይለር እንደሚያሳየው ቀደምቲ የሃይማኖት አይነት = ___'}, opts:['Monotheism','Totemism','Animism','Polytheism'], a:2,
+     ex:{en:'Tylor regarded animism as the earliest form of religion.', am:'ታይለር እንደሚለው animism ቀደምቲ የሃይማኖት አይነት ነው።'}},
+    {q:{en:'Descent traced through both parents is:', am:'ዘመድ በሁለቱም ወላጆች በኩል መከታተል = ___'}, opts:['Bilateral','Patrilineal','Matrilineal','Unilineal'], a:0,
+     ex:{en:'Tracing descent through both parents = bilateral.', am:'ዘመድን በሁለቱም ወላጆች በኩል መከታተል = bilateral ነው።'}}]}]},
+{ id:'civics', lt:'#15803D', dk:'#5CC380', icon:'shield',
+  name:{en:'Civics & Ethical Education', am:'ሲቪክስና ሥነ-ምግባር ትምህርት'},
+  desc:{en:'Democracy, rule of law, rights and duties.', am:'ዲሞክራሲ፣ የሕግ የበላይነት፣ መብትና ግዴታ።'},
+  chapters:[
+  { id:'civics-1', title:{en:'Democracy & Rule of Law', am:'ዲሞክራሲና የሕግ የበላይነት'}, notes:[
+    {en:'**Democracy** = government by the people, **directly or through elected representatives**.', am:'**ዲሞክራሲ** = አገርን በሕዝብ **በቀጥታ ወይም በተመረጡ ተወካዮች** አማካይነት ማስተዳደር ነው።'},
+    {en:'Principles: **popular sovereignty, political equality, majority rule with minority rights, free & fair elections, accountability, rule of law**.', am:'መርሆቹ፦ **የሕዝብ ሉዓላዊነት፣ የፖለቲካ እኩልነት፣ የብዙሃን ውሳኔ ከአናሳ መብት ጋር፣ ነጻና ፍትሃዊ ምርጫ፣ ተጠያቂነት፣ የሕግ የበላይነት**።'},
+    {en:'Types: **direct** democracy (citizens decide themselves) vs **representative**; systems may be **parliamentary or presidential**.', am:'ዓይነቶች፦ **ቀጥታ (direct)** — ሕዝብ በራሱ ይወስናል vs **ተወካይ (representative)**፤ ሥርዓቱም **ፓርላማዊ ወይም ፕሬዚዳንታዊ** ሊሆን ይችላል።'},
+    {en:'**Rule of law**: everyone — including government — is subject to and equal before the law.', am:'**የሕግ የበላይነት**፦ መንግሥትን ጨምሮ ሁሉም ሰው በሕግ ቅር ነው፤ ሁሉም በፊቱ እኩል ነው።'},
+    {en:'The **constitution** is the supreme law: it limits government power and protects rights.', am:'**ሕገ መንግሥት** የበላይ ሕግ ነው፦ የመንግሥትን ሥልጣን ይገድባልና መብቶችን ይጠብቃል።'},
+    {en:'Accountability means officials answer for their decisions; transparency makes that possible.', am:'ተጠያቂነት ማለት ኦፊሴሎች ለውሳኔዎቻቸው መለስ መስጠት ሲሆን ግልጽነት (transparency) ይህን ያስችላል።'}],
+   quiz:[
+    {q:{en:'Majority rule must be balanced by:', am:'የብዙሃን ውሳኔ በ___ መጣጠን አለበት።'}, opts:{en:['Minority rights','One-party rule','Military power','Censorship'], am:['የአናሳ መብት','የአንድ ፓርቲ ሥርዓት','የወታደራዊ ኃይል','ሴንሰርሺፕ']}, a:0,
+     ex:{en:'Democracy protects minority rights alongside majority rule.', am:'ዲሞክራሲ የብዙሃን ውሳኔን ከአናሳዎቹ መብት ጋር ይጠብቃል።'}},
+    {q:{en:'Citizens deciding laws directly is:', am:'ሕዝብ ሕጎችን በቀጥታ የመወሰን = ___'}, opts:{en:['Representative democracy','Direct democracy','Oligarchy','Monarchy'], am:['ተወካይ ዲሞክራሲ','ቀጥታ ዲሞክራሲ','ኦሊጋርኪ','ሞናርኪ']}, a:1,
+     ex:{en:'Citizens deciding directly = direct democracy.', am:'ሕዝብ በራሱ ቀጥታ የመወሰን = direct democracy ነው።'}},
+    {q:{en:'The supreme law of the land is the:', am:'የአገሪቱ የበላይ ሕግ ___ ነው።'}, opts:{en:['Regulation','Directive','Proclamation','Constitution'], am:['ደንብ','መመሪያ','አዋጅ','ሕገ መንግሥት']}, a:3,
+     ex:{en:'The constitution is the supreme law of the land.', am:'ሕገ መንግሥት የአገሪቱ የበላይ ሕግ ነው።'}},
+    {q:{en:'Rule of law means:', am:'የሕግ የበላይነት ማለት፦'}, opts:{en:['Leaders are above the law','Everyone, including government, is subject to the law','Law binds citizens only','Courts follow the executive'], am:['መሪዎች ከሕግ በላይ ናቸው','መንግሥትን ጨምሮ ሁሉም በሕግ ቅር ነው','ሕግ ለዜጎች ብቻ ነው','ፍርድ ቤቶች ሥልጣኑን ይከተላሉ']}, a:1,
+     ex:{en:'Rule of law binds everyone — including the government.', am:'የሕግ የበላይነት ሁሉንም ይገድባል — መንግሥትንም ጨምሮ።'}}]},
+  { id:'civics-2', title:{en:'Human Rights & Duties', am:'የሰብዓዊ መብቶችና ግዴታዎች'}, notes:[
+    {en:'Human rights are **universal, inalienable, indivisible and interrelated**.', am:'የሰብዓዊ መብቶች **የሁሉም (universal)፣ የማይነጠቁ (inalienable)፣ የማይከፋፈሉና ተያያዥ** ናቸው።'},
+    {en:'Three generations: **civil-political**, **socio-economic**, and **solidarity/environmental** rights.', am:'ሦስት ትውልዶች፦ **ዜግነት-ፖለቲካዊ**፣ **ማህበራዊ-ኢኮኖሚያዊ**፣ **የተባበሩ/አካባቢያዊ** መብቶች።'},
+    {en:'The **UDHR (1948)** is the foundation document; Ethiopia’s **FDRE Constitution (1995), Chapter Three** guarantees fundamental rights and freedoms.', am:'**UDHR (1948)** የመሠረት ሰነድ ነው፤ የኢትዮጵያ **ፌዴራላዊ ሕገ መንግሥት (1995)፣ ምዕራፍ ሦስት** መሠረታዊ መብቶችንና ነጻነቶችን ያረጋግጣል።'},
+    {en:'Democratic rights: **expression, assembly, vote**. Duties: **paying taxes, defending the country, respecting others’ rights**.', am:'ዴሞክራሲያዊ መብቶች፦ **የአስተያየት ነጻነት፣ የመሰብሰብ፣ የመምረጥ**። ግዴታዎች፦ **ግብር መክፈል፣ አገርን መከላከል፣ የሌሎችን መብት መከብር**።'},
+    {en:'Rights and duties are **two sides of one coin** — my right implies others’ duty not to violate it.', am:'መብትና ግዴታ **የአንድ ሳንካ ሁለት ገጽ** ናቸው — የእኔ መብት የሌሎች ግዴታ ነው።'},
+    {en:'Rights can be limited only by law, when necessary to protect the rights of others and public order.', am:'መብቶች ሊገደቡ የሚችሉት በሕግ ብቻ ሲሆን የሌሎችን መብትና የሕዝብ ሰላም ለመጠበቅ በግዴታ ከሆነ ብቻ ነው።'}],
+   quiz:[
+    {q:{en:'“Inalienable” means:', am:'«Inalienable» ማለት፦'}, opts:{en:['Can be sold','Applies to citizens only','Cannot be taken away','Granted by government'], am:['ሊሸጥ ይችላል','ለዜጎች ብቻ ነው','ሊነጠቅ የማይችል ነው','በመንግሥት የተሰጠ ነው']}, a:2,
+     ex:{en:'Inalienable: rights cannot be taken away.', am:'Inalienable ማለት መብቶች ሊነጠቁ የማይችሉ መሆናቸው ነው።'}},
+    {q:{en:'The right to education is mainly a ___ right.', am:'የትምህርት መብት በዋናነት ___ መብት ነው።'}, opts:{en:['Socio-economic','Civil-political','Solidarity','Procedural'], am:['ማህበራዊ-ኢኮኖሚያዊ','ዜግነት-ፖለቲካዊ','የተባበሩ (solidarity)','ሂደታዊ']}, a:0,
+     ex:{en:'Education, health and food belong to socio-economic rights.', am:'ትምህርት፣ ጤና፣ ምግብ የማህበራዊ-ኢኮኖሚያዊ መብቶች ናቸው።'}},
+    {q:{en:'UDHR was adopted in:', am:'UDHR የተቀባበለው በ___ ነው።'}, opts:['1919','1989','1995','1948'], a:3,
+     ex:{en:'UDHR was adopted on 10 December 1948.', am:'UDHR በ1948 በዓለም አቀፍ ቀን አቆጣጠር የተቀባበለ ነው።'}},
+    {q:{en:'Which is a citizen’s duty?', am:'የዜግነት ግዴታ የሆነው የቱ ነው?'}, opts:{en:['Receiving a salary','Holding office','Paying taxes','Petitioning'], am:['ደመወዝ መቀበል','ሥልጣን መያዝ','ግብር መክፈል','ፊያሌት ማቅረብ']}, a:2,
+     ex:{en:'Paying tax is a classic duty of citizenship.', am:'ግብር መክፈል ክላሲካል የዜግነት ግዴታ ነው።'}}]}]},
+{ id:'math', lt:'#BE123C', dk:'#F2718E', icon:'sigma',
+  name:{en:'Freshman Mathematics', am:'ሒሳብ (ፕሬሽማን)'},
+  desc:{en:'Sets, real numbers, relations and functions.', am:'ስብስቦች፣ እውነታዊ ቁጥሮች፣ ግንኙነትና ተግባር።'},
+  chapters:[
+  { id:'math-1', title:{en:'Sets & Real Numbers', am:'ስብስቦችና እውነታዊ ቁጥሮች'}, notes:[
+    {en:'A **set** is a well-defined collection of objects; its members are **elements**. Describe sets by words, listing, or set-builder notation.', am:'**ስብስብ (Set)** በጥሩ ሁኔታ የተወሰኑ ነገሮች ስብስብ ነው፤ አባላቱ **ኤለመንቶች** ይባላሉ። በቃል፣ በዝርዝር ወይም በset-builder ቀመር ሊገለጽ ይችላል።'},
+    {en:'Operations: **union (A∪B), intersection (A∩B), difference (A\\B), complement (A′), symmetric difference (A△B)**.', am:'ስሌቶች፦ **union (A∪B)፣ intersection (A∩B)፣ difference (A\\B)፣ complement (A′)፣ symmetric difference (A△B)** ናቸው።'},
+    {en:'Counting formula: **n(A∪B) = n(A) + n(B) − n(A∩B)**.', am:'የቁጥር ቀመር፦ **n(A∪B) = n(A) + n(B) − n(A∩B)**።'},
+    {en:'**ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ**; rationals are ratios a/b (b≠0); irrationals (√2, π) are real but not rational.', am:'**ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ**፤ rational ቁጥሮች a/b (b≠0) ናቸው፤ irrational ቁጥሮች (√2፣ π) እውነታዊ ናቸው ግን rational አይደሉም።'},
+    {en:'Properties of ℝ: **commutative, associative, distributive, identity (0 and 1), inverses**.', am:'የℝ ባህርያት፦ **commutative፣ associative፣ distributive፣ identity (0 እና 1)፣ inverses** ናቸው።'},
+    {en:'Division by zero is **undefined** — no real number property includes it.', am:'በዜሮ ማካፈል **undefined** ነው — ምንም የእውነታዊ ቁጥር ባህርይ አያካትትም።'}],
+   quiz:[
+    {q:{en:'n(A)=20, n(B)=15, n(A∩B)=5 → n(A∪B) = ?', am:'n(A)=20፣ n(B)=15፣ n(A∩B)=5 → n(A∪B) = ?'}, opts:['30','35','40','25'], a:0,
+     ex:{en:'n(A∪B) = 20 + 15 − 5 = 30.', am:'n(A∪B) = 20 + 15 − 5 = 30።'}},
+    {q:{en:'√2 is:', am:'√2 ___ ነው።'}, opts:['Rational','Integer','Irrational','Natural'], a:2,
+     ex:{en:'√2 is real but not a ratio of integers — irrational.', am:'√2 እውነታዊ ነገር ግን የኢንቲጀሮች ንፅፅር አይደለም — irrational ነው።'}},
+    {q:{en:'A∩B contains elements in:', am:'A∩B ውስጥ የሚገኙት ኤለመንቶች፦'}, opts:{en:['A only','Both A and B','A or B','Neither'], am:['A ብቻ','በሁለቱም (A እና B)','A ወይም B','በሁለቱም ውስጥ ያልሆኑ']}, a:1,
+     ex:{en:'Intersection = elements in both sets.', am:'Intersection = በሁለቱም ስብስቦች ውስጥ ያሉ ኤለመንቶች ናቸው።'}},
+    {q:{en:'Which is NOT true of real numbers?', am:'ስለ እውነታዊ ቁጥሮች እውነት ያልሆነው፦'}, opts:{en:['Distributive law holds','Additive inverses exist','Addition is commutative','Division by zero is defined'], am:['Distributive ሕግ ይሠራል','Additive inverse አለ','Addition commutative ነው','በዜሮ ማካፈል የተገለጸ ነው']}, a:3,
+     ex:{en:'Division by zero is undefined for real numbers.', am:'በዜሮ ማካፈል በእውነታዊ ቁጥሮች አይገለጽም (undefined)።'}}]},
+  { id:'math-2', title:{en:'Relations & Functions', am:'ግንኙነትና ተግባር'}, notes:[
+    {en:'An **ordered pair** (a,b); the **Cartesian product** A×B contains all ordered pairs.', am:'**የተስተካከለ ጥንድ** (a,b)፤ **Cartesian ውጤት** A×B ሁሉንም የተስተካከሉ ጥንዶች ያካትታል።'},
+    {en:'A **relation** is a subset of A×B; **domain** = first components, **range** = second components.', am:'**ግንኙነት (Relation)** የA×B ንዑስ ስብስብ ነው፤ **domain** = የመጀመሪያ ክፍሎች፣ **range** = የሁለተኛ ክፍሎች።'},
+    {en:'A **function** gives **exactly one image** to every domain element (vertical line test on graphs).', am:'**ተግባር (Function)** ለእያንዳንዱ domain ኤለመንት **በትክክል አንድ ገጽታ** ይሰጣል (በግራፍ ላይ vertical line test)።'},
+    {en:'Types: **one-to-one (injective)**, **onto (surjective)**, **bijection** = both.', am:'ዓይነቶች፦ **one-to-one (injective)**፣ **onto (surjective)**፣ **bijection** = ሁለቱም።'},
+    {en:'Composition: **(f∘g)(x) = f(g(x))** — apply g first, then f.', am:'Composition፦ **(f∘g)(x) = f(g(x))** — መጀመሪያ g ከዚያ f ይተገበራል።'},
+    {en:'An **inverse function** exists **iff** the function is bijective.', am:'**Inverse ተግባር** የሚኖረው ተግባሩ bijection ሲሆን **ብቻ** ነው።'}],
+   quiz:[
+    {q:{en:'A function requires every domain element to have:', am:'ተግባር ለእያንዳንዱ domain ኤለመንት ___ ይጠይቃል።'}, opts:{en:['Two images','Exactly one image','No image','Many images'], am:['ሁለት ገጽታ','በትክክል አንድ ገጽታ','ገጽታ የለም','ብዙ ገጽታ']}, a:1,
+     ex:{en:'Every domain element maps to exactly one image.', am:'እያንዳንዱ domain ኤለመንት በትክክል አንድ ገጽታ ይሰጣል።'}},
+    {q:{en:'(f∘g)(x) means:', am:'(f∘g)(x) ማለት፦'}, opts:['g(f(x))','f(x)·g(x)','f(g(x))','f(x)+g(x)'], a:2,
+     ex:{en:'(f∘g)(x) = f(g(x)) — apply g first, then f.', am:'(f∘g)(x) = f(g(x)) — መጀመሪያ g ከዚያ f ይተገበራል።'}},
+    {q:{en:'The domain of f(x)=1/(x−2) is:', am:'የ f(x)=1/(x−2) domain፦'}, opts:{en:['All real numbers','x > 2','x = 2','x ≠ 2'], am:['ሁሉም እውነታዊ ቁጥሮች','x > 2','x = 2','x ≠ 2']}, a:3,
+     ex:{en:'x = 2 makes the denominator zero, so exclude it.', am:'x = 2 ማክሮትን ዜሮ ያደርጋል፣ ስለዚህ ከdomain ይገለላል።'}},
+    {q:{en:'A function that is injective and surjective is:', am:'Injectiveና surjective የሆነ ተግባር ___ ይባላል።'}, opts:['Constant','Bijective','Even','Linear only'], a:1,
+     ex:{en:'Injective + surjective = bijective (invertible).', am:'Injective + surjective = bijective (inverse ያለው) ነው።'}}]}]}
+];
+const course = id => COURSES.find(c => c.id === id);
+const chap = (cid, chid) => course(cid).chapters.find(x => x.id === chid);
 
-                <!-- Tab row -->
-                <div style="display:flex; background:rgba(255,255,255,0.08); border-radius:12px; padding:4px; margin-bottom:18px;">
-                    <button id="tab-email-btn" onclick="switchLoginTab('email')"
-                        style="flex:1; padding:9px 0; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; background:var(--accent-gold); color:#000; transition:0.2s;">
-                        📧 Email
-                    </button>
-                    <button id="tab-phone-btn" onclick="switchLoginTab('phone')"
-                        style="flex:1; padding:9px 0; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; background:transparent; color:#aaa; transition:0.2s;">
-                        📱 Phone
-                    </button>
-                </div>
+/* የምክንያታዊ ተጫዋቾች (demo leaderboard) */
+const BOTS = [
+ {name:'Selam T.', pts:860},{name:'Yonas B.', pts:795},{name:'Hanna G.', pts:720},
+ {name:'Dawit K.', pts:640},{name:'Meron A.', pts:585},{name:'Abenezer L.', pts:510},
+ {name:'Liya M.', pts:430},{name:'Natnael F.', pts:365},{name:'Betel H.', pts:290},
+ {name:'Kirubel Z.', pts:210},{name:'Eyerusalem D.', pts:145},{name:'Mahi G.', pts:80}];
 
-                <!-- Email tab -->
-                <div id="login-email-tab">
-                    <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Email address</label>
-                    <input type="email" id="login-email" class="auth-input" placeholder="you@example.com">
-                    <button class="auth-btn" onclick="performLoginEmail()">CONTINUE</button>
-                </div>
+/* ============ ቋንቋ ጽሁፎች / UI strings ============ */
+const TXT = {
+  tagline:{en:'Freshman common courses — concise notes and exam practice in both English and Amharic.', am:'ለአዲስ መግቢ ተማሪዎች የጋራ ኮርሶች — አጭር ማስታወሻዎችና የፈተና ልምምድ በእንግሊዝኛም ሆነ በአማርኛ።'},
+  loginTg:{en:'Continue with Telegram', am:'በቴሌግራም ይግቡ'}, loginPh:{en:'Continue with phone', am:'በስልክ ቁጥር ይግቡ'},
+  signin:{en:'Sign in', am:'ግባ'}, phoneLbl:{en:'Phone number', am:'የስልክ ቁጥር'}, sendCode:{en:'Send code', am:'ኮድ ላክ'},
+  otpLbl:{en:'Enter the 4-digit code sent to', am:'የተላከልዎትን 4-አሃዝ ኮድ ያስገቡ'}, verify:{en:'Verify & continue', am:'አረጋግጥና ቀጥል'},
+  demoCode:{en:'Demo code: 4821', am:'የሙከራ ኮድ፦ 4821'}, nameLbl:{en:'Your full name', am:'ሙሉ ስምዎ'},
+  start:{en:'Start studying', am:'እንጀምር'}, hello:{en:'Hello', am:'ሰላም'},
+  heroSub:{en:'One chapter a day — on the road to 4.0.', am:'በቀን አንድ ምዕራፍ — ወደ 4.0 መንገድ።'},
+  streak:{en:'day streak', am:'ተከታታይ ቀናት'}, goal:{en:'Daily goal', am:'የዕለት ግብ'}, xp:{en:'XP', am:'XP'},
+  continue:{en:'Continue', am:'ቀጥል'}, courses:{en:'Common courses', am:'የጋራ ኮርሶች'},
+  chapters:{en:'chapters', am:'ምዕራፎች'}, read:{en:'read', am:'የተነበቡ'},
+  bookmarks:{en:'Bookmarks', am:'ቡክማርክ'}, myRank:{en:'My rank', am:'ደረጃዬ'},
+  notes:{en:'Notes', am:'ማስታወሻ'}, quiz:{en:'Quiz', am:'ፈተና'},
+  powerNotes:{en:'POWER NOTES', am:'ኃይለኛ ማስታወሻዎች'}, gotit:{en:'Got it · +5 XP', am:'ተረድቻለሁ · +5 XP'},
+  markedRead:{en:'Marked as read', am:'እንደተነበብ ተመዝግቧል'},
+  save:{en:'Save', am:'አስቀምጥ'}, saved:{en:'Saved', am:'ተቀምጧል'},
+  qOf:{en:'Question', am:'ጥያቄ'}, of:{en:'of', am:'ከ'},
+  submit:{en:'Submit', am:'አስገባ'}, next:{en:'Next', am:'ቀጥል'}, seeRes:{en:'See results', am:'ውጤቱን ተመልከት'},
+  correct:{en:'Correct!', am:'ትክክል!'}, notQuite:{en:'Not quite', am:'ትክክል አይደለም'},
+  why:{en:'Why?', am:'ለምን?'}, saveQ:{en:'Save this question', am:'ጥያቄውን አስቀምጥ'},
+  tryAgain:{en:'Try again', am:'እንደገና'}, toChapters:{en:'Chapters', am:'ምዕራፎች'},
+  boardTitle:{en:'Top students', am:'ምርጥ ተማሪዎች'}, boardSub:{en:'This week', am:'ይህ ሳምንት'},
+  you:{en:'You', am:'እርስዎ'}, students:{en:'students', am:'ተማሪዎች'},
+  quizzes:{en:'Quizzes', am:'ፈተናዎች'}, avg:{en:'Avg score', am:'አማካይ'}, chRead:{en:'Chapters read', am:'የተነበቡ'},
+  progress:{en:'Course progress', am:'የኮርሶች እድገት'}, seeAll:{en:'See all', am:'ሁሉንም ተመልከት'},
+  signout:{en:'Sign out', am:'ይውጡ'}, searchPh:{en:'Search concepts, chapters…', am:'ጽንሰ-ሀሳብ፣ ምዕራፎች ይፈልጉ…'},
+  srNotes:{en:'Notes', am:'ማስታወሻዎች'}, srQs:{en:'Questions', am:'ጥያቄዎች'},
+  srEmpty:{en:'No matches. Try “validity”, “memory” or “ዲሞክራሲ”.', am:'ውጤት አልተገኘም። “validity”፣ “memory” ወይም “ዲሞክራሲ” ይሞክሩ።'},
+  bmEmpty:{en:'Nothing saved yet — tap the bookmark on any note or question.', am:'እስካሁን አልተቀመጠም — በማንኛውም ማስታወሻ ወይም ጥያቄ ላይ ያለውን ቡክማርክ ይንኩ።'},
+  savedNotes:{en:'Saved notes', am:'የተቀመጡ ማስታወሻዎች'}, savedQs:{en:'Saved questions', am:'የተቀመጡ ጥያቄዎች'},
+  progLbl:{en:'Course progress', am:'የኮርሱ እድገት'}
+};
 
-                <!-- Phone tab -->
-                <div id="login-phone-tab" style="display:none;">
-                    <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Phone Number</label>
-                    <input type="tel" id="login-phone" class="auth-input" placeholder="09XXXXXXXX" pattern="^09\d{8}$">
-                    <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Password</label>
-                    <input type="password" id="login-pass" class="auth-input" placeholder="Password">
-                    <button class="auth-btn" onclick="performLogin()">LOGIN</button>
-                </div>
+/* ============ ቅርጸት / state ============ */
+let S;
+try{ S = JSON.parse(localStorage.getItem('sba.v1')) || null; }catch(e){ S = null; }
+if(!S) S = { user:null, lang:'en', xp:0, bookmarks:[], prog:{}, recent:[], daily:{}, streak:{last:null,count:0} };
+const save = () => { try{ localStorage.setItem('sba.v1', JSON.stringify(S)); }catch(e){} };
+const prog = k => (S.prog[k] = S.prog[k] || {});
 
-                <p style="color:#888; font-size:13px; margin-top:15px;" onclick="toggleAuth(true)">New here? <b style="color:white; cursor:pointer;">Register</b></p>
-            </div>
+/* ============ ቴሌግራም ግንኙነት ============ */
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+const IN_TG = !!(tg && tg.platform && tg.platform !== 'unknown');
+const TG_USER = tg && tg.initDataUnsafe && tg.initDataUnsafe.user ? tg.initDataUnsafe.user : null;
+let MBH = null;
+if(tg){ try{ tg.ready(); tg.expand();
+  tg.onEvent && tg.onEvent('backButtonClicked', () => navBack());
+  tg.BackButton && tg.BackButton.onClick(() => navBack());
+  tg.MainButton && tg.MainButton.onClick(() => { MBH && MBH(); });
+  tg.onEvent && tg.onEvent('themeChanged', () => { applyTheme(); render(); });
+}catch(e){} }
+function hap(k){ if(!tg || !tg.HapticFeedback) return; try{
+  if(k==='light'||k==='medium'||k==='heavy') tg.HapticFeedback.impactOccurred(k);
+  else tg.HapticFeedback.notificationOccurred(k); }catch(e){} }
+function setMB(text, on, enabled=true){ if(!tg || !tg.MainButton) return;
+  try{ if(!text){ tg.MainButton.hide(); MBH=null; return; }
+    MBH = on; tg.MainButton.setText(text);
+    tg.MainButton.setParams({ color: document.documentElement.dataset.theme==='dark' ? '#4FB57E' : '#186B47',
+      text_color: document.documentElement.dataset.theme==='dark' ? '#0D130E' : '#ffffff' });
+    enabled ? tg.MainButton.enable() : tg.MainButton.disable(); tg.MainButton.show();
+  }catch(e){} }
+function applyTheme(){ const dark = tg ? (tg.colorScheme === 'dark') : matchMedia('(prefers-color-scheme: dark)').matches;
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  const bg = dark ? '#12160F' : '#F4F1E8';
+  try{ tg && tg.setHeaderColor && tg.setHeaderColor(bg); tg && tg.setBackgroundColor && tg.setBackgroundColor(bg); }catch(e){} }
+matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => { if(!tg){ applyTheme(); render(); } });
 
-            <!-- REGISTER PANEL -->
-            <div id="signup-panel" style="display:none;">
-                <button onclick="toggleAuth(false)"
-                    style="background:none; border:none; color:#aaa; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:5px; margin-bottom:14px; padding:0;">
-                    ← Back to login
-                </button>
-                <p style="color:#ccc; font-size:13px; margin-bottom:18px;">Create your account</p>
-                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Full Name</label>
-                <input type="text" id="reg-name" class="auth-input" placeholder="e.g. Dawit Bekele">
-                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Phone Number</label>
-                <input type="tel" id="reg-phone" class="auth-input" placeholder="09XXXXXXXX" pattern="^09\d{8}$">
-                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Email (optional)</label>
-                <input type="email" id="reg-email" class="auth-input" placeholder="you@example.com">
-                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">University / College</label>
-                <input type="text" id="reg-university" class="auth-input" placeholder="e.g. Jimma University">
-                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Password</label>
-                <input type="password" id="reg-pass" class="auth-input" placeholder="Min. 8 characters">
-                <label style="color:#ccc; font-size:12px; display:block; text-align:left; margin-bottom:6px;">Confirm Password</label>
-                <input type="password" id="reg-pass2" class="auth-input" placeholder="Re-enter password">
-                <button class="auth-btn" onclick="performSignup()">CREATE ACCOUNT</button>
-                <p style="color:#888; font-size:13px; margin-top:15px;" onclick="toggleAuth(false)">Have account? <b style="color:white; cursor:pointer;">Login</b></p>
-            </div>
-        </div>
-    </div>
+/* ============ ማሳያ / toast ============ */
+function toast(msg, icon){ const t = document.createElement('div'); t.className='toast';
+  t.innerHTML = (icon ? ic(icon) : '') + esc(msg); $('#toasts').appendChild(t);
+  requestAnimationFrame(() => t.classList.add('on'));
+  setTimeout(() => { t.classList.remove('on'); setTimeout(() => t.remove(), 300); }, 1800); }
 
-    <div id="library-view" class="view active">
-        <div class="header-section">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h1 class="library-title">Course Library</h1>
-                <span id="gpa-badge" style="background:var(--accent-gold); color:black; padding:4px 10px; border-radius:10px; font-weight:bold; font-size:12px;">Goal: 4.0</span>
-            </div>
-            <p class="library-subtitle">Bilingual materials for All Freshman Students.</p>
-        </div>
-        <div class="course-list" id="course-container"></div>
-    </div>
+/* ============ XP / streak ============ */
+function gainXP(n){ S.xp += n;
+  if(S.streak.last !== today()) S.streak = { last: today(), count: S.streak.last === yest() ? (S.streak.count||0)+1 : 1 };
+  save(); toast('+'+n+' XP', 'spark'); }
+function bumpDaily(){ const t = today(); if(!S.daily || S.daily.d !== t) S.daily = { d:t, a:0 }; S.daily.a++; save(); }
 
-    <div id="detail-view" class="view">
-        <div class="header-section">
-            <button onclick="navigate('library-view')" style="background:none; border:none; color:white; font-size:18px; cursor:pointer; padding:0; margin-bottom:10px;">← Back</button>
-            <h1 id="selected-course-title" data-id="" style="margin:0; font-size: 22px;">Course</h1>
-            <div class="lang-switch">
-                <button id="btn-en" class="lang-btn active" onclick="setLanguage('en')">English 🇬🇧</button>
-                <button id="btn-am" class="lang-btn" onclick="setLanguage('am')">አማርኛ 🇪🇹</button>
-            </div>
-        </div>
-        <div id="chapters-container"></div>
-    </div>
+/* ============ ቡክማርክ ============ */
+const isBM = k => S.bookmarks.some(b => b.k === k);
+function bmToggle(item){ const i = S.bookmarks.findIndex(b => b.k === item.k);
+  if(i >= 0) S.bookmarks.splice(i,1); else { item.ts = Date.now(); S.bookmarks.unshift(item); } save(); }
 
-    <div id="profile-view" class="view">
-        <div style="padding:40px 20px; text-align:center;">
-            <div id="profile-avatar" style="width:80px; height:80px; background:var(--primary-green); border-radius:50%; margin: 0 auto 15px; display:flex; align-items:center; justify-content:center; color:white; font-size:36px;">
-                👤
-            </div>
-            <h2 id="user-display" style="margin-bottom:5px;">Student Name</h2>
-            <p id="user-phone-display" style="color: #666; margin-top:0;"></p>
-            <span id="tg-login-badge" style="display:none; background:#229ED9; color:white; font-size:11px; padding:3px 10px; border-radius:20px; font-weight:600;">✈️ Telegram Login</span>
-            
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; margin:25px 0;">
-                <div style="background:white; padding:15px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-                    <div style="font-size:20px; font-weight:bold; color:var(--primary-green);">0</div>
-                    <div style="font-size:11px; color:#888;">Quizzes Taken</div>
-                </div>
-                <div style="background:white; padding:15px; border-radius:15px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-                    <div style="font-size:20px; font-weight:bold; color:var(--accent-gold);">0%</div>
-                    <div style="font-size:11px; color:#888;">Avg. Score</div>
-                </div>
-            </div>
+/* ============ እድገት / progress ============ */
+function chProg(c, ch){ const p = S.prog[c+':'+ch] || {}; let v = 0; if(p.read) v += .5; if(p.best != null) v += .5*p.best/100; return v; }
+function courseProg(c){ return c.chapters.reduce((a,ch) => a + chProg(c.id, ch.id), 0) / c.chapters.length; }
 
-            <button class="auth-btn" style="background:#ff4d4d; color:white;" onclick="performLogout()">Logout Account</button>
-        </div>
-    </div>
+/* ============ ደረጃ / leaderboard ============ */
+function boardRows(){ const r = BOTS.map(b => ({name:b.name, pts:b.pts, me:false}));
+  r.push({name:S.user ? S.user.name : '—', pts:S.xp, me:true}); r.sort((a,b) => b.pts - a.pts); return r; }
+const myRank = () => boardRows().findIndex(r => r.me) + 1;
 
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="navigate('library-view')">
-            <div class="nav-icon">📚</div>
-            Courses
-        </div>
-        <div class="nav-item" onclick="navigate('profile-view')">
-            <div class="nav-icon">👤</div>
-            Profile
-        </div>
-    </nav>
+/* ============ ፍለጋ ማውጫ / search index ============ */
+const IDX = [];
+COURSES.forEach(c => c.chapters.forEach(ch => {
+  ch.notes.forEach(n => IDX.push({kind:'note', c, ch, note:n,
+    hay:(n.en+' '+n.am+' '+ch.title.en+' '+ch.title.am+' '+c.name.en).toLowerCase()}));
+  ch.quiz.forEach((q,i) => IDX.push({kind:'q', c, ch, qi:i, q,
+    hay:(q.q.en+' '+q.q.am+' '+ch.title.en+' '+ch.title.am).toLowerCase()}));
+}));
+function snippet(text, q){ const t = String(text), i = t.toLowerCase().indexOf(q.toLowerCase());
+  if(i < 0) return t.slice(0, 90); const s = Math.max(0, i-36);
+  return (s>0?'…':'') + t.slice(s, i + q.length + 56) + (i+q.length+56 < t.length ? '…' : ''); }
 
-    <script>
-        // Extended Course Data with Bilingual Support and progress
-        const courses = [
-            { id: 1, name: "Logic", amName: "ሎጂክ", chapters: 4, qs: 4, icon: "📖", desc: "Master critical thinking and formal reasoning.", progress: 0 },
-            { id: 2, name: "General Psychology", amName: "የሁሉም ሰው ስነ-ልቦና", chapters: 4, qs: 1, icon: "🧠", desc: "Understanding human behavior and mind.", progress: 0 },
-            { id: 3, name: "Geography of Ethiopia", amName: "የኢትዮጵያ ጂኦግራፊ", chapters: 3, qs: 1, icon: "🌍", desc: "Explore Ethiopia's landscape.", progress: 0 },
-            { id: 4, name: "Anthropology", amName: "አንትሮፖሎጂ", chapters: 3, qs: 0, icon: "👤", desc: "Study of human societies and cultures.", progress: 0 },
-            { id: 5, name: "Moral & Civic Education", amName: "ሞራል እና ሲቪክ", chapters: 3, qs: 1, icon: "⚖️", desc: "Ethics and citizenship in Ethiopia.", progress: 0 },
-            { id: 6, name: "Math for Social Sciences", amName: "ለማህበራዊ ሳይንሳት ሂሳብ", chapters: 3, qs: 0, icon: "📐", desc: "Applied mathematics for economics.", progress: 0 },
-            { id: 7, name: "Communicative English skill II", amName: "የመገናኛ እንሊዝኛ II", chapters: 5, qs: 2, icon: "💬", desc: "Advanced language and writing skills.", progress: 0 },
-            { id: 8, name: "Economics", amName: "ኢኮኖሚክስ", chapters: 6, qs: 5, icon: "📊", desc: "Principles of micro and macro economics.", progress: 0 },
-            { id: 9, name: "Global Trends", amName: "ዓለም አቀፍ ትውልድ", chapters: 4, qs: 1, icon: "🌐", desc: "Understanding international relations.", progress: 0 },
-            { id: 10, name: "Entrepreneurship", amName: "ኢንተርፕሩነርሺፕ", chapters: 4, qs: 2, icon: "💡", desc: "Developing business and innovation skills.", progress: 0 },
-            { id: 11, name: "History of Ethiopia", amName: "የኢትዮጵያ ታሪክ", chapters: 5, qs: 3, icon: "🏛️", desc: "Chronicles of the Horn of Africa.", progress: 0 },
-            { id: 12, name: "Emerging Technology", amName: "አዳዲስ ቴክኖሎጂዎች", chapters: 3, qs: 4, icon: "🚀", desc: "AI, IoT, and future tech trends.", progress: 0 },
-            { id: 13, name: "Communicative English skill I", amName: "እንግሊዝኛ I", chapters: 4, qs: 2, icon: "🔍", desc: "Advanced language and writing skills.", progress: 0 },
-            { id: 14, name: "Inclusiveness", amName: "ስተዳደርነት", chapters: 3, qs: 1, icon: "🤝", desc: "Special needs and inclusive society.", progress: 0 }
-        ];
+/* ============ ራውተር / router ============ */
+let stack = [{v: S.user ? 'home' : 'login'}];
+const cur = () => stack[stack.length-1];
+function navTo(v, p={}){ stack.push(Object.assign({v}, p)); render(true); }
+function navBack(){ if(stack.length > 1){ stack.pop(); render(false); } }
+function tabTo(v){ stack = [{v}]; render(true); }
 
-        // Logic course, Chapter 1 notes (cleaned up)
-        const logicNotes = `
-            <div>
-            <h3>CHAPTER ONE: INTRODUCING PHILOSOPHY</h3>
-            <h4>Chapter Overview</h4>
-            <p>Logic is often treated simultaneously as a field of study and as an instrument.</p>
-            <ul>
-                <li>As a field of study, it is a branch of philosophy that deals with the study of arguments and the principles and methods of right reasoning.</li>
-                <li>As an instrument, it is something we can use to formulate our own rational arguments and critically evaluate the soundness of others’ arguments.</li>
-            </ul>
-            <p>Before logic itself became a field of study, philosophers have been using it as a basic tool to investigate issues that won their philosophical attention, such as reality, knowledge, and value.</p>
-            <p>It is a rational and critical enterprise that tries to formulate and answer fundamental questions through an intensive application of reason- an application that draws on analysis, comparison, and evaluation. It involves reason, rational criticism, examination, and analysis.</p>
-            <h4>Meaning and Nature of Philosophy</h4>
-             <p>Because of its universal nature, it is difficult to define philosophy in terms of a specific subject matter. Because philosophy has no a specific subject matter to primarily deal with. Philosophy deals primarily with issues. What contents philosophy has are not the specific subject matters, but issues, which are universal in nature.</p>
-            <p>Philosophy is not as elusive as it is often thought to be. Nor is it remote from our various problems. It is unanimously agreed that the best way to learn and understand philosophy is to philosophize; i.e., to be confronted (መጋፈጥ) with philosophical questions, to use philosophical language, to become acquainted (መተዋወቅ) with differing philosophical positions and maneuvers (ዘዴ), to read the philosophers themselves, and to grapple (መተናነቅ) with the issues for oneself.</p>
-            <p>Socrates once stated that “Wonder is the feeling of a philosopher, and philosophy begins in wonder”. It is true that most of us may not have a clear knowledge about the history, nature, language, and issues of philosophy. But, we all think and reflect in our own way about issues that matter us most. We all have touched and moved by the feelings of wonder from which all philosophy derives. Thus, we all participate, more or less, in philosophical issues, even though thinking alone cannot make us philosophers.</p>
-            <p>However, we can define it etymologically, the word ― philosophy comes from two Greek words:</p>
-            <ul>
-                <li><strong>Philo</strong> which mean love and</li>
-                <li><strong>Sophia</strong> which mean wisdom.</li>
-            </ul>
-            <p>Thus, the literal definition of philosophy is “love of wisdom”.</p>
-            <p>The ancient Greek thinker Pythagoras was the first to use the word philosopher to call a person who clearly shows a marked curiosity in the things he experiences. Anyone who raises questions, such as:</p>
-            <ul>
-                <li>Does God exists?</li>
-                <li>What is reality?</li>
-                <li>What is the ultimate source of being?</li>
-                <li>What is knowledge?</li>
-                <li>What does it mean to know?</li>
-                <li>How do we come to know?</li>
-                <li>What is value?</li>
-            </ul>
-            <p>Nevertheless, this is not sufficient by itself to understand philosophy, for not all wisdoms are philosophy. The wisdom that philosophers seek is not the wisdom of the expertise or technical skills of professionals. Someone may be encyclopedic, and thus seemingly intelligent, but he may actually be foolish when it comes to understanding the meaning and significance of what he knows.</p>
-            <p>According to Socrates, wisdom consists of a critical habit መሰረታዊ ልማድ and eternal vigilance about all things ስለ ሁሉም ነገር ዘላለማዊ ንቃት and a reverence for truth ለእውነት አክብሮት, whatever its form, and wherever its place.</p>
-            <p>Based on the Socratic understanding of wisdom, philosophy, as a pursuit of wisdom, is, thus, the development of critical habits, the continuous search for truth, and the questioning of the apparent. To interrogate the obvious means to deal creatively with the phenomenal world, to go beyond the common understanding, and to speculate about things that other people accept with no doubt.</p>
-            <p>But, questioning/criticism is not the final end of philosophy, though raising the right question is often taken not only as the beginning and direction of philosophy but also as its essence. Raising the right question is an art that includes the ability to foresee (forecast) what is not readily obvious and to imagine different possibilities and alternatives of approaching the apparent. The philosophical enterprise, as Vincent Barry stated, is “an active imaginative process of formulating proper questions and resolving them by rigorous, persistent analysis”.</p>
-            <p>Accordingly, we can say that Philosophy has a constructive side, for it attempts to formulate rationally defensible answers to certain fundamental questions concerning the nature of reality, the nature of value, and the nature of knowledge and truth. At the same time, its critical side is manifested when it deals with giving a rational critic, analysis, clarification, and evaluation of answers given to basic metaphysical, epistemological, and axiological questions.</p>
-            <p>The other thing, which is worthy of noting, is that philosophy is an activity. It is not something that can be easily mastered or learned in schools. A philosopher is a great philosopher, not because he mastered philosophy, but because he did it. It is not his theory, but his extraordinary ability to critically think, to conceptualize, to analyze, to compare, to evaluate, and to understand- i.e., to philosophize- that makes him so. Of course, the product of philosophizing is philosophy as a product. However, what makes someone a great philosopher is not the produced philosophy, but his/her outstanding ability to philosophize.</p>
-            <h4>Basic Features of Philosophy</h4>
-            <p>As an academic discipline, philosophy has its own salient features that distinguishes it from other academic disciplines, be it natural, social and humanistic disciplines. The general features of philosophy can be summarized as follows:</p>
-            <ul>
-                <li>Philosophy is a set of views or beliefs about life and the universe, which are often held uncritically. We refer to this meaning as the informal sense of philosophy or having a philosophy. Usually when a person says my philosophy is, he or she is referring to an informal personal attitude to whatever topic is being discussed.</li>
-                <li>Philosophy is a process of reflecting on and criticizing our most deeply held conceptions and beliefs. This is the formal sense of doing philosophy. These two senses of philosophy having and doing cannot be treated entirely independent of each other. If we did not have a philosophy in the formal, personal sense, then we could not do a philosophy in the critical, reflective sense. However, having a philosophy is not sufficient for doing philosophy.</li>
-                <li>A genuine philosophical cannot be treated entirely independent of each other. It is open-minded and tolerant - willing to look at all sides of an issue without prejudice.</li>
-                <li>To philosophize is not merely (only) to read and know philosophy; there are skills of argumentation to be mastered, techniques of analysis to be employed, and a body of material to be appropriated such that we become able to think philosophically.</li>
-            <li>To philosophize also means to generalize. The accumulation of knowledge does not by itself lead to understanding, because it does not necessarily teach the mind to make a critical evaluation of facts that entail consistent and coherent judgment.</li>
-                <li>Philosophers, theologians, scientists, and others disagree:
-                    <ul>
-                        <li>First because they view things from different points of view and with different assumptions. Their personal experiences, cultural backgrounds, and training may vary widely.</li>
-                        <li>A second reason philosophers disagree is that they live in a changing universe. People change, society changes, and nature changes. Some people are responsive and sensitive to change.</li>
-                        <li>A third reason philosophers disagree is that they deal with an area of human experience in which the evidence is not complete. Different people may interpret the evidence we do have in various ways.</li>
-                    </ul>
-                </li>
-                <li>Philosophy is a rational attempt to look at the world as a whole. Philosophy seeks to combine the conclusions of the various sciences and human experience into some kind of consistent worldview. Philosophers wish to see life, not with the specialized slant of the scientist or the businessperson or the artist, but with the overall view of someone cognizant of life as a totality. Although there are difficulties and dangers in setting forth any worldview, there also are dangers in confining attention to fragments of human experience.</li>
-                <li>Philosophy attempts to bring the results of human inquiry into some meaningful interpretation that provides knowledge and insight for our lives.</li>
-                <li>Philosophy is the logical analysis of language and the clarification of the meaning of words and concepts.</li>
-            </ul>
-            <!-- More notes as needed... -->
-            </div>
-        `;
+/* ============ ፈተና ውስን / quiz session ============ */
+let QS = null;
+function newSession(cid, chid){ return { c:cid, ch:chid, i:0, picked:null, submitted:false, answers:[], correct:0, xp:0, done:false }; }
+const optList = q => Array.isArray(q.opts) ? q.opts : (q.opts[S.lang] || q.opts.en);
+const LET = ['A','B','C','D'];
 
-        let currentLang = 'en';
+function submitAnswer(){ const ch = chap(QS.c, QS.ch), q = ch.quiz[QS.i];
+  if(QS.picked == null || QS.submitted) return;
+  QS.submitted = true; const good = QS.picked === q.a; QS.answers[QS.i] = good ? 1 : 0;
+  if(good){ QS.correct++; QS.xp += 10; gainXP(10); }
+  bumpDaily(); hap(good ? 'success' : 'error'); render(); }
+function nextQ(){ const n = chap(QS.c, QS.ch).quiz.length;
+  if(!QS.submitted) return;
+  if(QS.i >= n-1){ QS.done = true; finishQuiz(); } else { QS.i++; QS.picked = null; QS.submitted = false; }
+  render(); }
+function finishQuiz(){ const n = chap(QS.c, QS.ch).quiz.length;
+  const pct = Math.round(QS.correct/n*100); const k = QS.c+':'+QS.ch; const p = prog(k);
+  p.taken = (p.taken||0) + 1; p.best = Math.max(p.best ?? 0, pct);
+  if(!S.recent.some(r => r.c===QS.c && r.ch===QS.ch)) S.recent.unshift({c:QS.c, ch:QS.ch, ts:Date.now()});
+  S.recent = S.recent.slice(0,6); save();
+  gainXP(10); if(pct === 100) setTimeout(() => gainXP(10), 350); }
+const tierMsg = pct => pct===100 ? {en:'Perfect — that’s 4.0 energy.', am:'ሙሉ ውጤት — ይህ የ4.0 ጉልበት ነው።'}
+  : pct>=75 ? {en:'Strong work. You’re nearly there.', am:'ጠንካራ ሥራ፤ ጥቂት ቀርቶሃል።'}
+  : pct>=50 ? {en:'Good. Review the notes and retake.', am:'ጥሩ — ማስታወሻዎቹን መልሰው ያጠኑ።'}
+  : {en:'Keep going — reread the notes and retry.', am:'ቀጥል — ማስታወሻዎቹን መልሰው አንብብና እንደገና ይሞክሩ።'};
 
-        function initApp() {
-            const container = document.getElementById('course-container');
-            container.innerHTML = courses.map(c => `
-                <div class="course-card" onclick="showCourse(${c.id})">
-                    <div class="course-icon-bg">${c.icon}</div>
-                    <div class="course-info">
-                        <div class="course-name">${currentLang === 'en' ? c.name : c.amName}</div>
-                        <div class="course-meta">${c.chapters} Chapters • Short Notes + MCQ</div>
-                        <div class="progress-container">
-                            <div class="progress-fill" style="width: ${c.progress || 0}%"></div>
-                        </div>
-                    </div>
-                    <div style="color:#ccc; margin-left:10px;">›</div>
-                </div>
-            `).join('');
+/* ============ የገጽ ጭብጥ ክፍሎች / view fragments ============ */
+function head(title, back){
+  return '<header class="top">'+(back
+    ? '<button class="iconbtn" data-act="back">'+ic('back')+'</button>'
+    : '<span class="wordmark">'+LOGO+'<span>Smart Bridge</span></span>')+
+    '<div class="top-title">'+esc(title)+'</div>'+
+    '<div class="seg"><button data-act="lang" data-l="en" class="'+(S.lang==='en'?'on':'')+'">EN</button>'+
+    '<button data-act="lang" data-l="am" class="'+(S.lang==='am'?'on':'')+'">አማ</button></div></header>'; }
 
-            if (localStorage.getItem('isLogged') === 'true') {
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfileUI();
-            }
-        }
+function ctile(icon, color, size){ return '<span class="ctile" style="--cc:'+color+(size?';width:'+size+'px;height:'+size+'px':'')+'">'+ic(icon)+'</span>'; }
+const cc = c => document.documentElement.dataset.theme === 'dark' ? c.dk : c.lt;
 
-        function setLanguage(lang) {
-            currentLang = lang;
-            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-            document.getElementById('btn-am').classList.toggle('active', lang === 'am');
-            // Re-render chapters to update language
-            const activeCourseId = document.getElementById('selected-course-title').dataset.id;
-            if (activeCourseId) showCourse(parseInt(activeCourseId));
-        }
+function questionCard(c, ch, qi){ const q = ch.quiz[qi];
+  return '<div class="card qcard"><p class="qtext sm">'+md(T(q.q))+'</p><div class="opts ro">'+
+    optList(q).map((o,i) => '<div class="opt '+(i===q.a?'ok':'dim')+'"><span class="lt">'+LET[i]+'</span><span class="ot">'+esc(o)+'</span>'+
+      '<span class="mk">'+(i===q.a?ic('check'):'')+'</span></div>').join('')+
+    '</div><p class="qex"><b>'+T({en:'Why?',am:'ለምን?'})+'</b> '+md(T(q.ex))+'</p></div>'; }
 
-        // Fixed: only one definition for showCourse
-        function showCourse(id) {
-            const course = courses.find(c => c.id === id);
-            const titleElem = document.getElementById('selected-course-title');
-            titleElem.innerText = currentLang === 'en' ? course.name : course.amName || course.name;
-            titleElem.dataset.id = id;
+/* ============ የግብዣ / login views ============ */
+let LF = { step:'pick' };
+function vLogin(){
+  let body = '';
+  if(LF.step === 'pick'){
+    body = '<div class="login-wrap view">'+
+      '<div class="bridge-art">'+BRIDGE_ART+
+        '<span class="fpill" style="left:6%;top:52%">'+T({en:'Logic',am:'አመክንዮ'})+'</span>'+
+        '<span class="fpill" style="left:41%;top:26%">'+T({en:'Psychology',am:'ሥነ ልብ'})+'</span>'+
+        '<span class="fpill" style="right:4%;top:56%">'+T({en:'Geography',am:'ጂኦግራፊ'})+'</span></div>'+
+      '<h1 class="lg-title">Smart Bridge<br>Academic</h1>'+
+      '<p class="lg-sub">'+T(TXT.tagline)+'</p>'+
+      '<div class="lg-btns">'+
+        '<button class="btn primary big" data-act="login-tg">'+ic('plane')+T(TXT.loginTg)+'</button>'+
+        '<button class="btn big" data-act="login-phone">'+ic('phone')+T(TXT.loginPh)+'</button></div>'+
+      '<p class="lg-note">'+T({en:'Built for Ethiopian freshmen · English–Amharic', am:'ለኢትዮጵያ ፕሬሽማን ተማሪዎች · እንግሊዝኛ–አማርኛ'})+'</p></div>';
+  } else if(LF.step === 'phone'){
+    body = '<div class="login-wrap view"><h1 class="lg-title" style="margin-top:26px">'+T(TXT.signin)+'</h1>'+
+      '<p class="lg-sub">'+T({en:'We’ll text you a verification code.', am:'የማረጋገጫ ኮድ እንልክልዎታለን።'})+'</p>'+
+      '<div class="field"><label>'+T(TXT.phoneLbl)+'</label><div class="phone-row"><span class="prefix">+251</span>'+
+      '<input id="ph" class="inp" inputmode="tel" placeholder="9XX XXX XXX"></div></div>'+
+      '<div class="lg-btns" style="margin-top:18px"><button class="btn primary big" data-act="send-code">'+T(TXT.sendCode)+'</button></div></div>';
+  } else if(LF.step === 'otp'){
+    body = '<div class="login-wrap view"><h1 class="lg-title" style="margin-top:26px">'+T(TXT.otpLbl)+'</h1>'+
+      '<p class="lg-sub">+251 '+esc(LF.phone)+'</p>'+
+      '<div class="field"><input id="otpin" class="inp otp" inputmode="numeric" maxlength="4" placeholder="••••"></div>'+
+      '<div class="hintrow"><span class="hint">'+T(TXT.demoCode)+'</span></div>'+
+      '<div class="lg-btns" style="margin-top:18px"><button class="btn primary big" data-act="verify">'+T(TXT.verify)+'</button></div></div>';
+  } else {
+    body = '<div class="login-wrap view"><h1 class="lg-title" style="margin-top:26px">'+T(TXT.nameLbl)+'</h1>'+
+      '<p class="lg-sub">'+T({en:'This is how it appears on the leaderboard.', am:'በደረጃ ሰሌዳው ላይ በዚህ ስም ይታያሉ።'})+'</p>'+
+      '<div class="field"><input id="nm" class="inp" value="'+esc(LF.name||'')+'" placeholder="'+esc(T({en:'e.g. Hanna Girma',am:'ለምሳሌ ሐና ግርማ'}))+'"></div>'+
+      '<div class="lg-btns" style="margin-top:18px"><button class="btn primary big" data-act="finish">'+T(TXT.start)+'</button></div></div>';
+  }
+  return head('', LF.step!=='pick') + body;
+}
+function finishLogin(name, phone, photo){
+  S.user = {name, phone, photo: photo||null}; save();
+  stack = [{v:'home'}]; render();
+  toast(T({en:'Welcome', am:'እንኳን ደህና መጡ'})+', '+name+'!', 'spark'); }
 
-            const chaptersContainer = document.getElementById('chapters-container');
-            let chaptersHTML = '';
-            for (let i = 1; i <= course.chapters; i++) {
-                chaptersHTML += `
-                    <div class="chapter-card">
-                        <div class="chapter-title">
-                            ${currentLang === 'en' ? 'Chapter' : 'ምዕራፍ'} ${i}: 
-                            ${currentLang === 'en' ? 'Core Concepts' : 'ዋና ዋና ነጥቦች'}
-                        </div>
-                        <div class="mode-container">
-                            <div class="mode-box" onclick="alert('PDF loading...')">
-                                <span class="mode-label">⚡ Power Notes</span>
-                                <span class="mode-count">Read in ${currentLang === 'en' ? 'English' : 'አማርኛ'}</span>
-                            </div>
-                            <div class="mode-box" onclick="alert('Quiz session starting...')">
-                                <span class="mode-label">❓ Quiz Mode</span>
-                                <span class="mode-count">Exam Prep</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            // If logic course, add special notes
-            if (course.name === "Logic") {
-                chaptersHTML += `<div style="margin-top:20px;">${logicNotes}</div>`;
-            }
-            chaptersContainer.innerHTML = chaptersHTML;
-            navigate('detail-view');
-        }
-        // For demo: Show alert instead of real PDF/quiz
-        function loadNotes(courseId, chapterNum) {
-            alert('PDF/notes viewer here for courseId: ' + courseId + ', chapter: ' + chapterNum);
-            // TODO: Implement document fetch/viewer
-        }
-        function startQuiz(courseId, chapterNum) {
-            alert('Quiz for courseId: ' + courseId + ', chapter: ' + chapterNum);
-            // TODO: Implement quiz logic
-        }
+/* ============ መነሻ / home ============ */
+function vHome(){
+  const goal = (S.daily && S.daily.d===today()) ? S.daily.a : 0;
+  const gp = Math.min(1, goal/10);
+  const last = S.recent[0];
+  let cont = '';
+  if(last){ const c = course(last.c), ch = chap(last.c, last.ch);
+    cont = '<button class="card cont" data-act="open-chapter" data-c="'+c.id+'" data-ch="'+ch.id+'" data-tab="notes" style="--cc:'+cc(c)+'">'+
+      '<span class="cont-ic">'+ic(c.icon)+'</span><span style="flex:1;min-width:0">'+
+      '<span class="lbl">'+T(TXT.continue)+'</span><span class="cont-title" style="display:block">'+esc(T(ch.title))+'</span></span>'+ic('chev')+'</button>'; }
+  const cards = COURSES.map(c => { const p = Math.round(courseProg(c)*100);
+    const rc = c.chapters.filter(x => (S.prog[c.id+':'+x.id]||{}).read).length;
+    return '<button class="card course" data-act="open-course" data-c="'+c.id+'" style="--cc:'+cc(c)+'">'+
+      '<span class="course-top"><span class="ctile">'+ic(c.icon)+'</span><span class="pct">'+p+'%</span></span>'+
+      '<span class="course-name">'+esc(T(c.name))+'</span>'+
+      '<span class="course-sub">'+esc(T({en:c.name.am, am:c.name.en}))+'</span>'+
+      '<span class="pbar"><i style="width:'+p+'%"></i></span>'+
+      '<span class="course-meta">'+c.chapters.length+' '+T(TXT.chapters)+' · '+rc+' '+T(TXT.read)+'</span></button>'; }).join('');
+  return head('', false) +
+    '<section class="hero view">'+HERO_BRIDGE+
+    '<div class="hero-row"><div><div class="eyebrow">'+T(TXT.hello)+'</div>'+
+    '<h1>'+esc(S.user.name)+'</h1><p class="hero-sub">'+T(TXT.heroSub)+'</p></div>'+
+    '<span class="avatar">'+(S.user.photo ? '<img src="'+esc(S.user.photo)+'" alt="">'
+      : esc(S.user.name.trim().charAt(0).toUpperCase()||'S'))+'</span></div>'+
+    '<div class="hero-stats">'+
+      '<div class="hstat"><span class="hbig">'+ic('flame')+(S.streak.count||0)+'</span><span class="hlab">'+T(TXT.streak)+'</span></div>'+
+      '<div class="hstat"><span class="miniring"><svg viewBox="0 0 44 44"><circle class="mr-bg" cx="22" cy="22" r="18" pathLength="100"/><circle class="mr-fg" cx="22" cy="22" r="18" pathLength="100" style="stroke-dashoffset:'+(100-gp*100)+'"/></svg><span>'+goal+'/10</span></span><span class="hlab">'+T(TXT.goal)+'</span></div>'+
+      '<div class="hstat"><span class="hbig">'+ic('spark')+S.xp+'</span><span class="hlab">'+T(TXT.xp)+'</span></div>'+
+    '</div></section>'+
+    (cont ? '<div class="lbl" style="margin:18px 18px 0">CONTINUE · '+T(TXT.continue).toUpperCase()+'</div>'+cont : '')+
+    '<div class="sec"><h2>'+T(TXT.courses)+'</h2><span class="count">'+COURSES.length+'</span></div>'+
+    '<div class="courses">'+cards+'</div>'+
+    '<div class="quick">'+
+      '<button class="card qchip" data-act="go-bms">'+ic('bm')+T(TXT.bookmarks)+'<b>'+S.bookmarks.length+'</b></button>'+
+      '<button class="card qchip" data-act="tab-board">'+ic('trophy')+T(TXT.myRank)+'<b>#'+myRank()+'</b></button>'+
+    '</div>';
+}
 
-        // --- Standard Auth and UI Logic ---
-        // ========== TELEGRAM AUTH (Primary) ==========
-        function initTelegramAuth() {
-            const tg = window.Telegram && window.Telegram.WebApp;
+/* ============ የኮርስ / course ============ */
+function vCourse(cid){ const c = course(cid); const p = Math.round(courseProg(c)*100);
+  const rows = c.chapters.map((ch,i) => { const pr = S.prog[c.id+':'+ch.id]||{};
+    let tags = '';
+    if(pr.read) tags += '<span class="tag">'+ic('check')+' '+T({en:'Notes read',am:'የተነበበ'})+'</span>';
+    if(pr.best != null) tags += '<span class="tag amber">'+pr.best+'% '+T({en:'best',am:'ምርጥ'})+'</span>';
+    return '<div class="card chrow" data-act="open-chapter" data-c="'+c.id+'" data-ch="'+ch.id+'" data-tab="notes">'+
+      '<span class="ch-num">0'+(i+1)+'</span><span class="ch-mid"><span class="ch-title">'+esc(T(ch.title))+'</span>'+
+      '<span class="ch-sub" style="display:block">'+esc(T({en:ch.title.am, am:ch.title.en}))+'</span>'+
+      (tags?'<span class="ch-tags">'+tags+'</span>':'')+'</span>'+
+      '<span class="ch-btns"><span class="mini" data-act="open-chapter" data-c="'+c.id+'" data-ch="'+ch.id+'" data-tab="notes">'+ic('book')+T(TXT.notes)+'</span>'+
+      '<span class="mini acc" data-act="open-chapter" data-c="'+c.id+'" data-ch="'+ch.id+'" data-tab="quiz">'+ic('checksq')+T(TXT.quiz)+'</span></span></div>'; }).join('');
+  return head(T(c.name), true) +
+    '<div class="card course-head view" style="--cc:'+cc(c)+'">'+ctile(c.icon, cc(c), 48)+
+    '<div style="flex:1"><div class="pname" style="font-size:15.5px">'+esc(T(c.name))+'</div>'+
+    '<div class="prole">'+esc(T({en:c.name.am, am:c.name.en}))+' · '+esc(T(c.desc))+'</div></div>'+
+    '<span class="pct" style="font-size:15px;font-family:Fraunces,serif;font-weight:700;color:var(--brand)">'+p+'%</span></div>'+
+    '<div class="chlist">'+rows+'</div>';
+}
 
-            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                // ✅ Inside Telegram — get user data automatically
-                const tgUser = tg.initDataUnsafe.user;
-                tg.ready();
-                tg.expand();
+/* ============ ምዕራፍ / chapter (notes + quiz) ============ */
+function vChapter(cid, chid, tab, qhl){ const c = course(cid), ch = chap(cid, chid);
+  let inner = '';
+  if(tab === 'notes'){
+    const k = cid+':'+chid; const p = prog(k); const on = isBM('n:'+cid+':'+chid);
+    inner = '<div class="notes-bar"><span class="lbl">'+T(TXT.powerNotes)+' · '+ch.notes.length+' '+T({en:'points',am:'ነጥቦች'})+'</span>'+
+      '<button class="bm-btn'+(on?' on':'')+'" data-act="bm-note" data-c="'+cid+'" data-ch="'+chid+'">'+ic(on?'bmf':'bm')+'</button></div>'+
+      '<div class="card notes-card view"><ol class="notes">'+ch.notes.map(n => '<li><p>'+hl(T(n), qhl)+'</p></li>').join('')+'</ol></div>'+
+      (p.read ? '<button class="btn ghost gotit" disabled>'+ic('check')+T(TXT.markedRead)+'</button>'
+              : '<button class="btn primary gotit" data-act="gotit" data-c="'+cid+'" data-ch="'+chid+'">'+ic('check')+T(TXT.gotit)+'</button>');
+  } else {
+    if(!QS || QS.c !== cid || QS.ch !== chid) QS = newSession(cid, chid);
+    const n = ch.quiz.length;
+    if(QS.done){
+      const pct = Math.round(QS.correct/n*100);
+      inner = '<div class="card rescard view" style="--cc:'+cc(c)+'"><div class="ring">'+
+        '<svg viewBox="0 0 132 132"><circle class="rbg" cx="66" cy="66" r="56"/><circle class="rfg" id="rfg" cx="66" cy="66" r="56" pathLength="100" style="stroke-dashoffset:100"/></svg>'+
+        '<div class="rnum"><b id="rnum">0</b><span>'+pct+'%</span></div></div>'+
+        '<div class="resline">'+QS.correct+'/'+n+' '+T({en:'correct',am:'ትክክል'})+
+        ' <span class="xpchip">'+ic('spark')+' +'+QS.xp+' XP</span></div>'+
+        '<p class="resmsg">'+T(tierMsg(pct))+'</p>'+
+        '<div class="btnrow"><button class="btn primary" data-act="qretry">'+ic('redo')+T(TXT.tryAgain)+'</button>'+
+        '<button class="btn" data-act="back">'+T(TXT.toChapters)+'</button></div></div>';
+      setTimeout(() => { const r = $('#rfg'); if(r) r.style.strokeDashoffset = 100-pct;
+        const num = $('#rnum'); if(num){ const t0 = performance.now();
+          const tick = t => { const k = Math.min(1,(t-t0)/900); num.textContent = Math.round(pct*(0.5-0.5*Math.cos(k*Math.PI))); if(k<1) requestAnimationFrame(tick); };
+          requestAnimationFrame(tick); } }, 60);
+    } else {
+      const q = ch.quiz[QS.i]; const opts = optList(q);
+      let ocls;
+      const optsHtml = opts.map((o,i) => {
+        let cls = 'opt', mark = '';
+        if(QS.submitted){ if(i===q.a){ cls+=' ok'; mark=ic('check'); }
+          else if(i===QS.picked){ cls+=' bad'; mark=ic('x'); } else cls+=' dim'; }
+        else if(i===QS.picked) cls += ' sel';
+        return '<button class="'+cls+'" data-act="pick" data-i="'+i+'"'+(QS.submitted?' disabled':'')+'>'+
+          '<span class="lt">'+LET[i]+'</span><span class="ot">'+esc(o)+'</span><span class="mk">'+mark+'</span></button>'; }).join('');
+      let expl = '';
+      if(QS.submitted){ const good = QS.answers[QS.i]===1; const onq = isBM('q:'+cid+':'+chid+':'+QS.i);
+        expl = '<div class="expl'+(good?' good':'')+'"><div class="ex-verdict '+(good?'good':'poor')+'">'+ic(good?'check':'x')+
+          (good?T(TXT.correct):T(TXT.notQuite))+'</div><p><b>'+T({en:'Why?',am:'ለምን?'})+'</b> '+md(T(q.ex))+'</p>'+
+          '<button class="bm-q'+(onq?' on':'')+'" data-act="bm-q">'+ic(onq?'bmf':'bm')+
+          (onq?T(TXT.saved):T(TXT.saveQ))+'</button></div>'; }
+      const last = QS.i >= n-1;
+      const foot = IN_TG ? '' : '<div class="qfoot"><button class="btn primary" data-act="qgo"'+(!QS.submitted && QS.picked==null?' disabled':'')+'>'+
+        (QS.submitted ? (last?T(TXT.seeRes):T(TXT.next)) : T(TXT.submit))+'</button></div>';
+      inner = '<div class="qwrap view"><div class="qmeta"><span>'+T(TXT.qOf)+' '+(QS.i+1)+' '+T(TXT.of)+' '+n+'</span>'+
+        '<span>'+QS.correct+' '+T({en:'correct',am:'ትክክል'})+'</span></div>'+
+        '<div class="qbar"><i style="width:'+((QS.i+(QS.submitted?1:0))/n*100)+'%"></i></div>'+
+        '<h2 class="qtext">'+md(T(q.q))+'</h2><div class="opts">'+optsHtml+'</div>'+expl+foot+'</div>';
+    }
+  }
+  return head(T(ch.title), true) +
+    '<div style="padding:12px 16px 0"><div class="seg" style="width:100%">'+
+    '<button style="flex:1" class="'+(tab==='notes'?'on':'')+'" data-act="ch-tab" data-tab="notes">'+ic('book')+T(TXT.notes)+'</button>'+
+    '<button style="flex:1" class="'+(tab==='quiz'?'on':'')+'" data-act="ch-tab" data-tab="quiz">'+ic('checksq')+T(TXT.quiz)+'</button></div></div>'+inner;
+}
 
-                const userData = {
-                    name: [tgUser.first_name, tgUser.last_name].filter(Boolean).join(' '),
-                    telegramId: tgUser.id,
-                    username: tgUser.username || '',
-                    picture: tgUser.photo_url || '',
-                    loginMethod: 'telegram'
-                };
+/* ============ ፍለጋ / search ============ */
+function vSearch(){ const q = cur().q || '';
+  return head('', false) +
+    '<div class="srch view"><input id="sinput" class="inp" placeholder="'+esc(T(TXT.searchPh))+'" value="'+esc(q)+'" autocomplete="off"></div>'+
+    '<div class="chips" id="schips"></div><div class="srlist" id="srlist"></div>';
+}
+function doSearch(q){ cur().q = q;
+  const chips = ['validity','memory','ዲሞክራሲ','ITCZ','polyandry','ስብስብ'];
+  $('#schips').innerHTML = q ? '' : chips.map(c => '<button class="chipx" data-act="chip" data-q="'+esc(c)+'">'+esc(c)+'</button>').join('');
+  const list = $('#srlist');
+  if(!q || q.trim().length < 2){ list.innerHTML = '<div class="empty">'+ic('search')+'<br>'+T(TXT.srEmpty)+'</div>'; return; }
+  const qq = q.trim().toLowerCase();
+  const notes = [], qs = [];
+  IDX.forEach(it => { if(it.hay.includes(qq)) (it.kind==='note'?notes:qs).push(it); });
+  let html = '';
+  const noteRows = notes.slice(0,10).map(it =>
+    '<button class="card sr" data-act="open-note-hl" data-c="'+it.c.id+'" data-ch="'+it.ch.id+'" data-q="'+esc(q.trim())+'">'+
+    '<span class="sr-ic">'+ic('book')+'</span><span class="sr-main"><span class="sr-t">'+esc(T(it.ch.title))+'</span>'+
+    '<span class="sr-s" style="display:block">'+hl(snippet(T(it.note), qq), qq)+'</span>'+
+    '<span class="sr-c" style="display:block">'+esc(T(it.c.name))+'</span></span></button>').join('');
+  const qRows = qs.slice(0,10).map((it,i) =>
+    '<button class="card sr" data-act="sr-toggle" data-i="'+i+'"><span class="sr-ic">'+ic('checksq')+'</span>'+
+    '<span class="sr-main"><span class="sr-t">'+hl(snippet(T(it.q.q), qq), qq)+'</span>'+
+    '<span class="sr-c" style="display:block">'+esc(T(it.c.name))+' · '+esc(T(it.ch.title))+'</span></span>'+
+    '<span class="srq" id="srq'+i+'"><span class="qcard card" style="display:block">'+questionCard(it.c, it.ch, it.qi)+'</span></span></button>').join('');
+  if(noteRows) html += '<div class="lbl" style="margin:6px 2px">'+T(TXT.srNotes).toUpperCase()+'</div>'+noteRows;
+  if(qRows) html += '<div class="lbl" style="margin:14px 2px 6px">'+T(TXT.srQs).toUpperCase()+'</div>'+qRows;
+  list.innerHTML = html || '<div class="empty">'+ic('search')+'<br>'+T(TXT.srEmpty)+'</div>';
+  cur()._qs = qs;
+}
 
-                localStorage.setItem('userData', JSON.stringify(userData));
-                localStorage.setItem('isLogged', 'true');
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfileUI();
-            } else {
-                // ⚠️ Not inside Telegram — show manual login
-                document.getElementById('tg-loading-panel').style.display = 'none';
-                document.getElementById('login-panel').style.display = 'block';
-            }
-        }
-        // ========== END TELEGRAM AUTH ==========
+/* ============ ደረጃ / leaderboard ============ */
+function vBoard(){ const rows = boardRows();
+  const list = rows.map((r,i) => { const rc = i===0?'g':i===1?'s':i===2?'b':'';
+    return '<div class="card brow'+(r.me?' me':'')+'"><span class="rank '+rc+'">'+(i+1)+'</span>'+
+      '<span class="bname">'+esc(r.name)+(r.me?' <span class="me-tag">'+T(TXT.you)+'</span>':'')+'</span>'+
+      '<span class="bpts">'+r.pts+' XP</span></div>'; }).join('');
+  return head(T(TXT.boardTitle), false) +
+    '<div class="sec" style="padding-top:14px"><h2 style="font-size:15px">'+T(TXT.boardSub)+'</h2><span class="count">'+rows.length+' '+T(TXT.students)+'</span></div>'+
+    '<div class="blist view">'+list+'</div>';
+}
 
-        function toggleAuth(isSignup) {
-            document.getElementById('login-panel').style.display = isSignup ? 'none' : 'block';
-            document.getElementById('signup-panel').style.display = isSignup ? 'block' : 'none';
-        }
-        function switchLoginTab(tab) {
-            const isEmail = tab === 'email';
-            document.getElementById('login-email-tab').style.display = isEmail ? 'block' : 'none';
-            document.getElementById('login-phone-tab').style.display = isEmail ? 'none' : 'block';
-            document.getElementById('tab-email-btn').style.background = isEmail ? 'var(--accent-gold)' : 'transparent';
-            document.getElementById('tab-email-btn').style.color = isEmail ? '#000' : '#aaa';
-            document.getElementById('tab-phone-btn').style.background = isEmail ? 'transparent' : 'var(--accent-gold)';
-            document.getElementById('tab-phone-btn').style.color = isEmail ? '#aaa' : '#000';
-        }
-        function performSignup() {
-            const name = document.getElementById('reg-name').value.trim();
-            const phone = document.getElementById('reg-phone').value.trim();
-            const email = document.getElementById('reg-email').value.trim();
-            const university = document.getElementById('reg-university').value.trim();
-            const pass = document.getElementById('reg-pass').value;
-            const pass2 = document.getElementById('reg-pass2').value;
-            if (!name || !phone || !pass) { alert("Please fill Name, Phone, and Password."); return; }
-            if (pass !== pass2) { alert("Passwords do not match!"); return; }
-            if (pass.length < 8) { alert("Password must be at least 8 characters."); return; }
-            localStorage.setItem('userData', JSON.stringify({ name, phone, email, university, pass }));
-            alert("Account created! Please login.");
-            toggleAuth(false);
-        }
-        function performLoginEmail() {
-            const email = document.getElementById('login-email').value.trim();
-            const savedData = JSON.parse(localStorage.getItem('userData'));
-            if (!email) { alert("Please enter your email."); return; }
-            if (savedData && email === savedData.email) {
-                localStorage.setItem('isLogged', 'true');
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfileUI();
-            } else { alert("Email not found. Please register first."); }
-        }
-        function performLogin() {
-            const phone = document.getElementById('login-phone').value.trim();
-            const pass = document.getElementById('login-pass').value;
-            const savedData = JSON.parse(localStorage.getItem('userData'));
-            // Demo Account: 0911111111 / 1234
-            if ((phone === "0911111111" && pass === "1234") || (savedData && phone === savedData.phone && pass === savedData.pass)) {
-                localStorage.setItem('isLogged', 'true');
-                if (!savedData) localStorage.setItem('userData', JSON.stringify({ name: "Smart Learner", phone: phone }));
-                document.getElementById('auth-overlay').style.display = 'none';
-                updateProfileUI();
-            } else { alert("Incorrect phone or password. Try: 0911111111 / 1234 for demo."); }
-        }
-        function navigate(viewId) {
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            document.getElementById(viewId).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach((n, idx) => {
-                n.classList.remove('active');
-                if ((viewId === 'library-view' || viewId === 'detail-view') && idx === 0) n.classList.add('active');
-                if (viewId === 'profile-view' && idx === 1) n.classList.add('active');
-            });
-        }
-        function updateProfileUI() {
-            const data = JSON.parse(localStorage.getItem('userData'));
-            if (data) {
-                document.getElementById('user-display').innerText = data.name || "Student";
+/* ============ ቡክማርክ / bookmarks ============ */
+function vBookmarks(){
+  const nb = S.bookmarks.filter(b => b.type==='note');
+  const qb = S.bookmarks.filter(b => b.type==='q');
+  let html = '';
+  if(nb.length){ html += '<div class="lbl" style="margin:16px 18px 0">'+T(TXT.savedNotes).toUpperCase()+'</div><div class="srlist">'+
+    nb.map(b => { const c = course(b.c), ch = chap(b.c, b.ch);
+      return '<div class="card bmrow" data-act="open-bm-note" data-c="'+b.c+'" data-ch="'+b.ch+'">'+
+        '<span class="sr-ic">'+ic('book')+'</span><span class="sr-main"><span class="sr-t">'+esc(T(ch.title))+'</span>'+
+        '<span class="sr-c" style="display:block">'+esc(T(c.name))+'</span></span>'+
+        '<span class="del" data-act="bm-remove" data-k="'+esc(b.k)+'">'+ic('x')+'</span></div>'; }).join('')+'</div>'; }
+  if(qb.length){ html += '<div class="lbl" style="margin:20px 18px 0">'+T(TXT.savedQs).toUpperCase()+'</div><div class="srlist">'+
+    qb.map(b => '<div>'+questionCard(course(b.c), chap(b.c, b.ch), b.qi)+
+      '<div style="display:flex;justify-content:flex-end;margin-top:6px"><button class="del" style="width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--surface2);color:var(--muted);display:grid;place-items:center;cursor:pointer" data-act="bm-remove" data-k="'+esc(b.k)+'">'+ic('x')+'</button></div></div>').join('')+'</div>'; }
+  if(!html) html = '<div class="empty">'+ic('bm')+'<br>'+T(TXT.bmEmpty)+'</div>';
+  return head(T(TXT.bookmarks), false) + '<div class="view" style="padding-bottom:8px">'+html+'</div>';
+}
 
-                // Subtitle: show @username for Telegram, email for email login, phone for phone login
-                let sub = '';
-                if (data.loginMethod === 'telegram') {
-                    sub = data.username ? '@' + data.username : 'Telegram User';
-                } else if (data.loginMethod === 'email') {
-                    sub = data.email || '';
-                } else {
-                    sub = data.phone || '';
-                }
-                document.getElementById('user-phone-display').innerText = sub;
+/* ============ መገለጫ / profile ============ */
+function vProfile(){
+  const taken = Object.values(S.prog).reduce((a,p) => a+(p.taken||0), 0);
+  const bests = Object.values(S.prog).filter(p => p.best != null).map(p => p.best);
+  const avg = bests.length ? Math.round(bests.reduce((a,b) => a+b,0)/bests.length) : 0;
+  const readN = Object.values(S.prog).filter(p => p.read).length;
+  const pl = COURSES.map(c => { const p = Math.round(courseProg(c)*100);
+    return '<div><div class="prow"><span class="pdot" style="background:'+cc(c)+'"></span><span>'+esc(T(c.name))+'</span><span class="ppct">'+p+'%</span></div>'+
+      '<div class="pbar sm" style="margin-top:5px;--cc:'+cc(c)+'"><i style="width:'+p+'%"></i></div></div>'; }).join('');
+  return head('', false) +
+    '<div class="card pcard view"><span class="avatar">'+(S.user.photo ? '<img src="'+esc(S.user.photo)+'" alt="">'
+      : esc(S.user.name.trim().charAt(0).toUpperCase()||'S'))+'</span>'+
+    '<div><div class="pname">'+esc(S.user.name)+'</div><div class="prole">'+
+    (S.user.phone==='telegram' ? T({en:'Telegram student',am:'የቴሌግራም ተማሪ'}) : '+'+esc(S.user.phone))+
+    ' · '+T({en:'Freshman · Common courses',am:'ፕሬሽማን · የጋራ ኮርሶች'})+'</div></div>'+
+    '<span class="prank">#'+myRank()+' · '+S.xp+' XP</span></div>'+
+    '<div class="stats view"><div class="card stat"><b>'+taken+'</b><span>'+T(TXT.quizzes)+'</span></div>'+
+    '<div class="card stat"><b>'+avg+'%</b><span>'+T(TXT.avg)+'</span></div>'+
+    '<div class="card stat"><b>'+readN+'</b><span>'+T(TXT.chRead)+'</span></div></div>'+
+    '<div class="sec"><h2>'+T(TXT.progress)+'</h2></div><div class="plist view">'+pl+'</div>'+
+    '<div class="sec"><h2>'+T(TXT.bookmarks)+'</h2><button class="more" data-act="go-bms">'+T(TXT.seeAll)+' →</button></div>'+
+    '<div class="srlist view">'+ (S.bookmarks.slice(0,3).map(b => { 
+      if(b.type==='note'){ const c=course(b.c), ch=chap(b.c,b.ch);
+        return '<div class="card bmrow" data-act="open-bm-note" data-c="'+b.c+'" data-ch="'+b.ch+'"><span class="sr-ic">'+ic('book')+'</span><span class="sr-main"><span class="sr-t">'+esc(T(ch.title))+'</span><span class="sr-c" style="display:block">'+esc(T(c.name))+'</span></span></div>'; }
+      const ch = chap(b.c, b.ch); return '<div class="card bmrow" data-act="go-bms"><span class="sr-ic">'+ic('checksq')+'</span><span class="sr-main"><span class="sr-t">'+esc(T(ch.quiz[b.qi].q).slice(0,70))+'…</span></span></div>';
+    }).join('') || '<div class="empty" style="padding:20px">'+T(TXT.bmEmpty)+'</div>') + '</div>'+
+    '<button class="btn signout" data-act="signout">'+ic('out')+T(TXT.signout)+'</button>';
+}
 
-                // Avatar: Telegram photo or fallback emoji
-                const avatarEl = document.getElementById('profile-avatar');
-                if (avatarEl) {
-                    if (data.picture) {
-                        avatarEl.innerHTML = '<img src="' + data.picture + '" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" onerror="this.parentElement.innerHTML='👤'">';
-                    } else {
-                        avatarEl.innerHTML = '👤';
-                    }
-                }
+/* ============ ሬንደር / render ============ */
+const VIEWS = { login:vLogin, home:vHome, course:vCourse, chapter:vChapter, search:vSearch, board:vBoard, bookmarks:vBookmarks, profile:vProfile };
+function render(){
+  const v = cur();
+  $('#screen').innerHTML = VIEWS[v.v](v.c, v.ch, v.tab, v.q);
+  const tb = $('#tabbar');
+  if(S.user){ tb.classList.remove('hidden');
+    const items = [['home','home',TXT.home? {en:'Home',am:'መነሻ'}:null],['search','search',{en:'Search',am:'ፍለጋ'}],['board','trophy',{en:'Ranking',am:'ደረጃ'}],['profile','user',{en:'Profile',am:'መገለጫ'}]];
+    tb.innerHTML = items.map(it => '<button class="'+(v.v===it[0]?'on':'')+'" data-act="tab" data-v="'+it[0]+'">'+ic(it[1])+T(it[2])+'</button>').join('');
+  } else tb.classList.add('hidden');
+  if(tg && tg.BackButton){ try{ (S.user && stack.length>1) ? tg.BackButton.show() : tg.BackButton.hide(); }catch(e){} }
+  if(S.user && IN_TG){
+    if(v.v==='chapter' && v.tab==='quiz' && QS && !QS.done){
+      const n = chap(QS.c, QS.ch).quiz.length;
+      if(QS.submitted) setMB(QS.i>=n-1 ? T(TXT.seeRes) : T(TXT.next), () => nextQ());
+      else setMB(T(TXT.submit), () => submitAnswer(), QS.picked != null);
+    } else if(v.v==='chapter' && v.tab==='quiz' && QS && QS.done) setMB(T(TXT.tryAgain), () => { QS = newSession(QS.c, QS.ch); render(); });
+    else setMB(null);
+  } else if(tg) setMB(null);
+  if(v.v==='search'){ const si = $('#sinput');
+    si.addEventListener('input', () => doSearch(si.value));
+    doSearch(v.q || ''); setTimeout(() => si.focus(), 60); }
+  window.scrollTo(0,0);
+}
 
-                // Show Telegram badge on profile if logged in via Telegram
-                const badgeEl = document.getElementById('tg-login-badge');
-                if (badgeEl) {
-                    badgeEl.style.display = data.loginMethod === 'telegram' ? 'inline-block' : 'none';
-                }
-            } else {
-                document.getElementById('user-display').innerText = "No Name";
-                document.getElementById('user-phone-display').innerText = "";
-            }
-        }
-        function performLogout() { localStorage.removeItem('isLogged'); location.reload(); }
+/* ============ ተግባራት / actions ============ */
+const ACT = {
+  lang: d => { S.lang = d.l; save(); render(); },
+  back: () => navBack(),
+  tab: d => tabTo(d.v),
+  'tab-board': () => tabTo('board'),
+  'go-bms': () => navTo('bookmarks'),
+  'open-course': d => navTo('course', {c:d.c}),
+  'open-chapter': d => navTo('chapter', {c:d.c, ch:d.ch, tab:d.tab||'notes'}),
+  'ch-tab': d => { cur().tab = d.tab; render(); },
+  'login-phone': () => { LF.step='phone'; render(); },
+  'lg-back': () => { LF.step = LF.step==='name'?'otp':LF.step==='otp'?'phone':'pick'; render(); },
+  'send-code': () => { const v = ($('#ph').value||'').replace(/\D/g,'');
+    if(!/^[97]\d{8}$/.test(v)){ toast(T({en:'Enter a valid Ethiopian mobile number', am:'ትክክለኛ የኢትዮጵያ ስልክ ቁጥር ያስገቡ'}), 'x'); return; }
+    LF.phone = v; LF.step='otp'; render(); },
+  'verify': () => { const v = ($('#otpin').value||'').trim();
+    if(v === '4821'){ LF.step='name'; render(); }
+    else toast(T({en:'Wrong code — demo code is 4821', am:'ተሳስቷል — የሙከራው ኮድ 4821 ነው'}), 'x'); },
+  'finish': () => { const v = ($('#nm').value||'').trim();
+    if(!v){ toast(T({en:'Please enter your name', am:'እባክዎ ስምዎን ያስገቡ'}), 'x'); return; }
+    finishLogin(v, LF.phone, null); },
+  'login-tg': () => { if(TG_USER) finishLogin([TG_USER.first_name, TG_USER.last_name].filter(Boolean).join(' '), 'telegram', TG_USER.photo_url);
+    else { toast(T({en:'Browser preview — demo profile used', am:'የአሳሽ ቅድመ-እይታ — የሙከራ መገለጫ ጥቅም ላይ ውሏል'}), 'spark'); finishLogin('Demo Student', 'telegram', null); } },
+  'gotit': d => { const p = prog(d.c+':'+d.ch); if(p.read) return; p.read = 1; save(); gainXP(5); render(); },
+  'bm-note': d => { bmToggle({type:'note', c:d.c, ch:d.ch, k:'n:'+d.c+':'+d.ch}); hap('light');
+    toast(isBM('n:'+d.c+':'+d.ch) ? T(TXT.saved) : T({en:'Removed', am:'ተወግዷል'}), 'bm'); render(); },
+  'bm-q': () => { const k = 'q:'+QS.c+':'+QS.ch+':'+QS.i;
+    bmToggle({type:'q', c:QS.c, ch:QS.ch, qi:QS.i, k}); hap('light'); render(); },
+  'bm-remove': d => { S.bookmarks = S.bookmarks.filter(b => b.k !== d.k); save(); render(); },
+  'open-bm-note': d => navTo('chapter', {c:d.c, ch:d.ch, tab:'notes'}),
+  'pick': d => { if(QS.submitted) return; QS.picked = +d.i; hap('light'); render(); },
+  'qgo': () => { QS.submitted ? nextQ() : submitAnswer(); },
+  'qretry': () => { QS = newSession(QS.c, QS.ch); render(); },
+  'chip': d => { cur().q = d.q; $('#sinput').value = d.q; doSearch(d.q); },
+  'sr-toggle': (d, el) => el.classList.toggle('open'),
+  'open-note-hl': d => navTo('chapter', {c:d.c, ch:d.ch, tab:'notes', q:d.q}),
+  'signout': () => { S.user = null; save(); LF = {step:'pick'}; stack = [{v:'login'}]; render(); }
+};
+document.addEventListener('click', e => { const el = e.target.closest('[data-act]');
+  if(!el || el.disabled) return; const a = ACT[el.dataset.act]; a && a(el.dataset, el); });
 
-        initApp();
-        // Auto-login via Telegram on startup
-        initTelegramAuth();
-    </script>
+/* ============ ማስጀመሪያ / init ============ */
+applyTheme();
+render();
+</script>
 </body>
 </html>
